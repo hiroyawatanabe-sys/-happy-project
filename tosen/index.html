@@ -75,25 +75,56 @@
           <ul class="-w-nav-list">
             <li class="-w-nav-item"><a href="#step-entry" class="-w-nav-link" aria-current="page">無料診断</a></li>
             <li class="-w-nav-item -w-has-sub">
-              <a href="/media/" class="-w-nav-link">メディア別サービス</a>
-              <button type="button" class="-w-nav-toggle" aria-expanded="false" aria-controls="nav-sub-media">
-                <span class="-w-visually-hidden">「メディア別サービス」のサブメニューを開閉</span>
+              <a href="/service/" class="-w-nav-link">取扱メディア</a>
+              <button type="button" class="-w-nav-toggle" aria-expanded="false" aria-controls="nav-sub-service">
+                <span class="-w-visually-hidden">「取扱メディア」のサブメニューを開閉</span>
                 <svg class="-w-icon" aria-hidden="true"><use href="#i-chevron-down"></use></svg>
               </button>
-              <div class="-w-mega" id="nav-sub-media">
+              <div class="-w-mega" id="nav-sub-service">
                 <ul class="-w-mega-list">
-                  <!-- 取扱媒体のラインナップ表記は要確認(4)。確定後にページ実体を用意 -->
-                  <li><a href="/media/orikomi/">新聞折込</a></li>
-                  <li><a href="/media/newspaper/">新聞広告</a></li>
-                  <li><a href="/media/tv/">地域テレビCM</a></li>
-                  <li><a href="/media/radio/">ラジオCM</a></li>
-                  <li><a href="/media/transit/">交通広告</a></li>
+                  <li><a href="/service/"><strong>取扱メディア・サービス紹介</strong></a></li>
+                  <li><a href="/service/insert/">折込チラシ</a></li>
+                  <li><a href="/service/newspaper/">新聞広告</a></li>
+                  <li><a href="/service/magazine/">雑誌・専門誌</a></li>
+                  <li><a href="/service/tv/">テレビCM</a></li>
+                  <li><a href="/service/radio/">ラジオ</a></li>
+                  <li><a href="/service/ooh/">交通・OOH（屋外）</a></li>
+                </ul>
+              </div>
+            </li>
+            <li class="-w-nav-item -w-has-sub">
+              <a href="/usp/" class="-w-nav-link">選ばれる理由</a>
+              <button type="button" class="-w-nav-toggle" aria-expanded="false" aria-controls="nav-sub-usp">
+                <span class="-w-visually-hidden">「選ばれる理由」のサブメニューを開閉</span>
+                <svg class="-w-icon" aria-hidden="true"><use href="#i-chevron-down"></use></svg>
+              </button>
+              <div class="-w-mega" id="nav-sub-usp">
+                <ul class="-w-mega-list">
+                  <li><a href="/usp/"><strong>選ばれる理由</strong></a></li>
+                  <li><a href="/usp/shindan/">あなたの"取りこぼし"、見つけます</a></li>
+                  <li><a href="/usp/full-media/">Webで穴が見えたら、王道メディアで塞ぐ</a></li>
+                  <li><a href="/usp/data/">同業の"効いた実数"で、提案します</a></li>
+                </ul>
+              </div>
+            </li>
+            <li class="-w-nav-item -w-has-sub">
+              <a href="/solution/" class="-w-nav-link">お困り事から探す</a>
+              <button type="button" class="-w-nav-toggle" aria-expanded="false" aria-controls="nav-sub-solution">
+                <span class="-w-visually-hidden">「お困り事から探す」のサブメニューを開閉</span>
+                <svg class="-w-icon" aria-hidden="true"><use href="#i-chevron-down"></use></svg>
+              </button>
+              <div class="-w-mega" id="nav-sub-solution">
+                <ul class="-w-mega-list">
+                  <li><a href="/solution/"><strong>お困り事から探す</strong></a></li>
+                  <li><a href="/solution/insert-response/">折込の反応が落ちた</a></li>
+                  <li><a href="/solution/web-ads/">Web広告に手応えがない</a></li>
+                  <li><a href="/solution/media-choice/">媒体の選び方がわからない</a></li>
                 </ul>
               </div>
             </li>
             <li class="-w-nav-item"><a href="/case/" class="-w-nav-link">事例</a></li>
             <li class="-w-nav-item"><a href="/column/" class="-w-nav-link">コラム</a></li>
-            <li class="-w-nav-item"><a href="/company/" class="-w-nav-link">会社概要</a></li>
+            <li class="-w-nav-item"><a href="/company/" class="-w-nav-link">会社案内</a></li>
           </ul>
         </nav>
 
@@ -119,12 +150,16 @@
     <nav class="-w-breadcrumb" aria-label="パンくずリスト">
       <ol class="-w-breadcrumb-list" itemscope itemtype="http://schema.org/BreadcrumbList">
         <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-          <a itemprop="item" href="/"><span itemprop="name">TOP</span></a>
+          <a itemprop="item" href="/"><span itemprop="name">HOME</span></a>
           <meta itemprop="position" content="1">
         </li>
-        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem" aria-current="page">
-          <span itemprop="name">WEB集客 取りこぼし診断</span>
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a itemprop="item" href="/usp/"><span itemprop="name">選ばれる理由</span></a>
           <meta itemprop="position" content="2">
+        </li>
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem" aria-current="page">
+          <span itemprop="name">あなたの"取りこぼし"、見つけます（無料診断）</span>
+          <meta itemprop="position" content="3">
         </li>
       </ol>
     </nav>
@@ -355,8 +390,8 @@
                 </span>
               </a>
 
-              <!-- Micro④ 選び方ガイドDL -->
-              <a href="/download/guide/" class="-w-next-card" data-tsn-card data-card="guide">
+              <!-- Micro④ 選び方ガイドDL（配布ページ＝/solution/media-choice/） -->
+              <a href="/solution/media-choice/" class="-w-next-card" data-tsn-card data-card="guide">
                 <span class="-w-next-card-icon"><svg class="-w-icon" aria-hidden="true"><use href="#i-file-down"></use></svg></span>
                 <span class="-w-next-card-body">
                   <span class="-w-next-card-ttl">媒体の選び方ガイドをもらう</span>
@@ -378,8 +413,8 @@
                 </span>
               </a>
 
-              <!-- Micro② コラム回遊（導線Aへ送り返し） -->
-              <a href="/column/orikomi-response/" class="-w-next-card" data-tsn-card data-card="column">
+              <!-- Micro② お困り事回遊（導線Aへ送り返し） -->
+              <a href="/solution/insert-response/" class="-w-next-card" data-tsn-card data-card="column">
                 <span class="-w-next-card-icon"><svg class="-w-icon" aria-hidden="true"><use href="#i-doc-lines"></use></svg></span>
                 <span class="-w-next-card-body">
                   <span class="-w-next-card-ttl">折込の反応が落ちた理由を読む</span>
@@ -418,7 +453,7 @@
         <strong>"王道メディア"</strong>で、御社の商圏に届く一手をご提案します。
       </p>
       <div class="-w-final-cta-btns">
-        <!-- 相談フォームURLは要確認(8)。確定後 /contact/ を実URLへ差し替え -->
+        <!-- /contact/ ＝無料相談・お問い合わせ（サイトマップ確定済み。フォーム実体は別途構築） -->
         <a class="-w-consult-btn -w-consult-btn-lg -w-button-click" href="/contact/" data-tsn-consult data-placement="final">
           <svg class="-w-icon" aria-hidden="true"><use href="#i-headset"></use></svg>
           <span>無料相談を予約する（30分・オンライン可）</span>
@@ -439,35 +474,52 @@
     <div class="-w-footer-inner">
       <nav class="-w-footer-nav" aria-label="フッターナビゲーション">
         <div class="-w-footer-col">
-          <p class="-w-footer-head">診断する</p>
+          <p class="-w-footer-head">診断・相談</p>
           <ul>
-            <li><a href="#step-entry">WEB集客 取りこぼし診断</a></li>
-            <li><a href="#final-cta">無料相談</a></li>
+            <li><a href="#step-entry">無料診断（取りこぼし診断）</a></li>
+            <li><a href="/usp/">選ばれる理由</a></li>
+            <li><a href="/benefit/">東宣で得られること</a></li>
+            <li><a href="/contact/">無料相談・お問い合わせ</a></li>
           </ul>
         </div>
         <div class="-w-footer-col">
-          <p class="-w-footer-head">メディア別サービス</p>
+          <p class="-w-footer-head">取扱メディア・サービス</p>
           <ul>
-            <li><a href="/media/orikomi/">新聞折込</a></li>
-            <li><a href="/media/newspaper/">新聞広告</a></li>
-            <li><a href="/media/tv/">地域テレビCM</a></li>
-            <li><a href="/media/radio/">ラジオCM</a></li>
-            <li><a href="/media/transit/">交通広告</a></li>
+            <li><a href="/service/">サービス紹介</a></li>
+            <li><a href="/service/insert/">折込チラシ</a></li>
+            <li><a href="/service/newspaper/">新聞広告</a></li>
+            <li><a href="/service/magazine/">雑誌・専門誌</a></li>
+            <li><a href="/service/tv/">テレビCM</a></li>
+            <li><a href="/service/radio/">ラジオ</a></li>
+            <li><a href="/service/ooh/">交通・OOH（屋外）</a></li>
+          </ul>
+        </div>
+        <div class="-w-footer-col">
+          <p class="-w-footer-head">お困り事から探す</p>
+          <ul>
+            <li><a href="/solution/">お困り事から探す</a></li>
+            <li><a href="/solution/insert-response/">折込の反応が落ちた</a></li>
+            <li><a href="/solution/web-ads/">Web広告に手応えがない</a></li>
+            <li><a href="/solution/media-choice/">媒体の選び方がわからない</a></li>
           </ul>
         </div>
         <div class="-w-footer-col">
           <p class="-w-footer-head">知る</p>
           <ul>
-            <li><a href="/case/">事例・実数</a></li>
-            <li><a href="/column/">コラム</a></li>
-            <li><a href="/download/guide/">媒体の選び方ガイド</a></li>
+            <li><a href="/case/">お客様の声・事例</a></li>
+            <li><a href="/column/">お役立ちコラム</a></li>
+            <li><a href="/faq/">よくあるご質問</a></li>
+            <li><a href="/news/">お知らせ</a></li>
           </ul>
         </div>
         <div class="-w-footer-col">
           <p class="-w-footer-head">会社情報</p>
           <ul>
-            <li><a href="/company/">会社概要</a></li>
-            <li><a href="/privacy/">プライバシーポリシー</a></li>
+            <li><a href="/company/">会社案内</a></li>
+            <li><a href="/company/message/">代表者挨拶</a></li>
+            <li><a href="/privacy-policy/">プライバシーポリシー</a></li>
+            <li><a href="/compliance/">コンプライアンス指針</a></li>
+            <li><a href="/sitemap/">サイトマップ</a></li>
           </ul>
         </div>
       </nav>
