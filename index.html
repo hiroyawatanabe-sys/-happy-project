@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>新・七つの大罪｜141億のデータが裁く無料WEBサイト診断</title>
+<meta name="keywords" content="新・七つの大罪,診断">
+<meta name="description" content="あなたのWEBサイトは知らずに罪を犯していませんか？141億のデータが裁く「新・七つの大罪」診断なら、URL入力だけでSEOやセキュリティの致命的な問題を60秒で白日のもとに晒します。完全無料で申込不要、その場で改善レポートも保存可能です。">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<!-- ▼ 本番反映時に差し替え：GA4 / Microsoft Clarity のタグをここに設置（開発版では発火させない） -->
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script> -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Noto+Serif+JP:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap">
+<link rel="stylesheet" href="css/style.css">
+
+<script src="js/common.js" defer></script>
+<script src="js/seven-cta.js" defer></script>
+</head>
+<body id="top">
+
+<!-- =========================================================
+     SVGアイコンスプライト（Material Outlined 互換のストローク型）
+     CDNフォント非依存で確実に描画するため直接埋め込み（03c §4-3方式）
+========================================================== -->
+<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"
+     style="position:absolute;width:0;height:0;overflow:hidden">
+  <defs>
+    <symbol id="i-person" viewBox="0 0 24 24"><circle cx="12" cy="7.5" r="3.5"/><path d="M5 20.5c0-3.6 3.1-6.2 7-6.2s7 2.6 7 6.2"/></symbol>
+    <symbol id="i-person-off" viewBox="0 0 24 24"><circle cx="12" cy="7.5" r="3.5"/><path d="M5 20.5c0-3.6 3.1-6.2 7-6.2s7 2.6 7 6.2"/><path d="m4 4 16 16"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3.5V15m0 0 4.2-4.2M12 15 7.8 10.8"/><path d="M4.5 20.5h15"/></symbol>
+    <symbol id="i-file-down" viewBox="0 0 24 24"><path d="M13.5 3.5H7A1.5 1.5 0 0 0 5.5 5v14A1.5 1.5 0 0 0 7 20.5h10a1.5 1.5 0 0 0 1.5-1.5V8.5z"/><path d="M13.5 3.5V8.5h5"/><path d="M12 11.5v5m0 0 2.4-2.4M12 16.5l-2.4-2.4"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M10.2 8.8v6.4l5.2-3.2z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m15.8 15.8 4.7 4.7"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="M10.3 13.7a4.6 4.6 0 0 0 6.5.4l2.5-2.5a4.6 4.6 0 0 0-6.5-6.5l-1.5 1.5"/><path d="M13.7 10.3a4.6 4.6 0 0 0-6.5-.4l-2.5 2.5a4.6 4.6 0 0 0 6.5 6.5l1.5-1.5"/></symbol>
+    <symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 4.5v16M8 20.5h8M7 6.5h10"/><path d="M6.5 6.5 4 12a2.7 2.7 0 0 0 5 0zM17.5 6.5 15 12a2.7 2.7 0 0 0 5 0z"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.8 4.8L19 7.5"/></symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="m8.3 12.3 2.5 2.5 5-5.2"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="i-exclaim" viewBox="0 0 24 24"><path d="M12 4.5V14"/><circle cx="12" cy="18.5" r="1.4" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 4 2.8 20h18.4z"/><path d="M12 10v4.5"/><circle cx="12" cy="17.2" r="1.1" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-block" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="m6 6 12 12"/></symbol>
+    <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a4.2 4.2 0 0 0-5.6 5.2L3.6 17a2.1 2.1 0 1 0 3 3l5.5-5.6a4.2 4.2 0 0 0 5.2-5.6L14 12.1l-2.1-2.1z"/></symbol>
+    <symbol id="i-clipboard-x" viewBox="0 0 24 24"><rect x="5.5" y="4.5" width="13" height="16" rx="2"/><path d="M9 4.5a3 3 0 0 1 6 0"/><path d="m9.7 11.2 4.6 4.6m0-4.6-4.6 4.6"/></symbol>
+    <symbol id="i-clipboard-check" viewBox="0 0 24 24"><rect x="5.5" y="4.5" width="13" height="16" rx="2"/><path d="M9 4.5a3 3 0 0 1 6 0"/><path d="m8.8 13 2.3 2.3 4.2-4.4"/></symbol>
+    <symbol id="i-timer" viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="7"/><path d="M12 13.5V9.8M9.5 3h5M12 3v3.5"/></symbol>
+    <symbol id="i-zoom-in" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m15.8 15.8 4.7 4.7M11 8.3v5.4M8.3 11h5.4"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 14.5a2 2 0 0 1-2 2H8.5L3.5 20.5V6a2 2 0 0 1 2-2H19a2 2 0 0 1 2 2z"/></symbol>
+    <symbol id="i-headset" viewBox="0 0 24 24"><path d="M4.5 13.5a7.5 7.5 0 0 1 15 0"/><rect x="3" y="13.5" width="4" height="6" rx="1.6"/><rect x="17" y="13.5" width="4" height="6" rx="1.6"/><path d="M19.5 19.5a3 3 0 0 1-3 3H13"/></symbol>
+    <symbol id="i-checklist" viewBox="0 0 24 24"><path d="M12.5 6.5H21M12.5 12H21M12.5 17.5H21"/><path d="m3.5 6 1.8 1.8 3.4-3.4M3.5 11.5l1.8 1.8 3.4-3.4M3.5 17l1.8 1.8 3.4-3.4"/></symbol>
+    <symbol id="i-print" viewBox="0 0 24 24"><path d="M7 8V3.5h10V8"/><rect x="3.5" y="8" width="17" height="8.5" rx="1.5"/><rect x="7" y="13.5" width="10" height="7"/></symbol>
+    <symbol id="i-restart" viewBox="0 0 24 24"><path d="M3.5 4v4.5H8"/><path d="M4.6 13.5a8 8 0 1 0 1.2-6.2L3.5 8.5"/></symbol>
+    <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9.5 6 6 6-6"/></symbol>
+    <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9.5 6 6 6-6 6"/></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M4 12h15.5m0 0-6-6m6 6-6 6"/></symbol>
+    <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3.5 13.9 9l5.6 1.9-5.6 1.9L12 18.5l-1.9-5.7-5.6-1.9L10.1 9z"/><path d="m19 15.5.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-doc-lines" viewBox="0 0 24 24"><path d="M13.5 3.5H7A1.5 1.5 0 0 0 5.5 5v14A1.5 1.5 0 0 0 7 20.5h10a1.5 1.5 0 0 0 1.5-1.5V8.5z"/><path d="M13.5 3.5V8.5h5"/><path d="M9 12.5h6M9 16h4"/></symbol>
+  </defs>
+</svg>
+
+<div id="-w-container">
+
+  <!-- =========================================================
+       ヘッダー（50vhスクロールで固定：共通JSが .-w-header-fixed を付与）
+  ========================================================== -->
+  <header class="-w-header -w-header-scroll" data-vh="50">
+    <p class="-w-header-site-title">
+      <span class="-w-header-site-title-inner">141億の行動データが裁く「新・七つの大罪」WEBサイト無料診断</span>
+    </p>
+
+    <div class="-w-header-inner">
+      <div class="-w-header-top">
+
+        <div class="-w-header-branding">
+          <a href="/" class="-w-logo" aria-label="株式会社ガーディアン トップページ">
+            <!-- ロゴ：本番は画像（/_img/ja/resource/14/logo/）。スタンドアロン版はSVG＋テキストで代替 -->
+            <svg class="-w-logo-mark" viewBox="0 0 32 36" aria-hidden="true" width="28" height="32">
+              <path d="M16 1 30 6v12c0 9-6.2 14.6-14 17C8.2 32.6 2 27 2 18V6L16 1z"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+              <path d="M16 9v10M11 14h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span class="-w-logo-text">
+              <span class="-w-logo-en">GUARDIAN</span>
+              <span class="-w-logo-ja">株式会社ガーディアン</span>
+            </span>
+          </a>
+        </div>
+
+        <div class="-w-header-cta">
+          <a href="/alliance-masterplan-2026/" class="-w-cta-btn -w-cta-btn1">
+            <svg class="-w-icon" aria-hidden="true"><use href="#i-person"></use></svg>
+            <span class="-w-cta-sm-text">提携企業の方へ</span>
+          </a>
+          <a href="/alliance-masterplan-2026/document/" class="-w-cta-btn -w-cta-btn2">
+            <svg class="-w-icon" aria-hidden="true"><use href="#i-download"></use></svg>
+            <span class="-w-cta-sm-text">提携資料 DL</span>
+          </a>
+          <a href="/new-seven-deadly-sins/" class="-w-cta-btn -w-cta-btn3" aria-current="page">
+            <span class="-w-cta-badge">無料</span>
+            <span class="-w-cta-main">
+              <span class="-w-cta-sub">リアルタイム無料HP診断</span>
+              <span class="-w-cta-ttl">新・七つの大罪</span>
+            </span>
+            <span class="-w-cta-arrow" aria-hidden="true">→</span>
+          </a>
+          <a href="/77s-check/" class="-w-cta-btn -w-cta-btn4">
+            <span class="-w-cta-sec">45<small>秒</small></span>
+            <span class="-w-cta-divider" aria-hidden="true"></span>
+            <span class="-w-cta-main">
+              <span class="-w-cta-sub">無料本格HP診断</span>
+              <span class="-w-cta-ttl">77's Check!!</span>
+            </span>
+            <svg class="-w-icon -w-cta-play" aria-hidden="true"><use href="#i-play"></use></svg>
+          </a>
+          <a href="/scsc-cue/scsc_cue_business/" class="-w-cta-btn -w-cta-btn5">
+            <svg class="-w-icon" aria-hidden="true"><use href="#i-calendar"></use></svg>
+            <span class="-w-cta-main">
+              <span class="-w-cta-ttl">無料相談会</span>
+              <span class="-w-cta-badge5">予約可能</span>
+            </span>
+            <span class="-w-cta-arrow" aria-hidden="true">›</span>
+          </a>
+        </div>
+
+        <div class="-w-header-tools">
+          <button type="button" class="-w-search-toggle" aria-expanded="false" aria-controls="-w-search-box" aria-label="サイト内検索を開く">
+            <svg class="-w-icon" aria-hidden="true"><use href="#i-search"></use></svg>
+          </button>
+          <button type="button" class="-w-menu-toggle" aria-expanded="false" aria-controls="-w-global-nav" aria-label="メニューを開く">
+            <span class="-w-menu-bar" aria-hidden="true"></span>
+            <span class="-w-menu-bar" aria-hidden="true"></span>
+            <span class="-w-menu-bar" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- サイト内検索（本番は Google CSE。スタンドアロン版は site: 検索で代替） -->
+      <div class="-w-search-box" id="-w-search-box" hidden>
+        <form class="-w-search-form" role="search" action="https://www.google.com/search" method="get" target="_blank" rel="noopener">
+          <label class="-w-visually-hidden" for="-w-search-input">サイト内検索キーワード</label>
+          <input class="-w-search-input" id="-w-search-input" type="search" name="q" placeholder="サイト内を検索" required>
+          <button class="-w-search-submit" type="submit">
+            <svg class="-w-icon" aria-hidden="true"><use href="#i-search"></use></svg>
+            <span class="-w-visually-hidden">検索する</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- グローバルナビ（PC：ホバーでメガメニュー ／ SP：ドロワー内アコーディオン） -->
+      <nav class="-w-header-nav" id="-w-global-nav" aria-label="メインナビゲーション">
+        <ul class="-w-nav-list">
+
+          <li class="-w-nav-item">
+            <a href="/" class="-w-nav-link">TOP</a>
+          </li>
+
+          <li class="-w-nav-item -w-has-sub">
+            <a href="/9usps/" class="-w-nav-link">9つの武器</a>
+            <button type="button" class="-w-nav-toggle" aria-expanded="false" aria-controls="nav-sub-usps">
+              <span class="-w-visually-hidden">「9つの武器」のサブメニューを開閉</span>
+              <svg class="-w-icon" aria-hidden="true"><use href="#i-chevron-down"></use></svg>
+            </button>
+            <div class="-w-mega" id="nav-sub-usps">
+              <ul class="-w-mega-list">
+                <li><a href="/9usps/"><strong>ガーディアン9つの武器 TOP</strong></a></li>
+                <li><a href="/9usps/cms-owlet-system/">USP1 独自CMS OWLet（アウレット）</a></li>
+                <li><a href="/9usps/web-marketing-strategy/">USP2 代表発明 3D-CMF理論</a></li>
+                <li><a href="/9usps/ai-web-design-athena/">USP3 独自AI×BIG DATA Athena</a></li>
+                <li><a href="/9usps/subscription-website-service/">USP4 初期0円 月額2千円～完全サブスク</a></li>
+                <li><a href="/9usps/cybersecurity-scan-dog/">USP5 サプライチェーン防衛</a></li>
+                <li><a href="/9usps/web-consulting-support/">USP6 毎月MTG 毎週提案</a></li>
+                <li><a href="/9usps/quality-assurance-77checks/">USP7 覚悟の品質保証</a></li>
+                <li><a href="/9usps/legal-compliance-yakujihou/">USP8 法律完全保証 Legal</a></li>
+                <li><a href="/9usps/performance-based-pricing/">USP9 業界初！完全成果報酬型</a></li>
+                <li><a href="/9usps/ai-web-design-athena/scsc-briefing-hearing-system/">SCSC BRIEFING ホームページ制作ヒアリング</a></li>
+                <li><a href="/9usps/ai-web-design-athena/invoice-for-future-losses/">未来の損失請求書</a></li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="-w-nav-item -w-has-sub">
+            <a href="/scsc-lineup/" class="-w-nav-link">サービス</a>
+            <button type="button" class="-w-nav-toggle" aria-expanded="false" aria-controls="nav-sub-service">
+              <span class="-w-visually-hidden">「サービス」のサブメニューを開閉</span>
+              <svg class="-w-icon" aria-hidden="true"><use href="#i-chevron-down"></use></svg>
+            </button>
+            <div class="-w-mega" id="nav-sub-service">
+              <ul class="-w-mega-list">
+                <li><a href="/scsc-lineup/"><strong>サービス案内 TOP</strong></a></li>
+                <li><a href="/scsc-cue/">SCSC CUE（低価格重視型）</a></li>
+                <li><a href="/service/subscription/scsc/">SCSC（成果重視型）</a></li>
+                <li><a href="/scsc-lineup/scsc-legal/">SCSC Legal（法令順守型）</a></li>
+                <li><a href="/scsc-lineup/scsc-startup/">SCSC StartUp（起業・スタートアップ型）</a></li>
+                <li><a href="/scsc-lineup/scsc-model/">SCSC Model（タレント・モデル特化）</a></li>
+                <li><a href="/9usps/ai-web-design-athena/scsc-model-complete-guide/">SCSC Model完全ガイド（無料サービスのからくり）</a></li>
+                <li><a href="/scsc-lineup/scan-dog-scsc-dog/">SCAN DOG簡易版（セキュリティ・チェック・サービス）</a></li>
+                <li><a href="/scsc-lineup/scan-dog/">SCAN DOG正規版（高度セキュリティ運用サービス）</a></li>
+                <li><a href="/scsc-lineup/scan-dog-scsc-dog/#cont3">SCSC Dog（セキュリティ重視型）</a></li>
+                <li><a href="https://lp.guardian.jpn.com/">SCSC LP+（ランディングページ特化型）</a></li>
+                <li><a href="/scsc-lineup/scsc-recruit/">SCSC Recruit（採用重視型）</a></li>
+                <li><a href="/new-seven-deadly-sins/">新・七つの大罪（リアルタイム無料HP診断「健康診断」）</a></li>
+                <li><a href="/77s-check/">新・77's Check!! 無料診断（無料詳細HP診断「人間ドック」）</a></li>
+                <li><a href="/9usps/quality-assurance-77checks/significance-of-all-clear/">新・77's Check!!をオールクリアする意義（上位10%以内のHP）</a></li>
+                <li><a href="/scsc-lineup/scsc-legal/gmen-110/">WEB表示Gメン110番（違法と疑わしきHPの診断・通報サービス）</a></li>
+                <li><a href="/scsc-lineup/scsc-legal/rescue119/">法令リスク救急119番（違法⇒法令順守への救急サービス）</a></li>
+                <li><a href="/scsc-lineup/dx-base/">DX BASE（DX/AX化を促進する社内向けWEBメディア）</a></li>
+                <li><a href="/scsc-lineup/scsc-professional/">SCSC Professional（業種特化型SCSCサービス）</a></li>
+                <li><a href="/scsc-lineup/scsc-estate/">SCSC Estate（業種特化型SCSCサービス）</a></li>
+                <li><a href="/scsc-lineup/scsc-factory/">SCSC Factory（業種特化型SCSCサービス）</a></li>
+                <li><a href="/scsc-lineup/scsc-school/">SCSC School（業種特化型SCSCサービス）</a></li>
+                <li><a href="/scsc-lineup/scsc-consultant/">SCSC Consultant（業種特化型SCSCサービス）</a></li>
+                <li><a href="/scsc-lineup/scsc-motor/">SCSC Motor（業種特化型SCSCサービス）</a></li>
+                <li><a href="/scsc-lineup/scsc-ceremony/">SCSC Ceremony（業種特化型SCSCサービス）</a></li>
+                <li><a href="/scsc-lineup/scsc-pet/">SCSC Pet（業種特化型SCSCサービス）</a></li>
+                <li><a href="/web-shinsatsushitsu-webinar/">WEB診察室ウェビナー</a></li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="-w-nav-item -w-has-sub">
+            <a href="/alliance-masterplan-2026/" class="-w-nav-link">業務提携</a>
+            <button type="button" class="-w-nav-toggle" aria-expanded="false" aria-controls="nav-sub-alliance">
+              <span class="-w-visually-hidden">「業務提携」のサブメニューを開閉</span>
+              <svg class="-w-icon" aria-hidden="true"><use href="#i-chevron-down"></use></svg>
+            </button>
+            <div class="-w-mega" id="nav-sub-alliance">
+              <ul class="-w-mega-list">
+                <li><a href="/alliance-masterplan-2026/"><strong>GUARDIAN ALLIANCE MASTER PLAN (GAMP)公式ページ</strong></a></li>
+                <li><a href="/gamp-lp/">GUARDIAN ALLIANCE MASTER PLAN (GAMP)紹介LP</a></li>
+                <li><a href="/alliance-masterplan-2026/webinar/">GAMP説明会ウェビナー【無料】毎日14:00-15:00</a></li>
+                <li><a href="/alliance-masterplan-2026/plan/">GAMP全45プラン（HP制作業界を凌駕する45の武器）</a></li>
+                <li><a href="/alliance-masterplan-2026/document/">同業他社の皆様へ（ご提携の提案資料DL）</a></li>
+                <li><a href="/alliance-masterplan-2026/channel-strategy/">自由競争時代の終幕（HP制作業界の変異）</a></li>
+                <li><a href="/alliance-masterplan-2026/4system-story/">HP制作を変える4つのシステム（4大工程の自動化）</a></li>
+                <li><a href="/alliance-masterplan-2026/new-sales-strategy/">探さない営業の型（市場は足元に転がっている）</a></li>
+                <li><a href="/alliance-masterplan-2026/87-failure-market/">87.4%がHPで成果が出ない正体（約21万社の実態調査結果）</a></li>
+                <li><a href="/alliance-masterplan-2026/new-reality/">入れ替わる、HP制作の当たり前（これからは「作って終わり」は罪）</a></li>
+                <li><a href="/alliance-masterplan-2026/gamp-arsenal-dock/">GAMP ARSENAL × ARSENAL DOCK（8兆円市場のリスト提供サービス）</a></li>
+                <li><a href="/scsc-partner/">【個人向け紹介制度】SCSC Partner</a></li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="-w-nav-item -w-has-sub">
+            <a href="/scsc-ranking/" class="-w-nav-link">実績</a>
+            <button type="button" class="-w-nav-toggle" aria-expanded="false" aria-controls="nav-sub-results">
+              <span class="-w-visually-hidden">「実績」のサブメニューを開閉</span>
+              <svg class="-w-icon" aria-hidden="true"><use href="#i-chevron-down"></use></svg>
+            </button>
+            <div class="-w-mega" id="nav-sub-results">
+              <ul class="-w-mega-list">
+                <li><a href="/scsc-ranking/"><strong>SCSCランキングMonthly（究極の実績集：数万社の月間WEB成果ランキング）</strong></a></li>
+                <li><a href="/achievements/">141億のデータが導いた実績（「相関」ではない「因果」データの威力）</a></li>
+                <li><a href="/achievements/3d-cmf-ad-actual-results/">WEB広告の常識を覆した「3D-CMF理論×Athena」の全記録（顧客心理を掴む再現性マーケティング理論の実証）</a></li>
+                <li><a href="/media/">メディア掲載実績</a></li>
+                <li><a href="/achievements/true-value/">ホームページ制作 実績76,129サイトの真価（「BIG DATA」こそが経験や勘を凌駕する）</a></li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="-w-nav-item -w-has-sub">
+            <a href="/web-strategy-labo/" class="-w-nav-link">WEB戦略ラボ</a>
+            <button type="button" class="-w-nav-toggle" aria-expanded="false" aria-controls="nav-sub-labo">
+              <span class="-w-visually-hidden">「WEB戦略ラボ」のサブメニューを開閉</span>
+              <svg class="-w-icon" aria-hidden="true"><use href="#i-chevron-down"></use></svg>
+            </button>
+            <div class="-w-mega" id="nav-sub-labo">
+              <ul class="-w-mega-list">
+                <li><a href="/web-strategy-labo/"><strong>WEB戦略ラボ TOP（成果を上げるための知の集積）</strong></a></li>
+                <li><a href="/web-strategy-labo/web-strategy-textbook/">WEB戦略の教科書（基本と原則を押さえよう）</a></li>
+                <li><a href="/web-strategy-labo/industry-specific-web-strategies/">業種別WEB戦略（「業種×トレンド」のデータ分析）</a></li>
+                <li><a href="/web-strategy-labo/security/">セキュリティ最前線（これから重要性を増してゆく領域の知を！）</a></li>
+                <li><a href="/web-strategy-labo/compliance/">法令順守ガイド（正しいマーケティングを実践するための処方箋）</a></li>
+                <li><a href="/web-strategy-labo/success-story/">成果が出た！導入事例（「GUARDIAN×顧客」が織り成す成功物語）</a></li>
+                <li><a href="/web-strategy-labo/trend/">最新トレンド解説（トレンドを押さえよう！）</a></li>
+                <li><a href="/web-strategy-labo/web-know-how/">実践！WEB運用ノウハウ（WEB成果を上げるためのノウハウ集）</a></li>
+                <li><a href="/web-strategy-labo/web-strategy-textbook/4d-cmf-framework/">AI時代におけるWEB集客手法の再定義（AI時代のWEB集客の基礎）</a></li>
+                <li><a href="/throughout-japan/">日本全国対応GUARDIAN（WEB軸での47都道府県物語）</a></li>
+                <li><a href="/web-failure-white-paper/">日本中小企業WEB失敗白書 2026（21万社を調査・分析した結果）</a></li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="-w-nav-item -w-has-sub">
+            <a href="/philosophy/" class="-w-nav-link">ビジョン</a>
+            <button type="button" class="-w-nav-toggle" aria-expanded="false" aria-controls="nav-sub-vision">
+              <span class="-w-visually-hidden">「ビジョン」のサブメニューを開閉</span>
+              <svg class="-w-icon" aria-hidden="true"><use href="#i-chevron-down"></use></svg>
+            </button>
+            <div class="-w-mega" id="nav-sub-vision">
+              <ul class="-w-mega-list">
+                <li><a href="/philosophy/sme-website-production/">勝て！日本中小企業！ 守って、勝たせる。</a></li>
+                <li><a href="/alliance_masterplan_2026/why_partner/">HP制作会社の提携先にガーディアンが選ばれる理由</a></li>
+                <li><a href="/web-strategy-labo/web-strategy-textbook/homepage-renewal-failure/">失敗しない制作会社の選び方</a></li>
+                <li><a href="/web-strategy-labo/web-strategy-textbook/homepage-operation-failure/">失敗しないホームページの運用方法</a></li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="-w-nav-item -w-has-sub">
+            <span class="-w-nav-link -w-nav-link-static">ものづくり</span>
+            <button type="button" class="-w-nav-toggle" aria-expanded="false" aria-controls="nav-sub-monodukuri">
+              <span class="-w-visually-hidden">「ものづくり」のサブメニューを開閉</span>
+              <svg class="-w-icon" aria-hidden="true"><use href="#i-chevron-down"></use></svg>
+            </button>
+            <div class="-w-mega" id="nav-sub-monodukuri">
+              <ul class="-w-mega-list">
+                <li><a href="/9usps/cms-owlet-system/">OWLet（GUARDIANの独自CMSは「パーツ・マネジメント・システム」）</a></li>
+                <li><a href="/alliance-masterplan-2026/scsc-briefing/">SCSC BRIEFING（「ヒアリング」工数をゼロにして、顧客満足度を上げる）</a></li>
+                <li><a href="/web-production/g-blueprint50/">ホームページ制作を自動化｜G-Blueprint50のWEB設計革命（高度マーケティング分析を自動化）</a></li>
+                <li><a href="/9usps/ai-web-design-athena/#REVOLUTION">REVOLUTION（GUARDIAN独自の「パーツ・アッセンブリー・システム」）</a></li>
+                <li><a href="/9usps/weaknesses-response/">ガーディアンの弱点？よくある5つの批判に代表が本音で答えます（勝手に思い込まないでください）</a></li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="-w-nav-item -w-has-sub">
+            <a href="/wahms/" class="-w-nav-link">WAHMS（学校）</a>
+            <button type="button" class="-w-nav-toggle" aria-expanded="false" aria-controls="nav-sub-wahms">
+              <span class="-w-visually-hidden">「WAHMS」のサブメニューを開閉</span>
+              <svg class="-w-icon" aria-hidden="true"><use href="#i-chevron-down"></use></svg>
+            </button>
+            <div class="-w-mega" id="nav-sub-wahms">
+              <ul class="-w-mega-list">
+                <li><a href="/wahms/"><strong>完全無料オンラインビジネス学校 WAHMS(ワムス)</strong></a></li>
+                <li><a href="/wahms/#pre-lecture">開講記念 プレ講義</a></li>
+                <li><a href="/wahms/#lct1">マーケティング学校（毎週火曜日20:30～22:00）</a></li>
+                <li><a href="/wahms/#lct2">青山塾 （毎週水曜日12:00～13:00）</a></li>
+                <li><a href="/wahms/#lct3">WEB学校（毎週水曜日20:30～22:00）</a></li>
+                <li><a href="/wahms/#lct4">セールス学校（毎週木曜日20:30～22:00）</a></li>
+                <li><a href="/wahms/#lct5">マネジメント学校（毎週金曜日20:30～22:00）</a></li>
+                <li><a href="/wahms/#lct6">人間力学校（毎週土曜日09:00～10:30）</a></li>
+                <li><a href="/wahms/#register">公式LINE 「WAHMS（ワムス）」(参加申請)</a></li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="-w-nav-item">
+            <a href="/member/" class="-w-nav-link">メンバー紹介</a>
+          </li>
+
+          <li class="-w-nav-item -w-has-sub">
+            <a href="/recruit/" class="-w-nav-link">採用</a>
+            <button type="button" class="-w-nav-toggle" aria-expanded="false" aria-controls="nav-sub-recruit">
+              <span class="-w-visually-hidden">「採用」のサブメニューを開閉</span>
+              <svg class="-w-icon" aria-hidden="true"><use href="#i-chevron-down"></use></svg>
+            </button>
+            <div class="-w-mega" id="nav-sub-recruit">
+              <ul class="-w-mega-list">
+                <li><a href="/recruit/">採用TOP</a></li>
+                <li><a href="/recruit/new_graduates/">新卒採用</a></li>
+                <li><a href="/recruit/jobs/">中途採用</a></li>
+                <li><a href="/recruit/intern/">大学生インターン</a></li>
+                <li><a href="/recruit/high_school/">高卒採用</a></li>
+                <li><a href="/recruit/parttimer/">アルバイト・パート</a></li>
+                <li><a href="/recruit/contractor/">契約社員</a></li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="-w-nav-item -w-has-sub">
+            <a href="/company/" class="-w-nav-link">会社情報</a>
+            <button type="button" class="-w-nav-toggle" aria-expanded="false" aria-controls="nav-sub-company">
+              <span class="-w-visually-hidden">「会社情報」のサブメニューを開閉</span>
+              <svg class="-w-icon" aria-hidden="true"><use href="#i-chevron-down"></use></svg>
+            </button>
+            <div class="-w-mega" id="nav-sub-company">
+              <ul class="-w-mega-list">
+                <li><a href="/member/Hiro_Aoyama/">代表・青山裕一</a></li>
+                <li><a href="/contact_us/">お問い合わせ</a></li>
+                <li><a href="/sitemap/">サイトマップ</a></li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+
+        <!-- SPドロワー内のCTA -->
+        <div class="-w-sp-cta">
+          <a href="/new-seven-deadly-sins/" class="-w-cta-btn -w-cta-btn3">
+            <span class="-w-cta-badge">無料</span>
+            <span class="-w-cta-main">
+              <span class="-w-cta-sub">リアルタイム無料HP診断</span>
+              <span class="-w-cta-ttl">新・七つの大罪</span>
+            </span>
+            <span class="-w-cta-arrow" aria-hidden="true">→</span>
+          </a>
+          <a href="/77s-check/" class="-w-cta-btn -w-cta-btn4">
+            <span class="-w-cta-sec">45<small>秒</small></span>
+            <span class="-w-cta-divider" aria-hidden="true"></span>
+            <span class="-w-cta-main">
+              <span class="-w-cta-sub">無料本格HP診断</span>
+              <span class="-w-cta-ttl">77's Check!!</span>
+            </span>
+            <svg class="-w-icon -w-cta-play" aria-hidden="true"><use href="#i-play"></use></svg>
+          </a>
+          <a href="/scsc-cue/scsc_cue_business/" class="-w-cta-btn -w-cta-btn5">
+            <svg class="-w-icon" aria-hidden="true"><use href="#i-calendar"></use></svg>
+            <span class="-w-cta-main">
+              <span class="-w-cta-ttl">無料相談会</span>
+              <span class="-w-cta-badge5">予約可能</span>
+            </span>
+            <span class="-w-cta-arrow" aria-hidden="true">›</span>
+          </a>
+          <a href="/alliance-masterplan-2026/" class="-w-cta-btn -w-cta-btn1">
+            <svg class="-w-icon" aria-hidden="true"><use href="#i-person"></use></svg>
+            <span class="-w-cta-sm-text">提携企業の方へ</span>
+          </a>
+          <a href="/alliance-masterplan-2026/document/" class="-w-cta-btn -w-cta-btn2">
+            <svg class="-w-icon" aria-hidden="true"><use href="#i-download"></use></svg>
+            <span class="-w-cta-sm-text">提携資料 DL</span>
+          </a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- =========================================================
+       パンくずリスト
+  ========================================================== -->
+  <div class="-w-breadcrumb-wrap">
+    <nav class="-w-breadcrumb" id="breadcrumb" aria-label="パンくずリスト">
+      <ol class="-w-breadcrumb-list" itemscope itemtype="http://schema.org/BreadcrumbList">
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a itemprop="item" href="/"><span itemprop="name">TOP</span></a>
+          <meta itemprop="position" content="1">
+        </li>
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem" aria-current="page">
+          <span itemprop="name">新・七つの大罪</span>
+          <meta itemprop="position" content="2">
+        </li>
+      </ol>
+    </nav>
+  </div>
+
+  <!-- =========================================================
+       メインビジュアル（h1＋診断ツール）
+  ========================================================== -->
+  <div class="-w-mv-box">
+
+    <!-- AI要約・精査ウィジェット（本番はCMS共通パーツ。ここではUIと開閉のみ実装） -->
+    <div class="-w-ai-assist" data-hidden="false">
+      <button type="button" class="-w-ai-begin" aria-expanded="false" aria-controls="-w-ai-command">
+        <svg class="-w-icon" aria-hidden="true"><use href="#i-sparkle"></use></svg>
+        <span class="-w-ai-label">AI要約・精査</span>
+      </button>
+      <div class="-w-ai-command" id="-w-ai-command" hidden>
+        <button type="button" class="-w-ai-command-action" data-ai-open="summary">
+          <svg class="-w-icon" aria-hidden="true"><use href="#i-doc-lines"></use></svg>
+          <span>AI要約</span>
+        </button>
+        <button type="button" class="-w-ai-command-action" data-ai-open="verification">
+          <svg class="-w-icon" aria-hidden="true"><use href="#i-clipboard-check"></use></svg>
+          <span>AI精査</span>
+        </button>
+        <button type="button" class="-w-ai-close" aria-label="AIメニューを閉じる">
+          <svg class="-w-icon" aria-hidden="true"><use href="#i-close"></use></svg>
+        </button>
+      </div>
+
+      <div class="-w-ai-display" id="-w-ai-display-summary" role="dialog" aria-modal="true" aria-labelledby="-w-ai-summary-title" hidden>
+        <div class="-w-ai-display-border">
+          <button type="button" class="-w-ai-close-display" data-ai-close aria-label="AI要約を閉じる">
+            <svg class="-w-icon" aria-hidden="true"><use href="#i-close"></use></svg>
+          </button>
+          <p class="-w-ai-display-title" id="-w-ai-summary-title">AI要約</p>
+          <div class="-w-ai-scrollable">
+            <button type="button" class="-w-ai-show-prompt" data-prompt-target="-w-summary-prompt">プロンプトを確認</button>
+            <div id="-w-summary-prompt" class="-w-ai-prompt" hidden>
+              <p>このページの内容を、初めて訪れた企業担当者向けに300字以内で要約してください。（本番環境で使用されるプロンプトのサンプル）</p>
+            </div>
+            <div id="-w-display-summary-content" class="-w-ai-content">
+              <p>「新・七つの大罪」は、URLを入力するだけで7カテゴリ21項目をその場で審判する完全無料のWEBサイト診断です。個人情報の入力・申込は一切不要で、約60秒でスコアと改善ポイントが表示され、PDFレポートの保存も可能です。</p>
+              <p class="-w-ai-note">※スタンドアロン版のためサンプル表示です。本番環境ではAI連携により自動生成されます。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="-w-ai-display" id="-w-ai-display-verification" role="dialog" aria-modal="true" aria-labelledby="-w-ai-verification-title" hidden>
+        <div class="-w-ai-display-border">
+          <button type="button" class="-w-ai-close-display" data-ai-close aria-label="AI精査を閉じる">
+            <svg class="-w-icon" aria-hidden="true"><use href="#i-close"></use></svg>
+          </button>
+          <p class="-w-ai-display-title" id="-w-ai-verification-title">AI精査</p>
+          <div class="-w-ai-verification-wrapper">
+            <p class="-w-ai-display-title-sub">ChatGPTによるAI精査</p>
+            <div class="-w-ai-scrollable">
+              <button type="button" class="-w-ai-show-prompt" data-prompt-target="-w-verification-gpt-prompt">プロンプトを確認</button>
+              <div id="-w-verification-gpt-prompt" class="-w-ai-prompt" hidden>
+                <p>このページの記載内容に誇大表現・事実誤認がないか第三者の視点で精査してください。（サンプル）</p>
+              </div>
+              <div id="-w-verification-gpt" class="-w-ai-content">
+                <p>※スタンドアロン版のためサンプル表示です。本番環境ではChatGPTによる精査結果が表示されます。</p>
+              </div>
+            </div>
+          </div>
+          <div class="-w-ai-verification-wrapper">
+            <p class="-w-ai-display-title-sub">GeminiによるAI精査</p>
+            <div class="-w-ai-scrollable">
+              <button type="button" class="-w-ai-show-prompt" data-prompt-target="-w-verification-gemini-prompt">プロンプトを確認</button>
+              <div id="-w-verification-gemini-prompt" class="-w-ai-prompt" hidden>
+                <p>このページの記載内容に誇大表現・事実誤認がないか第三者の視点で精査してください。（サンプル）</p>
+              </div>
+              <div id="-w-verification-gemini" class="-w-ai-content">
+                <p>※スタンドアロン版のためサンプル表示です。本番環境ではGeminiによる精査結果が表示されます。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ▼ 診断ツール本体 -->
+    <div id="-w-seven-deadly" class="-w-seven-cta">
+
+      <!-- STEP 1：診断入口（ヒーロー） -->
+      <section id="step-entry" class="-w-step-entry no-print" aria-label="新・七つの大罪 診断入口">
+        <div class="-w-entry-inner -w-fade-in -w-scroll-animation">
+          <p class="-w-entry-ornament" aria-hidden="true">◆ THE SEVEN DEADLY SINS OF WEB ◆</p>
+          <p class="-w-entry-eyebrow">141億の行動データが裁く、リアルタイム無料HP診断</p>
+          <h1 class="-w-entry-title">
+            <span class="-w-entry-title-new">新</span><span class="-w-entry-title-dot" aria-hidden="true">・</span><span class="-w-entry-title-main">七つの大罪</span>
+          </h1>
+          <p class="-w-entry-lead">
+            あなたのWEBサイトは、<em>知らずして罪を犯していないか？</em><br>
+            URLを入力するだけ。約60秒で、7つの大罪＝21項目を審判します。
+          </p>
+
+          <form class="-w-entry-form" id="seven-entry-form" novalidate>
+            <div class="-w-entry-field">
+              <label class="-w-visually-hidden" for="target-url">診断するWEBサイトのURL</label>
+              <svg class="-w-icon -w-entry-field-icon" aria-hidden="true"><use href="#i-link"></use></svg>
+              <input type="url" id="target-url" class="-w-entry-input" placeholder="https://example.co.jp"
+                     inputmode="url" autocomplete="url" required>
+              <!-- 本番CMSが発行するワンタイムトークン（サーバーサイドで差し込み） -->
+              <input type="hidden" name="uniq" value="">
+              <input type="hidden" name="token" value="">
+            </div>
+            <button type="submit" class="-w-entry-submit -w-button-click">
+              <svg class="-w-icon" aria-hidden="true"><use href="#i-scale"></use></svg>
+              <span>いますぐ審判を受ける</span>
+            </button>
+            <p class="-w-entry-error" id="entry-error" role="alert" hidden>URLの形式が正しくありません。「https://」から始まるURLを入力してください。</p>
+          </form>
+
+          <ul class="-w-entry-badges" aria-label="診断の特長">
+            <li><svg class="-w-icon" aria-hidden="true"><use href="#i-check-circle"></use></svg>完全無料</li>
+            <li><svg class="-w-icon" aria-hidden="true"><use href="#i-person-off"></use></svg>個人情報の入力ゼロ</li>
+            <li><svg class="-w-icon" aria-hidden="true"><use href="#i-clipboard-x"></use></svg>申込・登録不要</li>
+            <li><svg class="-w-icon" aria-hidden="true"><use href="#i-timer"></use></svg>約60秒で判定</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- STEP エラー：通信エラー -->
+      <section id="step-error" class="-w-step-panel no-print" hidden>
+        <div class="-w-panel-card" role="alert">
+          <h2 class="-w-panel-title -w-panel-title-error">
+            <svg class="-w-icon" aria-hidden="true"><use href="#i-alert"></use></svg>通信エラーが発生しました
+          </h2>
+          <p class="-w-panel-text">お手数ですが、時間を置いて再度お試しください。</p>
+          <button type="button" class="-w-panel-back" data-seven-reset>入力画面に戻る</button>
+        </div>
+      </section>
+
+      <!-- STEP エラー：アクセス制限 -->
+      <section id="step-block" class="-w-step-panel no-print" hidden>
+        <div class="-w-panel-card" role="alert">
+          <h2 class="-w-panel-title -w-panel-title-error">
+            <svg class="-w-icon" aria-hidden="true"><use href="#i-block"></use></svg>アクセス制限中です
+          </h2>
+          <p class="-w-panel-text">同一IPアドレスからの診断は、30分に3回までとなります。<br>時間を空けてお試しください。</p>
+          <button type="button" class="-w-panel-back" data-seven-reset>入力画面に戻る</button>
+        </div>
+      </section>
+
+      <!-- STEP エラー：メンテナンス -->
+      <section id="step-maintenance" class="-w-step-panel no-print" hidden>
+        <div class="-w-panel-card" role="alert">
+          <h2 class="-w-panel-title -w-panel-title-error">
+            <svg class="-w-icon" aria-hidden="true"><use href="#i-wrench"></use></svg>ただいまメンテナンス中です
+          </h2>
+          <p class="-w-panel-text">メンテナンス完了まで今しばらくお待ちください。</p>
+          <button type="button" class="-w-panel-back" data-seven-reset>入力画面に戻る</button>
+        </div>
+      </section>
+
+      <!-- STEP 2：診断実行〜結果 -->
+      <section id="step-diagnosis" class="-w-step-diagnosis no-print" hidden aria-label="診断の進行状況と結果">
+
+        <!-- 7カテゴリの進捗サークル（JSが生成） -->
+        <div class="-w-progress-area">
+          <p class="-w-progress-url">診断対象：<span id="progress-target-url"></span></p>
+          <div class="-w-progress-circles" id="progress-circles" role="list" aria-label="カテゴリ別の診断進捗"></div>
+          <p class="-w-progress-status" id="progress-status" role="status" aria-live="polite"></p>
+        </div>
+
+        <!-- 診断中アンケートモーダル -->
+        <div id="survey-overlay" class="-w-survey-overlay" role="dialog" aria-modal="true" aria-labelledby="survey-title" hidden>
+          <div class="-w-survey-card">
+            <div class="-w-survey-topbar" aria-hidden="true"></div>
+            <div class="-w-survey-head">
+              <div class="-w-loading-spinner" aria-hidden="true"></div>
+              <h2 class="-w-survey-title" id="survey-title">診断を実行中...</h2>
+              <p class="-w-survey-lead">お待ちの間によろしければ<br class="-w-sp">簡易アンケートにご協力ください。</p>
+            </div>
+
+            <form id="survey-form" class="-w-survey-form">
+              <fieldset class="-w-survey-fieldset">
+                <legend class="-w-survey-legend">▼ 診断のきっかけ</legend>
+                <div class="-w-survey-radio-group">
+                  <label class="-w-survey-choice"><input type="radio" name="trigger" value="現状把握（興味本位）" required><span>現状把握（興味本位）</span></label>
+                  <label class="-w-survey-choice"><input type="radio" name="trigger" value="HPに不安がある"><span>HPに不安がある</span></label>
+                  <label class="-w-survey-choice"><input type="radio" name="trigger" value="リニューアル検討中"><span>リニューアル検討中</span></label>
+                </div>
+              </fieldset>
+
+              <div class="-w-survey-grid">
+                <fieldset class="-w-survey-fieldset">
+                  <legend class="-w-survey-legend">▼ HPに求める役割</legend>
+                  <div class="-w-survey-check-group">
+                    <label class="-w-survey-choice"><input type="checkbox" name="goal[]" value="集客・認知"><span>集客・認知</span></label>
+                    <label class="-w-survey-choice"><input type="checkbox" name="goal[]" value="リピーター獲得"><span>リピーター獲得</span></label>
+                    <label class="-w-survey-choice"><input type="checkbox" name="goal[]" value="問合せ獲得"><span>問合せ・成果獲得</span></label>
+                    <label class="-w-survey-choice"><input type="checkbox" name="goal[]" value="採用強化"><span>採用強化</span></label>
+                  </div>
+                </fieldset>
+                <div class="-w-survey-fieldset">
+                  <label class="-w-survey-legend" for="industry-select">▼ 業種</label>
+                  <select id="industry-select" name="industry2" class="-w-survey-select">
+                    <option value="">-</option>
+                  </select>
+                  <select id="industry-select2" name="industry3" class="-w-survey-select" aria-label="業種（詳細）">
+                    <option value="">-</option>
+                  </select>
+                </div>
+              </div>
+
+              <button type="submit" class="-w-survey-submit -w-button-click">回答する</button>
+              <button type="button" id="survey-stop" class="-w-survey-stop -w-button-click" hidden>回答せず結果を見る</button>
+            </form>
+
+            <div id="survey-thanks" class="-w-survey-thanks" hidden>
+              <svg class="-w-icon -w-survey-thanks-icon" aria-hidden="true"><use href="#i-check-circle"></use></svg>
+              <p class="-w-survey-thanks-title">回答を受け付けました</p>
+              <p class="-w-survey-thanks-text">まもなく診断が完了します...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 結果エリア（診断完了までブラー） -->
+        <div id="final-actions" class="-w-final-actions -w-is-locked">
+
+          <!-- 成績表（JSが生成） -->
+          <div id="seven-report-container" class="-w-report-container"></div>
+
+          <!-- 旧レイアウト互換の受け皿（本番JS契約を維持） -->
+          <div id="category-list" hidden></div>
+          <div id="total-score" hidden></div>
+
+          <div class="-w-report-actions no-print">
+            <p class="-w-report-done-label">診断が完了しました</p>
+            <button type="button" id="download-btn" class="-w-download-btn -w-button-click" disabled>
+              <svg class="-w-icon" aria-hidden="true"><use href="#i-file-down"></use></svg>
+              <span>診断レポートを発行 (PDF)</span>
+            </button>
+            <p class="-w-dl-note" id="dl-note" hidden>※詳細な解説付きレポートが生成されました</p>
+            <button type="button" class="-w-retry-btn" data-seven-reset>
+              <svg class="-w-icon" aria-hidden="true"><use href="#i-restart"></use></svg>別のURLを診断する
+            </button>
+          </div>
+
+          <div class="-w-next-cta no-print">
+            <h2 class="-w-next-cta-title">ご検討ください</h2>
+            <div class="-w-next-cta-grid">
+
+              <a href="/77s-check/" class="-w-next-card -w-next-card-primary">
+                <svg class="-w-next-card-bgicon -w-icon" aria-hidden="true"><use href="#i-zoom-in"></use></svg>
+                <svg class="-w-next-card-icon -w-icon" aria-hidden="true"><use href="#i-zoom-in"></use></svg>
+                <span class="-w-next-card-body">
+                  <span class="-w-next-card-ttl">新・77's Check!! 精密診断</span>
+                  <span class="-w-next-card-tag">無料・完全版</span>
+                  <span class="-w-next-card-text">
+                    一つでも×が付いた方必見！七項目だけの診断では見えない、成果が上がらない真の問題を解明します。
+                    「制作会社と御社、どっちが悪いの！？」「改善のための具体的アクション指南」まで明確にした無料レポートをお届け！
+                  </span>
+                  <span class="-w-next-card-link">無料で追加診断する<svg class="-w-icon" aria-hidden="true"><use href="#i-arrow-right"></use></svg></span>
+                </span>
+              </a>
+
+              <a href="https://lin.ee/JEMfk31" target="_blank" rel="noopener" class="-w-next-card -w-next-card-line">
+                <svg class="-w-next-card-bgicon -w-icon" aria-hidden="true"><use href="#i-chat"></use></svg>
+                <svg class="-w-next-card-icon -w-icon" aria-hidden="true"><use href="#i-chat"></use></svg>
+                <span class="-w-next-card-body">
+                  <span class="-w-next-card-ttl">公式LINE「SCSC倶楽部」</span>
+                  <span class="-w-next-card-tag">ノウハウ配信中</span>
+                  <span class="-w-next-card-text">
+                    営業行為は一切行いません！LINEに友だち追加するだけで、貴重なノウハウを定期的にお届けします。
+                    "毎日5分"の情報収集で、ホームページを成長させるための知識が身につきます。
+                  </span>
+                  <span class="-w-next-card-link">友だち追加する<svg class="-w-icon" aria-hidden="true"><use href="#i-arrow-right"></use></svg></span>
+                </span>
+              </a>
+
+              <a href="/scsc_cue/scsc_cue_business/" class="-w-next-card -w-next-card-sub">
+                <svg class="-w-next-card-icon -w-next-card-icon-round -w-icon" aria-hidden="true"><use href="#i-headset"></use></svg>
+                <span class="-w-next-card-body">
+                  <span class="-w-next-card-ttl">専門家に相談する</span>
+                  <span class="-w-next-card-text">診断結果を元に、何から着手すべきかプロが具体的な改善案をご案内します。</span>
+                  <span class="-w-next-card-link">無料相談を予約<svg class="-w-icon" aria-hidden="true"><use href="#i-chevron-right"></use></svg></span>
+                </span>
+              </a>
+
+              <a href="/scsc_lineup/" class="-w-next-card -w-next-card-sub">
+                <svg class="-w-next-card-icon -w-next-card-icon-round -w-icon" aria-hidden="true"><use href="#i-checklist"></use></svg>
+                <span class="-w-next-card-body">
+                  <span class="-w-next-card-ttl">SCSC プラン比較</span>
+                  <span class="-w-next-card-text">検出された課題を解決し、あるべき姿にするため弊社サービスから最適なプランを確認。</span>
+                  <span class="-w-next-card-link">解決策を見る<svg class="-w-icon" aria-hidden="true"><use href="#i-chevron-right"></use></svg></span>
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       ここから下は次フェーズで構築
+       （「新・七つの大罪って何？まずは動画を見る」以降のセクション）
+  ========================================================== -->
+  <div id="contents">
+    <main role="main" id="main">
+      <!--
+        TODO（次フェーズ）:
+        1. 新・七つの大罪って何？まずは動画を見る（YouTube埋め込み）
+        2. あなたのWEBサイトは、知らずして罪を犯していないか？（導入文・統計・バッジ・メリット3カード）
+        3. 診断が必要な3つの理由
+        4. 審判される七つの罪（7カード）
+        5. 診断ツール（2箇所目）／固定バナー／フッター
+      -->
+    </main>
+  </div>
+
+</div>
+</body>
+</html>
