@@ -213,7 +213,7 @@
 
     html += '<div class="-w-bridge-close">' +
       '<p class="-w-bridge-close-lead">あなたの結果に、どの処方が合うか。答え合わせは無料です。</p>' +
-      '<a class="-w-consult-btn -w-button-click" href="#final-cta" data-tsn-consult data-placement="bridge">' +
+      '<a class="-w-consult-btn -w-button-click" href="/contact/" data-tsn-consult data-placement="bridge">' +
         iconSvg('i-headset') + '<span>自社に合う処方を無料で聞く</span></a>' +
     '</div>' +
     '<p class="-w-bridge-note">※掲載の数値は各案件の実績であり、同様の効果をお約束するものではありません。</p>';
@@ -280,12 +280,14 @@
       if (state.reportDone) {
         stickyText.textContent = '×項目の直し方、無料でご案内します';
         stickyBtn.textContent = '無料相談する';
-        stickyBtn.setAttribute('href', '#final-cta');
+        stickyBtn.setAttribute('href', '/contact/');
+        stickyBtn.setAttribute('data-tsn-consult', '');
         stickyBtn.setAttribute('data-placement', 'sticky_post');
       } else {
         stickyText.textContent = 'あなたのサイトの取りこぼし、1分でわかります';
         stickyBtn.textContent = '無料で診断する';
         stickyBtn.setAttribute('href', '#step-entry');
+        stickyBtn.removeAttribute('data-tsn-consult');
         stickyBtn.setAttribute('data-placement', 'sticky_pre');
       }
       sticky.hidden = false;
@@ -369,8 +371,8 @@
       main.textContent = '無料相談を予約する';
       main.onclick = function () {
         closeExit();
-        var cta = $('final-cta');
-        if (cta) cta.scrollIntoView({ behavior: 'smooth' });
+        track('generate_lead', { lead_type: 'consult', placement: 'exit' });
+        location.href = '/contact/';
       };
       dismiss.textContent = '今回はやめておく';
     }
