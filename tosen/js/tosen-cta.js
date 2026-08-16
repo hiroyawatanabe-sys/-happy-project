@@ -24,10 +24,11 @@
       hole: '検索で見つけてもらえていない可能性があります',
       rx: '検索やWeb広告に頼らず商圏へ直接届く、新聞折込・地域TV・ラジオで「検索しない層」からの認知をつくる打ち手が有効です。',
       media: [
-        { label: '新聞折込', icon: 'i-doc-lines' },
-        { label: '地域TV', icon: 'i-tv' },
-        { label: 'ラジオ', icon: 'i-radio' }
+        { label: '新聞折込', icon: 'i-doc-lines', url: '/service/insert/' },
+        { label: '地域TV', icon: 'i-tv', url: '/service/tv/' },
+        { label: 'ラジオ', icon: 'i-radio', url: '/service/radio/' }
       ],
+      cta: { label: '折込チラシで商圏に直接届ける方法を見る', url: '/service/insert/' },
       ev: '紙・交通広告を起点にしたキャンペーンで、LP流入 <strong>14,000件超</strong> の実績があります。',
       src: '出典：東宣 実施実績（がん啓発キャンペーン／流入＝LPセッション数）'
     },
@@ -35,9 +36,10 @@
       hole: 'サイトの強みが伝わる前に離脱されている可能性があります',
       rx: '新聞・住宅情報誌・折込のクリエイティブで「伝わる訴求」を設計し、サイトへ還流させる導線が有効です（制作はグループ会社TACと一気通貫）。',
       media: [
-        { label: '新聞広告', icon: 'i-doc-lines' },
-        { label: '新聞折込', icon: 'i-doc-lines' }
+        { label: '新聞広告', icon: 'i-doc-lines', url: '/service/newspaper/' },
+        { label: '雑誌・専門誌', icon: 'i-doc-lines', url: '/service/magazine/' }
       ],
+      cta: { label: '新聞広告で"伝わる訴求"をつくる方法を見る', url: '/service/newspaper/' },
       ev: '関東・関西の住宅会社で、ブランディングTVCMからメディアプラン・バイイングまでの一括運用実績があります。',
       src: '※社名・数値は掲載許諾の確定後に表示します'
     },
@@ -45,9 +47,10 @@
       hole: '会社を信頼してもらう根拠が不足している可能性があります',
       rx: '第三者公査（日本ABC協会）の部数データを持つ新聞や地域TVへの掲載は、それ自体が「マス媒体に載っている会社」という信用補完になります。',
       media: [
-        { label: '新聞広告', icon: 'i-doc-lines' },
-        { label: '地域TV', icon: 'i-tv' }
+        { label: '新聞広告', icon: 'i-doc-lines', url: '/service/newspaper/' },
+        { label: '地域TV', icon: 'i-tv', url: '/service/tv/' }
       ],
+      cta: { label: '新聞広告で会社の信用を補強する方法を見る', url: '/service/newspaper/' },
       ev: '東宣は官公庁・公的機関（国税局・警察・自治体 等）の広告実績を多数持つ、創業1948年の広告会社です。',
       src: '出典：東宣 業務実績（公的機関案件）'
     },
@@ -55,9 +58,10 @@
       hole: '訪問者がサイト内で迷い、行動にたどり着けていない可能性があります',
       rx: '折込チラシ＋QRコードなら「電話・来店・LP直行」の一直線導線を紙側に設計でき、サイト内の迷子を回避できます。',
       media: [
-        { label: '新聞折込', icon: 'i-doc-lines' },
-        { label: '交通広告', icon: 'i-train' }
+        { label: '新聞折込', icon: 'i-doc-lines', url: '/service/insert/' },
+        { label: '交通・OOH', icon: 'i-train', url: '/service/ooh/' }
       ],
+      cta: { label: '折込＋QRで"一直線の導線"をつくる方法を見る', url: '/service/insert/' },
       ev: '紙・交通広告を起点にしたLP直行導線で、流入 <strong>14,000件超</strong> の実績があります。',
       src: '出典：東宣 実施実績（がん啓発キャンペーン／流入＝LPセッション数）'
     },
@@ -65,8 +69,9 @@
       hole: '安心して集客・出稿できる状態ではない可能性があります',
       rx: 'まずWeb側の改善が先決です。無料相談で対処の方針をご案内します。並行して、紙媒体はサイトの状態に左右されず商圏へ届く手段として使えます。',
       media: [
-        { label: 'まずWeb改善', icon: 'i-wrench' }
+        { label: 'まずWeb改善', icon: 'i-wrench', url: null }
       ],
+      cta: { label: 'Web改善の進め方を無料相談で聞く', url: '/contact/', consult: true },
       ev: null,
       src: null
     },
@@ -74,9 +79,10 @@
       hole: '表示の遅さ・見づらさで、せっかくの訪問者が離脱している可能性があります',
       rx: 'まず受け皿（サイト）の改善が先決です。無料相談で対処の方針をご案内します。紙媒体は表示速度に依存しない到達手段として並走できます。',
       media: [
-        { label: 'まずWeb改善', icon: 'i-wrench' },
-        { label: '新聞折込', icon: 'i-doc-lines' }
+        { label: 'まずWeb改善', icon: 'i-wrench', url: null },
+        { label: '新聞折込', icon: 'i-doc-lines', url: '/service/insert/' }
       ],
+      cta: { label: 'Web改善の進め方を無料相談で聞く', url: '/contact/', consult: true },
       ev: null,
       src: null
     },
@@ -84,11 +90,35 @@
       hole: '効果が測れておらず、販促の良し悪しを判断できない可能性があります',
       rx: 'クーポン・QRコード付きの折込は、反響が「回収枚数」でそのまま数えられる、計測できるマス媒体です。数字で判断する販促に切り替えられます。',
       media: [
-        { label: '新聞折込', icon: 'i-doc-lines' },
-        { label: '新聞広告', icon: 'i-doc-lines' }
+        { label: '新聞折込', icon: 'i-doc-lines', url: '/service/insert/' },
+        { label: '新聞広告', icon: 'i-doc-lines', url: '/service/newspaper/' }
       ],
+      cta: { label: '反響を"枚数"で数える折込の使い方を見る', url: '/service/insert/' },
       ev: '媒体接触の実測例として、総接触 <strong>6,024,186人</strong> を記録した企画があります。',
       src: '出典：東宣 実施実績（渋沢栄一関連企画／総接触＝各媒体接触人数の合算）'
+    }
+  };
+
+  /* アンケート「いちばん近いお悩み」→ お困り事カード（マッピングC）
+     ※媒体の選び方はガイドカード（/solution/media-choice/）と重複するため一覧へ */
+  var SOLUTION_CARDS = {
+    '折込・チラシの反応が落ちた': {
+      url: '/solution/insert-response/', card: 'solution_insert',
+      ttl: '折込・チラシの反応が落ちた方へ', tag: 'お困り事別ガイド',
+      text: '「紙が効かなくなった」のではなく「効かせ方が変わった」。原因と立て直し方をまとめました。',
+      link: '対策を見る'
+    },
+    'Web広告に手応えがない': {
+      url: '/solution/web-ads/', card: 'solution_webads',
+      ttl: 'Web広告に手応えがない方へ', tag: 'お困り事別ガイド',
+      text: 'クリック単価の高騰、刺さらない訴求。Web広告の限界と補い方を整理しました。',
+      link: '対策を見る'
+    },
+    '何から手をつけるべきか知りたい': {
+      url: '/solution/', card: 'solution_top',
+      ttl: 'お困り事から探す', tag: 'お困り事別ガイド',
+      text: '「反応が落ちた」「手応えがない」——よくあるお困り事別に、原因と打ち手をまとめています。',
+      link: '一覧を見る'
     }
   };
 
@@ -96,6 +126,7 @@
     from: null,        // column | price | null
     focusCat: null,    // ?t= で指定されたローマ数字
     reportDone: false,
+    surveyTrigger: null,  // アンケート「いちばん近いお悩み」の回答
     pdfSaved: false,
     exitShown: false,
     stickyClosed: false
@@ -160,13 +191,22 @@
   function buildBridgeCard(result) {
     var rx = RX[result.roman];
     if (!rx) return '';
+    // 媒体チップ：サービスページがあるものはリンク（1×1の原則：処方→その媒体の売り場へ）
     var media = rx.media.map(function (m) {
+      if (m.url) {
+        return '<a href="' + m.url + '" data-tsn-card data-card="bridge_media" data-category="' + result.roman + '">' +
+          iconSvg(m.icon) + m.label + '</a>';
+      }
       return '<span>' + iconSvg(m.icon) + m.label + '</span>';
     }).join('');
     var ev = rx.ev
       ? '<div class="-w-bridge-ev">' + rx.ev +
         (rx.src ? '<span class="-w-bridge-src">' + rx.src + '</span>' : '') + '</div>'
       : '';
+    // カテゴリ別CTA：解決策ページへ直行（V/VIはWeb改善＝無料相談へ）
+    var ctaAttr = rx.cta.consult
+      ? 'data-tsn-consult data-placement="bridge_web"'
+      : 'data-tsn-card data-card="bridge_service" data-category="' + result.roman + '"';
     return '<div class="-w-bridge-card" data-category="' + result.roman + '">' +
       '<div class="-w-bridge-card-top">' +
         '<span class="-w-bridge-x">' + iconSvg('i-close') + '×判定</span>' +
@@ -175,7 +215,8 @@
       '<p class="-w-bridge-rx">' + rx.rx + '</p>' +
       '<div class="-w-bridge-media">' + media + '</div>' +
       ev +
-      '<a class="-w-bridge-col-link" href="/column/?t=' + result.roman + '" data-tsn-card data-card="bridge_column">この分野の解説コラムを読む</a>' +
+      '<a class="-w-bridge-cta" href="' + rx.cta.url + '" ' + ctaAttr + '>' + rx.cta.label +
+        iconSvg('i-arrow-right') + '</a>' +
     '</div>';
   }
 
@@ -208,24 +249,38 @@
         iconSvg('i-megaphone') +
         '<p class="-w-bridge-allpass-ttl">守りは合格。次は攻めの認知です。</p>' +
         '<p class="-w-bridge-allpass-text">サイトの受け皿は整っています。王道メディアで商圏の認知シェアを取りにいく打ち手をご提案できます。</p>' +
+        '<div class="-w-bridge-allpass-links">' +
+          '<a class="-w-bridge-cta" href="/usp/full-media/" data-tsn-card data-card="usp_fullmedia">王道メディアの使い方を見る' + iconSvg('i-arrow-right') + '</a>' +
+          '<a class="-w-bridge-cta" href="/case/" data-tsn-card data-card="case">同業の事例を見る' + iconSvg('i-arrow-right') + '</a>' +
+        '</div>' +
       '</div>';
     }
 
+    // 締めCTA：総合リスクで出し分け（重症度ルーティング）
+    var closeLead;
+    var closeSub = '';
+    if (fails.length >= 2) {
+      // リスク大・特大：人への接続を最優先
+      closeLead = '×が' + fails.length + 'カテゴリあります。どこから直すか、順番の整理からお手伝いします。';
+    } else if (fails.length === 1 || warns.length) {
+      // リスク中：相談＋自習系（選び方ガイド）を併記
+      closeLead = 'あなたの結果に、どの処方が合うか。答え合わせは無料です。';
+      closeSub = '<a class="-w-bridge-close-sub" href="/solution/media-choice/" data-tsn-card data-card="guide">先に「媒体の選び方」を自分で読む</a>';
+    } else {
+      // リスク小（全○）：攻めの一手の相談
+      closeLead = '攻めの一手のご相談も無料です。御社の商圏に合う媒体からご提案します。';
+    }
+
     html += '<div class="-w-bridge-close">' +
-      '<p class="-w-bridge-close-lead">あなたの結果に、どの処方が合うか。答え合わせは無料です。</p>' +
+      '<p class="-w-bridge-close-lead">' + closeLead + '</p>' +
       '<a class="-w-consult-btn -w-button-click" href="/contact/" data-tsn-consult data-placement="bridge">' +
         iconSvg('i-headset') + '<span>自社に合う処方を無料で聞く</span></a>' +
+      closeSub +
     '</div>' +
     '<p class="-w-bridge-note">※掲載の数値は各案件の実績であり、同様の効果をお約束するものではありません。</p>';
 
     bridge.innerHTML = html;
     bridge.hidden = false;
-
-    // 導線B（費用ページ）流入時は10万円テストカードを強調
-    if (state.from === 'price') {
-      var trial = $('trial-card');
-      if (trial) trial.classList.add('-w-trial-open');
-    }
 
     track('bridge_view', {
       ng_count: fails.length,
@@ -386,8 +441,7 @@
       '<h2 class="-w-pp-sec">§05　次の一手 <span>NEXT ACTION</span></h2>' +
       '<div class="-w-pp-next">' +
         '<p class="-w-pp-next-ttl">この成績表を見ながら、30分の無料相談ができます</p>' +
-        '<p class="-w-pp-next-text">オンラインOK。結果の見方と「最初の一手」だけお伝えします。売り込みはしません。<br>' +
-        '「まずは10万円で、いちばん大きな穴だけ塞ぐ」少額テストのご相談も承ります。</p>' +
+        '<p class="-w-pp-next-text">オンラインOK。結果の見方と「最初の一手」だけお伝えします。売り込みはしません。</p>' +
         '<p class="-w-pp-next-url">無料相談・お問い合わせ　▶　https://www.tosen-net.co.jp/contact/</p>' +
         '<p class="-w-pp-next-org">株式会社 東宣（TOSEN）　〒104-0031 東京都中央区京橋3-7-10 東宣ビル2階</p>' +
       '</div>' +
@@ -396,6 +450,38 @@
       footer(3) + '</section>';
 
     root.innerHTML = p1 + p2 + p3;
+  }
+
+  /* -----------------------------------------------------------
+     2c. アンケート回答 → お困り事カード切替（入口文脈の引き継ぎ）
+  ----------------------------------------------------------- */
+  function updateSolutionCard() {
+    var card = $('solution-card');
+    var conf = SOLUTION_CARDS[state.surveyTrigger];
+    if (!card || !conf) return;
+    card.setAttribute('href', conf.url);
+    card.setAttribute('data-card', conf.card);
+    var ttl = card.querySelector('.-w-next-card-ttl');
+    var tag = card.querySelector('.-w-next-card-tag');
+    var text = card.querySelector('.-w-next-card-text');
+    var link = card.querySelector('.-w-next-card-link');
+    if (ttl) ttl.textContent = conf.ttl;
+    if (tag) tag.textContent = conf.tag;
+    if (text) text.textContent = conf.text;
+    if (link) link.innerHTML = conf.link + iconSvg('i-arrow-right');
+  }
+
+  function initSurveyBridge() {
+    var form = $('survey-form');
+    if (!form) return;
+    // エンジンの送信処理には干渉せず、回答値だけを読み取る
+    form.addEventListener('submit', function () {
+      var checked = form.querySelector('input[name="trigger"]:checked');
+      if (checked) {
+        state.surveyTrigger = checked.value;
+        updateSolutionCard();
+      }
+    });
   }
 
   function initReportObserver() {
@@ -592,8 +678,7 @@
       var consult = e.target.closest('[data-tsn-consult]');
       if (consult) {
         track('generate_lead', {
-          lead_type: consult.dataset.placement === 'trial_card' || consult.dataset.placement === 'final_trial'
-            ? 'trial' : 'consult',
+          lead_type: 'consult',
           placement: consult.dataset.placement || 'unknown'
         });
         return;
@@ -617,6 +702,7 @@
   ----------------------------------------------------------- */
   document.addEventListener('DOMContentLoaded', function () {
     initEntryParams();
+    initSurveyBridge();
     initReportObserver();
     initSticky();
     initExitIntent();

@@ -1035,7 +1035,8 @@ body.-w-modal-open { overflow: hidden; }
   gap: 0.6rem;
   margin-bottom: 1.2rem;
 }
-.-w-bridge-media span {
+.-w-bridge-media span,
+.-w-bridge-media a {
   display: inline-flex;
   align-items: center;
   gap: 0.4em;
@@ -1045,6 +1046,10 @@ body.-w-modal-open { overflow: hidden; }
   background: var(--red-soft, rgba(200, 22, 29, 0.08));
   border-radius: 999px;
   padding: 0.35em 1.1em;
+}
+.-w-bridge-media a { border: 1px solid var(--border-red, rgba(200, 22, 29, 0.35)); transition: background 0.2s ease; }
+@media (hover: hover) and (pointer: fine) {
+  .-w-bridge-media a:hover { background: var(--o-r-colors-accent, #c8161d); color: #fff; }
 }
 .-w-bridge-media .-w-icon { font-size: 1.6rem; }
 .-w-bridge-ev {
@@ -1062,11 +1067,38 @@ body.-w-modal-open { overflow: hidden; }
   color: var(--text-secondary, #5b6672);
   margin-top: 0.4rem;
 }
-.-w-bridge-col-link {
+/* 処方カードのカテゴリ別CTA（×の解決策ページへ直行） */
+.-w-bridge-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-size: 1.35rem;
+  font-weight: var(--ti-fwbo, 700);
+  color: var(--o-r-colors-accent, #c8161d);
+  border-bottom: var(--ti-bw, 1px) solid currentColor;
+  padding-bottom: 0.2em;
+  transition: color 0.2s ease;
+}
+.-w-bridge-cta .-w-icon { font-size: 1.6rem; }
+@media (hover: hover) and (pointer: fine) {
+  .-w-bridge-cta:hover { color: var(--button-hover, #a8380b); }
+}
+
+/* 締めのサブリンク（リスク中：ガイド誘導） */
+.-w-bridge-close-sub {
   font-size: 1.3rem;
   color: var(--text-link, #c8161d);
   text-decoration: underline;
   text-underline-offset: 0.3em;
+}
+
+/* 全○分岐のリンク群 */
+.-w-bridge-allpass-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.2rem;
+  margin-top: 1.6rem;
 }
 
 /* 全○（×ゼロ）分岐 */
@@ -1077,7 +1109,7 @@ body.-w-modal-open { overflow: hidden; }
   padding: 2.4rem;
   text-align: center;
 }
-.-w-bridge-allpass .-w-icon { font-size: 3.2rem; color: var(--success-text, #15803d); }
+.-w-bridge-allpass > .-w-icon { font-size: 3.2rem; color: var(--success-text, #15803d); }
 .-w-bridge-allpass-ttl { font-size: 1.8rem; font-weight: var(--ti-fwbk, 900); margin: 0.8rem 0; }
 .-w-bridge-allpass-text { font-size: 1.4rem; line-height: 1.9; color: var(--text-secondary, #5b6672); }
 
@@ -1114,6 +1146,8 @@ body.-w-modal-open { overflow: hidden; }
   gap: 1.6rem;
 }
 @media (min-width: 768px) { .-w-next-cta-grid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1024px) { .-w-next-cta-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1024px) { .-w-next-card { flex-direction: column; } }
 
 .-w-next-card {
   position: relative;
@@ -1171,27 +1205,6 @@ body.-w-modal-open { overflow: hidden; }
 /* 主役カード（事例） */
 .-w-next-card-primary { border: 2px solid var(--o-r-colors-accent, #c8161d); }
 
-/* 10万円テストカード */
-.-w-next-card-trial {
-  background: #fff4e5;
-  border: 2px solid var(--o-r-colors-button, #c2410c);
-}
-.-w-next-card-trial .-w-next-card-icon { background: var(--o-r-colors-button, #c2410c); }
-.-w-next-card-trial .-w-next-card-tag,
-.-w-next-card-trial .-w-next-card-link { color: var(--o-r-colors-button, #c2410c); }
-.-w-next-card-ribbon {
-  position: absolute;
-  top: -1.1rem;
-  left: 2rem;
-  background: var(--o-r-colors-button, #c2410c);
-  color: var(--o-r-colors-button_text, #ffffff);
-  font-size: 1.1rem;
-  font-weight: var(--ti-fwbo, 700);
-  border-radius: 999px;
-  padding: 0.2em 1.2em;
-}
-/* 導線B流入時などの強調表示（tosen-cta.js が付与） */
-.-w-next-card-trial.-w-trial-open { animation: w-pulse-cta 2s ease-in-out 2; }
 
 /* 相談帯 */
 .-w-consult-band {
@@ -1408,10 +1421,6 @@ body.-w-modal-open { overflow: hidden; }
   25% { transform: translateX(-0.6rem); }
   75% { transform: translateX(0.6rem); }
 }
-@keyframes w-pulse-cta {
-  0%, 100% { box-shadow: 0 0 0 0 var(--cta-glow, rgba(194, 65, 12, 0.3)); }
-  50% { box-shadow: 0 0 0 1.4rem rgba(194, 65, 12, 0); }
-}
 
 .-w-loading-spinner {
   width: 4rem;
@@ -1437,7 +1446,6 @@ body.-w-modal-open { overflow: hidden; }
   .-w-exit,
   .-w-sticky,
   .-w-nav-item.-w-open > .-w-mega { animation: none; }
-  .-w-next-card-trial.-w-trial-open { animation: none; }
   .-w-progress-item.-w-state-running .-w-progress-ring svg { animation: none; }
   .-w-loading-spinner { animation-duration: 2s; }
   .-w-entry-input.-w-invalid { animation: none; }
