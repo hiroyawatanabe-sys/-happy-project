@@ -1444,25 +1444,266 @@ body.-w-modal-open { overflow: hidden; }
 }
 
 /* -------------------------------------------------------------
-   14. 印刷（PDF発行 = 成績表のみ）
+   14. 印刷（PDF発行）
+   ガーディアン本番PDF（print_pdf.php）を参考にした3ページ構成の
+   印刷専用レポート #tosen-print のみを出力する。
+   全ページに TOSEN ロゴ＋「PROVIDED BY 株式会社ガーディアン」。
 ------------------------------------------------------------- */
+/* 画面では印刷専用レポートを出さない */
+.-w-print-report { display: none; }
+
 @media print {
-  .no-print,
-  .-w-breadcrumb-wrap,
-  .-w-survey-overlay,
+  @page { size: A4; margin: 10mm 12mm; }
+
+  /* ページ本体は隠し、印刷レポートのみ表示 */
+  body > #-w-container,
   .-w-sticky,
   .-w-exit,
-  .-w-final-cta { display: none !important; }
+  .-w-survey-overlay,
+  .-w-preview-toast { display: none !important; }
 
-  body { background: #fff; color: #1c1c1c; }
-  .-w-mv-box { background: #fff; }
-  .-w-step-diagnosis { padding: 0; max-width: none; }
-  .-w-progress-area { display: none; }
-  .-w-final-actions { filter: none !important; opacity: 1 !important; }
-
-  .-w-report-card {
-    border: 1px solid #c8161d;
-    border-top-width: 4px;
-    box-shadow: none;
+  body {
+    background: #fff;
+    color: #1f2933;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
+
+  .-w-print-report { display: block; }
+
+  /* 診断前に印刷された場合の案内 */
+  .-w-print-report:empty::before {
+    content: "診断を実行すると、この位置に「WEB集客 取りこぼし診断レポート」が出力されます。";
+    display: block;
+    padding: 4rem 2rem;
+    font-size: 1.4rem;
+    color: #5b6672;
+    text-align: center;
+  }
+
+  /* ---- ページ共通 ---- */
+  .-w-pp {
+    page-break-after: always;
+    display: flex;
+    flex-direction: column;
+    min-height: 26.5cm;
+  }
+  .-w-pp:last-child { page-break-after: auto; }
+
+  .-w-pp-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.6rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 2px solid #c8161d;
+    margin-bottom: 1.6rem;
+  }
+  .-w-pp-logo { height: 3.4rem; width: auto; }
+  .-w-pp-head-right { text-align: right; }
+  .-w-pp-head-title {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: #1f2933;
+  }
+  .-w-pp-provided {
+    display: block;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    color: #5b6672;
+  }
+
+  .-w-pp-foot {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    gap: 1.6rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid #e3e6ea;
+    font-size: 0.95rem;
+    color: #5b6672;
+    letter-spacing: 0.06em;
+  }
+
+  .-w-pp-sec {
+    font-size: 1.5rem;
+    font-weight: 900;
+    border-left: 5px solid #c8161d;
+    padding-left: 1rem;
+    margin: 1.8rem 0 1rem;
+    break-after: avoid;
+  }
+  .-w-pp-sec span {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: #5b6672;
+    margin-left: 0.8em;
+  }
+  .-w-pp-lead { font-size: 1.2rem; color: #414b55; margin-bottom: 1rem; }
+
+  /* ---- 表紙 ---- */
+  .-w-pp-cover-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 1.6rem;
+  }
+  .-w-pp-cover-en {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    color: #c8161d;
+  }
+  .-w-pp-cover-title {
+    font-size: 3.2rem;
+    font-weight: 900;
+    line-height: 1.4;
+  }
+  .-w-pp-cover-stamp { margin: 0.8rem 0; }
+  .-w-pp-cover-stamp .-w-report-stamp { margin: 0 auto; }
+  .-w-pp-cover-meta {
+    border-collapse: collapse;
+    font-size: 1.25rem;
+    margin: 0 auto;
+    max-width: 15cm;
+  }
+  .-w-pp-cover-meta th, .-w-pp-cover-meta td {
+    border: 1px solid #e3e6ea;
+    padding: 0.6rem 1.4rem;
+    text-align: left;
+    word-break: break-all;
+  }
+  .-w-pp-cover-meta th {
+    background: #f6f7f9;
+    white-space: nowrap;
+    font-weight: 700;
+  }
+  .-w-pp-cover-org { font-size: 1.1rem; color: #5b6672; letter-spacing: 0.06em; }
+
+  /* ---- 成績表サマリ ---- */
+  .-w-pp-total {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    break-inside: avoid;
+  }
+  .-w-pp-total-stamp .-w-report-stamp {
+    width: 8.4rem;
+    height: 8.4rem;
+    margin: 0;
+  }
+  .-w-pp-total-stamp .-w-report-stamp-grade { font-size: 2.2rem; }
+  .-w-pp-total-line { font-size: 1.35rem; margin-bottom: 0.4rem; }
+  .-w-pp-total-line strong { color: #c8161d; }
+  .-w-pp-total-msg { font-size: 1.2rem; color: #414b55; }
+
+  .-w-pp-balance {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+    break-inside: avoid;
+  }
+  .-w-pp-radar { flex: 0 0 7.4cm; }
+  .-w-pp-radar svg { width: 7.4cm; height: auto; }
+  .-w-pp-table {
+    flex: 1;
+    border-collapse: collapse;
+    font-size: 1.15rem;
+  }
+  .-w-pp-table th, .-w-pp-table td {
+    border: 1px solid #e3e6ea;
+    padding: 0.45rem 0.8rem;
+    text-align: left;
+  }
+  .-w-pp-table thead th { background: #f6f7f9; font-size: 1.05rem; }
+  .-w-pp-td-roman { text-align: center; color: #c8161d; font-weight: 700; width: 3.2rem; }
+  .-w-pp-td-num { text-align: center; white-space: nowrap; }
+  .-w-pp-judge {
+    display: inline-block;
+    font-weight: 700;
+    font-size: 1.05rem;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    padding: 0 0.8em;
+    white-space: nowrap;
+  }
+  .-w-pp-judge-pass { color: #15803d; }
+  .-w-pp-judge-warn { color: #b45309; }
+  .-w-pp-judge-fail { color: #c0271d; }
+
+  .-w-pp-action {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    border: 1px solid #e3e6ea;
+    border-left: 4px solid #c8161d;
+    border-radius: 6px;
+    padding: 0.8rem 1.2rem;
+    margin-bottom: 0.7rem;
+    break-inside: avoid;
+  }
+  .-w-pp-action-num {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    background: #c8161d;
+    color: #fff;
+    font-weight: 900;
+    font-size: 1.2rem;
+  }
+  .-w-pp-action-ttl { font-size: 1.25rem; font-weight: 700; }
+  .-w-pp-action-text { font-size: 1.15rem; color: #414b55; }
+  .-w-pp-note-inline { font-size: 1.2rem; color: #15803d; font-weight: 700; }
+
+  /* ---- 処方箋・次の一手 ---- */
+  .-w-pp-rx {
+    border: 1px solid #e3e6ea;
+    border-left: 4px solid #c8161d;
+    border-radius: 6px;
+    padding: 1rem 1.4rem;
+    margin-bottom: 0.9rem;
+    break-inside: avoid;
+  }
+  .-w-pp-rx-ttl { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .-w-pp-rx-text { font-size: 1.15rem; color: #414b55; margin-bottom: 0.5rem; }
+  .-w-pp-rx-media { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem; }
+  .-w-pp-rx-media span {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #c8161d;
+    border: 1px solid rgba(200, 22, 29, 0.4);
+    border-radius: 999px;
+    padding: 0.05em 0.9em;
+  }
+  .-w-pp-rx-ev {
+    font-size: 1.1rem;
+    background: #f6f7f9;
+    border-radius: 4px;
+    padding: 0.6rem 1rem;
+  }
+  .-w-pp-rx-ev strong { color: #c8161d; }
+  .-w-pp-rx-ev span { display: block; font-size: 0.95rem; color: #5b6672; margin-top: 0.2rem; }
+
+  .-w-pp-next {
+    border: 2px solid #c8161d;
+    border-radius: 8px;
+    padding: 1.2rem 1.6rem;
+    break-inside: avoid;
+  }
+  .-w-pp-next-ttl { font-size: 1.4rem; font-weight: 900; margin-bottom: 0.4rem; }
+  .-w-pp-next-text { font-size: 1.15rem; color: #414b55; margin-bottom: 0.6rem; }
+  .-w-pp-next-url { font-size: 1.3rem; font-weight: 700; color: #c8161d; margin-bottom: 0.4rem; }
+  .-w-pp-next-org { font-size: 1.05rem; color: #5b6672; }
+
+  .-w-pp-note { margin-top: 1rem; font-size: 0.95rem; color: #5b6672; line-height: 1.7; }
 }

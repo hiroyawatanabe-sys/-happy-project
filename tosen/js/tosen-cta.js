@@ -48,7 +48,7 @@
         { label: '新聞広告', icon: 'i-doc-lines' },
         { label: '地域TV', icon: 'i-tv' }
       ],
-      ev: '東宣は官公庁・公的機関（国税局・警察・自治体 等）の広告実績を多数持つ、創業1958年の広告会社です。',
+      ev: '東宣は官公庁・公的機関（国税局・警察・自治体 等）の広告実績を多数持つ、創業1948年の広告会社です。',
       src: '出典：東宣 業務実績（公的機関案件）'
     },
     'IV': {
@@ -233,6 +233,171 @@
     });
   }
 
+  /* -----------------------------------------------------------
+     2b. 印刷専用レポート生成（PDF発行＝window.print 時のみ表示）
+         参考: ガーディアン本番PDF（print_pdf.php）の構成を東宣仕様へ転換
+         表紙 → 成績表サマリ → 処方箋・次の一手 の3ページ構成
+  ----------------------------------------------------------- */
+  function buildPrintReport(container, results) {
+    var root = $('tosen-print');
+    if (!root) return;
+
+    var metaEl = container.querySelector('.-w-report-meta');
+    var metaText = metaEl ? metaEl.textContent : '';
+    var urlMatch = metaText.match(/診断URL：(.+?)診断日時：/);
+    var dateMatch = metaText.match(/診断日時：([0-9\/]+ [0-9:]+)/);
+    var passMatch = metaText.match(/合格項目：(\d+)\s*\/\s*21/);
+    var diagUrl = urlMatch ? urlMatch[1] : '';
+    var diagDate = dateMatch ? dateMatch[1].trim() : '';
+    var passCount = passMatch ? passMatch[1] : '-';
+
+    var stampEl = container.querySelector('.-w-report-stamp');
+    var stampHtml = stampEl ? stampEl.outerHTML : '';
+    var gradeEl = container.querySelector('.-w-report-stamp-grade');
+    var gradeLabel = gradeEl ? gradeEl.textContent.trim() : '';
+
+    var radarEl = container.querySelector('.-w-report-radar svg');
+    var radarHtml = radarEl ? radarEl.outerHTML : '';
+
+    var GRADE_MSG = {
+      '小': '大きな取りこぼしは見当たりませんでした。次は「攻めの認知」で商圏シェアを取りにいく段階です。',
+      '中': '放置すると機会損失につながる項目があります。×の項目から一つずつ塞いでいきましょう。',
+      '大': '集客の取りこぼしが起きている可能性が高い状態です。優先度の高い×から着手をおすすめします。',
+      '特大': '複数の経路でお客様を逃している可能性があります。まずは無料相談で対処の順番を整理しましょう。'
+    };
+    var JUDGE_LABEL = { pass: '合格', warn: '要注意', fail: '要改善' };
+
+    // 各カテゴリ行のコメント・項目を成績表から回収
+    var rows = [];
+    container.querySelectorAll('.-w-report-row').forEach(function (row) {
+      var roman = row.querySelector('.-w-report-row-roman');
+      var name = row.querySelector('.-w-report-row-name');
+      var judge = row.querySelector('.-w-report-row-judge');
+      var comment = row.querySelector('.-w-report-row-comment');
+      var items = [];
+      row.querySelectorAll('.-w-report-item').forEach(function (item) {
+        items.push({
+          pass: item.classList.contains('-w-item-pass'),
+          label: item.textContent.replace(/：(合格|不合格)$/, '').trim()
+        });
+      });
+      if (roman && judge) {
+        rows.push({
+          roman: roman.textContent.trim(),
+          name: name ? name.textContent.trim() : '',
+          judgeText: judge.textContent.trim(),
+          judgeCls: judge.classList.contains('-w-judge-fail') ? 'fail' : (judge.classList.contains('-w-judge-warn') ? 'warn' : 'pass'),
+          comment: comment ? comment.textContent.trim() : '',
+          items: items
+        });
+      }
+    });
+
+    var failRows = rows.filter(function (r) { return r.judgeCls === 'fail'; });
+    var warnRows = rows.filter(function (r) { return r.judgeCls === 'warn'; });
+
+    function header(pageTitle) {
+      return '<div class="-w-pp-head">' +
+        '<img class="-w-pp-logo" src="assets/logo-tosen.jpg" alt="株式会社東宣（TOSEN）">' +
+        '<div class="-w-pp-head-right">' +
+          '<span class="-w-pp-head-title">' + pageTitle + '</span>' +
+          '<span class="-w-pp-provided">PROVIDED BY 株式会社ガーディアン</span>' +
+        '</div>' +
+      '</div>';
+    }
+    function footer(num) {
+      return '<div class="-w-pp-foot">' +
+        '<span>PROVIDED BY 株式会社ガーディアン　｜　WEB集客 取りこぼし診断</span>' +
+        '<span>Page 0' + num + ' / 03</span>' +
+      '</div>';
+    }
+
+    /* ---- Page 1: 表紙 ---- */
+    var p1 = '<section class="-w-pp -w-pp-cover">' + header('WEB MARKETING LEAK CHECK REPORT') +
+      '<div class="-w-pp-cover-main">' +
+        '<p class="-w-pp-cover-en">WEB MARKETING LEAK CHECK REPORT</p>' +
+        '<h1 class="-w-pp-cover-title">WEB集客 取りこぼし診断<br>レポート</h1>' +
+        '<div class="-w-pp-cover-stamp">' + stampHtml + '</div>' +
+        '<table class="-w-pp-cover-meta"><tbody>' +
+          '<tr><th>診断URL</th><td>' + diagUrl + '</td></tr>' +
+          '<tr><th>診断日</th><td>' + diagDate + '</td></tr>' +
+          '<tr><th>診断項目</th><td>7カテゴリ 21項目（自動診断）／合格 ' + passCount + ' / 21</td></tr>' +
+        '</tbody></table>' +
+        '<p class="-w-pp-cover-org">株式会社 東宣（TOSEN）　創業1948年／全省庁統一資格／日本ABC協会加盟</p>' +
+      '</div>' + footer(1) + '</section>';
+
+    /* ---- Page 2: 成績表サマリ ---- */
+    var tableRows = rows.map(function (r, i) {
+      var ok = r.items.filter(function (it) { return it.pass; }).length;
+      return '<tr>' +
+        '<td class="-w-pp-td-roman">' + r.roman + '</td>' +
+        '<td>' + r.name + '</td>' +
+        '<td class="-w-pp-td-num">' + ok + ' / ' + r.items.length + '</td>' +
+        '<td><span class="-w-pp-judge -w-pp-judge-' + r.judgeCls + '">' + JUDGE_LABEL[r.judgeCls] + '</span></td>' +
+      '</tr>';
+    }).join('');
+
+    var topActions = failRows.slice(0, 3).map(function (r, i) {
+      return '<div class="-w-pp-action">' +
+        '<span class="-w-pp-action-num">' + (i + 1) + '</span>' +
+        '<div><p class="-w-pp-action-ttl">' + r.roman + '. ' + r.name + '</p>' +
+        '<p class="-w-pp-action-text">' + r.comment + '</p></div>' +
+      '</div>';
+    }).join('') || '<p class="-w-pp-note-inline">要改善（×）のカテゴリはありませんでした。</p>';
+
+    var p2 = '<section class="-w-pp">' + header('成績表　SCORE REPORT') +
+      '<h2 class="-w-pp-sec">§01　総合判定 <span>TOTAL</span></h2>' +
+      '<div class="-w-pp-total">' +
+        '<div class="-w-pp-total-stamp">' + stampHtml + '</div>' +
+        '<div class="-w-pp-total-body">' +
+          '<p class="-w-pp-total-line">合格項目：<strong>' + passCount + ' / 21</strong>　取りこぼしリスク：<strong>' + gradeLabel + '</strong></p>' +
+          '<p class="-w-pp-total-msg">' + (GRADE_MSG[gradeLabel] || '') + '</p>' +
+        '</div>' +
+      '</div>' +
+      '<h2 class="-w-pp-sec">§02　7カテゴリバランス <span>CATEGORY BREAKDOWN</span></h2>' +
+      '<div class="-w-pp-balance">' +
+        '<div class="-w-pp-radar">' + radarHtml + '</div>' +
+        '<table class="-w-pp-table"><thead><tr><th></th><th>カテゴリ</th><th>合格</th><th>判定</th></tr></thead>' +
+        '<tbody>' + tableRows + '</tbody></table>' +
+      '</div>' +
+      '<h2 class="-w-pp-sec">§03　最優先で直したい項目 <span>TOP ACTIONS</span></h2>' +
+      topActions +
+      footer(2) + '</section>';
+
+    /* ---- Page 3: 処方箋・次の一手 ---- */
+    var targets = failRows.length ? failRows : warnRows;
+    var rxCards = targets.slice(0, 3).map(function (r) {
+      var rx = RX[r.roman];
+      if (!rx) return '';
+      var media = rx.media.map(function (m) { return '<span>' + m.label + '</span>'; }).join('');
+      return '<div class="-w-pp-rx">' +
+        '<p class="-w-pp-rx-ttl">' + r.roman + '. ' + r.name + '：' + rx.hole + '</p>' +
+        '<p class="-w-pp-rx-text">' + rx.rx + '</p>' +
+        '<div class="-w-pp-rx-media">' + media + '</div>' +
+        (rx.ev ? '<p class="-w-pp-rx-ev">' + rx.ev + (rx.src ? '<span>' + rx.src + '</span>' : '') + '</p>' : '') +
+      '</div>';
+    }).join('') || '<div class="-w-pp-rx"><p class="-w-pp-rx-ttl">守りは合格。次は攻めの認知です。</p>' +
+      '<p class="-w-pp-rx-text">サイトの受け皿は整っています。王道メディアで商圏の認知シェアを取りにいく打ち手をご提案できます。</p></div>';
+
+    var p3 = '<section class="-w-pp">' + header('処方箋　PRESCRIPTION') +
+      '<h2 class="-w-pp-sec">§04　王道メディア処方 <span>PRESCRIPTION</span></h2>' +
+      '<p class="-w-pp-lead">×の原因ごとに、Web施策だけでなく新聞折込・地域TV・ラジオ・交通広告などの"王道メディア"まで含めた打ち手を処方します。</p>' +
+      rxCards +
+      '<h2 class="-w-pp-sec">§05　次の一手 <span>NEXT ACTION</span></h2>' +
+      '<div class="-w-pp-next">' +
+        '<p class="-w-pp-next-ttl">この成績表を見ながら、30分の無料相談ができます</p>' +
+        '<p class="-w-pp-next-text">オンラインOK。結果の見方と「最初の一手」だけお伝えします。売り込みはしません。<br>' +
+        '「まずは10万円で、いちばん大きな穴だけ塞ぐ」少額テストのご相談も承ります。</p>' +
+        '<p class="-w-pp-next-url">無料相談・お問い合わせ　▶　https://www.tosen-net.co.jp/contact/</p>' +
+        '<p class="-w-pp-next-org">株式会社 東宣（TOSEN）　〒104-0031 東京都中央区京橋3-7-10 東宣ビル2階</p>' +
+      '</div>' +
+      '<p class="-w-pp-note">※本診断は公開情報の自動解析による簡易診断であり、結果は推定を含みます。実際の集客状況・改善効果を保証するものではありません。<br>' +
+      '※掲載の数値は各案件の実績であり、同様の効果をお約束するものではありません。</p>' +
+      footer(3) + '</section>';
+
+    root.innerHTML = p1 + p2 + p3;
+  }
+
   function initReportObserver() {
     var container = $('seven-report-container');
     if (!container || !('MutationObserver' in window)) return;
@@ -241,7 +406,9 @@
       if (state.reportDone) return;
       if (container.querySelector('.-w-report-card')) {
         state.reportDone = true;
-        renderBridge(parseReport(container));
+        var results = parseReport(container);
+        renderBridge(results);
+        buildPrintReport(container, results);
         updateSticky();
       }
     });
