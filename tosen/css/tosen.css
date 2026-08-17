@@ -1453,15 +1453,17 @@ body.-w-modal-open { overflow: hidden; }
 
 /* -------------------------------------------------------------
    14. 印刷（PDF発行）
-   ガーディアン本番PDF（print_pdf.php）を参考にした3ページ構成の
-   印刷専用レポート #tosen-print のみを出力する。
-   全ページに TOSEN ロゴ＋「PROVIDED BY 株式会社ガーディアン」。
+   承認済みサンプルPDF「七つの取りこぼし診断 Webサイト品質診断
+   レポート」（12ページ構成）に準拠した印刷専用レポート。
+   表紙 / 成績表 / カテゴリ詳細×7 / 制作会社 納品品質 /
+   ×の埋め方（東宣提案） / 付録
+   全ページに TOSEN ロゴ＋「診断エンジン提供：株式会社ガーディアン（OWLet）」
 ------------------------------------------------------------- */
 /* 画面では印刷専用レポートを出さない */
 .-w-print-report { display: none; }
 
 @media print {
-  @page { size: A4; margin: 10mm 12mm; }
+  @page { size: A4; margin: 9mm 11mm; }
 
   /* ページ本体は隠し、印刷レポートのみ表示 */
   body > #-w-container,
@@ -1477,11 +1479,11 @@ body.-w-modal-open { overflow: hidden; }
     print-color-adjust: exact;
   }
 
-  .-w-print-report { display: block; }
+  .-w-print-report { display: block; font-size: 1.1rem; line-height: 1.6; }
 
   /* 診断前に印刷された場合の案内 */
   .-w-print-report:empty::before {
-    content: "診断を実行すると、この位置に「WEB集客 取りこぼし診断レポート」が出力されます。";
+    content: "診断を実行すると、この位置に「七つの取りこぼし診断 Webサイト品質診断レポート」が出力されます。";
     display: block;
     padding: 4rem 2rem;
     font-size: 1.4rem;
@@ -1494,63 +1496,76 @@ body.-w-modal-open { overflow: hidden; }
     page-break-after: always;
     display: flex;
     flex-direction: column;
-    min-height: 26.5cm;
+    min-height: 27.2cm;
   }
   .-w-pp:last-child { page-break-after: auto; }
 
   .-w-pp-head {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 1.6rem;
-    padding-bottom: 0.8rem;
-    border-bottom: 2px solid #c8161d;
-    margin-bottom: 1.6rem;
+    gap: 1rem;
+    border-bottom: 2px solid #1f2933;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.8rem;
   }
-  .-w-pp-logo { height: 3.4rem; width: auto; }
-  .-w-pp-head-right { text-align: right; }
-  .-w-pp-head-title {
-    display: block;
-    font-size: 1.1rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    color: #1f2933;
-  }
-  .-w-pp-provided {
-    display: block;
-    font-size: 0.95rem;
-    letter-spacing: 0.08em;
-    color: #5b6672;
-  }
+  .-w-pp-logo { height: 2.8rem; width: auto; }
+  .-w-pp-head-mid { flex: 1; min-width: 0; }
+  .-w-pp-kicker { display: block; font-size: 1.25rem; font-weight: 900; letter-spacing: 0.03em; }
+  .-w-pp-kicker-sub { display: block; font-size: 0.9rem; color: #5b6672; }
+  .-w-pp-head-meta { text-align: right; font-size: 0.85rem; color: #414b55; line-height: 1.5; word-break: break-all; max-width: 24rem; }
+  .-w-pp-num { flex-shrink: 0; font-size: 2.4rem; font-weight: 900; color: #c8161d; line-height: 1; margin-left: 0.4rem; }
 
   .-w-pp-foot {
     margin-top: auto;
     display: flex;
     justify-content: space-between;
-    gap: 1.6rem;
-    padding-top: 0.8rem;
-    border-top: 1px solid #e3e6ea;
-    font-size: 0.95rem;
+    gap: 1rem;
+    border-top: 1px solid #c9cfd6;
+    padding-top: 0.4rem;
+    font-size: 0.82rem;
     color: #5b6672;
-    letter-spacing: 0.06em;
   }
 
   .-w-pp-sec {
-    font-size: 1.5rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.7rem;
+    font-size: 1.25rem;
     font-weight: 900;
-    border-left: 5px solid #c8161d;
-    padding-left: 1rem;
-    margin: 1.8rem 0 1rem;
-    break-after: avoid;
+    border-left: 4px solid #c8161d;
+    padding-left: 0.8rem;
+    margin: 0.9rem 0 0.6rem;
   }
-  .-w-pp-sec span {
-    font-size: 1rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    color: #5b6672;
-    margin-left: 0.8em;
+  .-w-pp-sec span { font-size: 0.8rem; font-weight: 700; color: #9aa3ac; letter-spacing: 0.08em; }
+  .-w-pp-lead { font-size: 1rem; color: #414b55; margin-bottom: 0.6rem; }
+  .-w-pp-lead strong { color: #c8161d; }
+  .-w-sin { color: #9aa3ac; font-size: 0.85em; font-weight: 400; }
+  .-w-pp-refnote { margin-top: 0.5rem; font-size: 0.75rem; color: #9aa3ac; }
+
+  /* ---- グレードバッジ ---- */
+  .-w-ppg {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 3px double currentColor;
+    border-radius: 50%;
+    width: 7.4rem;
+    height: 7.4rem;
+    text-align: center;
+    line-height: 1.05;
+    flex-shrink: 0;
   }
-  .-w-pp-lead { font-size: 1.2rem; color: #414b55; margin-bottom: 1rem; }
+  .-w-ppg-tag { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; }
+  .-w-ppg-letter { font-size: 2.9rem; font-weight: 900; }
+  .-w-ppg-word { font-size: 0.85rem; font-weight: 700; }
+  .-w-ppg-sm { width: 5.8rem; height: 5.8rem; }
+  .-w-ppg-sm .-w-ppg-letter { font-size: 2.1rem; }
+  .-w-ppg-sm .-w-ppg-word { font-size: 0.7rem; }
+  .-w-ppg-a, .-w-gl-a { color: #15803d; }
+  .-w-ppg-b, .-w-gl-b { color: #1d4ed8; }
+  .-w-ppg-c, .-w-gl-c { color: #b45309; }
+  .-w-ppg-d, .-w-gl-d { color: #c8161d; }
 
   /* ---- 表紙 ---- */
   .-w-pp-cover-main {
@@ -1560,100 +1575,96 @@ body.-w-modal-open { overflow: hidden; }
     align-items: center;
     justify-content: center;
     text-align: center;
-    gap: 1.6rem;
+    gap: 0.9rem;
   }
-  .-w-pp-cover-en {
-    font-size: 1.1rem;
-    font-weight: 700;
-    letter-spacing: 0.3em;
-    color: #c8161d;
-  }
-  .-w-pp-cover-title {
-    font-size: 3.2rem;
-    font-weight: 900;
-    line-height: 1.4;
-  }
-  .-w-pp-cover-stamp { margin: 0.8rem 0; }
-  .-w-pp-cover-stamp .-w-report-stamp { margin: 0 auto; }
-  .-w-pp-cover-meta {
-    border-collapse: collapse;
-    font-size: 1.25rem;
-    margin: 0 auto;
-    max-width: 15cm;
-  }
-  .-w-pp-cover-meta th, .-w-pp-cover-meta td {
-    border: 1px solid #e3e6ea;
-    padding: 0.6rem 1.4rem;
-    text-align: left;
-    word-break: break-all;
-  }
-  .-w-pp-cover-meta th {
-    background: #f6f7f9;
-    white-space: nowrap;
-    font-weight: 700;
-  }
-  .-w-pp-cover-org { font-size: 1.1rem; color: #5b6672; letter-spacing: 0.06em; }
+  .-w-pp-cover-logo { height: 5rem; width: auto; margin-bottom: 0.6rem; }
+  .-w-pp-cover-en { font-size: 1.05rem; letter-spacing: 0.32em; color: #c8161d; font-weight: 700; }
+  .-w-pp-cover-title { font-size: 3.6rem; font-weight: 900; letter-spacing: 0.06em; line-height: 1.25; }
+  .-w-pp-cover-sub { font-size: 1.5rem; font-weight: 700; letter-spacing: 0.22em; color: #414b55; }
+  .-w-pp-cover-meta { border-collapse: collapse; margin-top: 1.4rem; }
+  .-w-pp-cover-meta th, .-w-pp-cover-meta td { border: 1px solid #c9cfd6; font-size: 1.05rem; padding: 0.5rem 1.4rem; }
+  .-w-pp-cover-meta th { background: #f6f7f9; font-weight: 700; text-align: left; white-space: nowrap; }
+  .-w-pp-cover-meta td { word-break: break-all; }
+  .-w-pp-provided { margin-top: 1.6rem; font-size: 1rem; color: #414b55; border-top: 1px solid #c9cfd6; padding-top: 0.8rem; letter-spacing: 0.05em; line-height: 1.8; }
 
-  /* ---- 成績表サマリ ---- */
+  /* ---- P2 総合評価 ---- */
   .-w-pp-total {
     display: flex;
     align-items: center;
-    gap: 2rem;
-    break-inside: avoid;
-  }
-  .-w-pp-total-stamp .-w-report-stamp {
-    width: 8.4rem;
-    height: 8.4rem;
-    margin: 0;
-  }
-  .-w-pp-total-stamp .-w-report-stamp-grade { font-size: 2.2rem; }
-  .-w-pp-total-line { font-size: 1.35rem; margin-bottom: 0.4rem; }
-  .-w-pp-total-line strong { color: #c8161d; }
-  .-w-pp-total-msg { font-size: 1.2rem; color: #414b55; }
-
-  .-w-pp-balance {
-    display: flex;
-    align-items: center;
-    gap: 1.6rem;
-    break-inside: avoid;
-  }
-  .-w-pp-radar { flex: 0 0 7.4cm; }
-  .-w-pp-radar svg { width: 7.4cm; height: auto; }
-  .-w-pp-table {
-    flex: 1;
-    border-collapse: collapse;
-    font-size: 1.15rem;
-  }
-  .-w-pp-table th, .-w-pp-table td {
+    gap: 1.3rem;
     border: 1px solid #e3e6ea;
-    padding: 0.45rem 0.8rem;
-    text-align: left;
+    border-radius: 8px;
+    padding: 0.8rem 1.1rem;
   }
-  .-w-pp-table thead th { background: #f6f7f9; font-size: 1.05rem; }
-  .-w-pp-td-roman { text-align: center; color: #c8161d; font-weight: 700; width: 3.2rem; }
-  .-w-pp-td-num { text-align: center; white-space: nowrap; }
-  .-w-pp-judge {
+  .-w-pp-total-body { flex: 1; min-width: 0; }
+  .-w-pp-total-headline { font-size: 1.45rem; font-weight: 900; margin-bottom: 0.3rem; }
+  .-w-pp-total-headline strong { color: #c8161d; }
+  .-w-pp-total-stats { display: flex; flex-wrap: wrap; gap: 0.3rem 1.4rem; font-size: 0.95rem; color: #414b55; }
+  .-w-pp-total-stats strong { color: #1f2933; font-size: 1.15rem; }
+  .-w-pp-owl { flex: 0 0 16.5rem; background: #f6f7f9; border-radius: 6px; padding: 0.6rem 0.9rem; font-size: 0.9rem; color: #414b55; }
+  .-w-pp-owl-tag {
     display: inline-block;
-    font-weight: 700;
-    font-size: 1.05rem;
+    font-size: 0.75rem;
+    font-weight: 900;
+    color: #c8161d;
     border: 1px solid currentColor;
     border-radius: 999px;
-    padding: 0 0.8em;
+    padding: 0 0.7em;
+    margin-bottom: 0.25rem;
+  }
+  .-w-pp-owl-sig { display: block; text-align: right; font-size: 0.75rem; color: #9aa3ac; margin-top: 0.2rem; }
+
+  /* ---- P2 バランス ---- */
+  .-w-pp-balance { display: flex; gap: 1.1rem; align-items: center; }
+  .-w-pp-radar { flex: 0 0 6.2cm; }
+  .-w-pp-radar svg { width: 6.2cm; height: auto; }
+  .-w-pp-radar-legend { display: flex; gap: 1rem; justify-content: center; font-size: 0.8rem; color: #5b6672; }
+  .-w-pp-radar-legend i { display: inline-block; width: 0.85em; height: 0.85em; border-radius: 2px; margin-right: 0.3em; }
+  .-w-pp-table { flex: 1; border-collapse: collapse; }
+  .-w-pp-table th, .-w-pp-table td { border: 1px solid #e3e6ea; padding: 0.24rem 0.45rem; font-size: 0.92rem; text-align: center; }
+  .-w-pp-table thead th { background: #f6f7f9; font-size: 0.8rem; }
+  .-w-pp-table td.-w-l { text-align: left; }
+  .-w-pp-table .-w-pp-gl { font-weight: 900; }
+  .-w-pp-tr-total td { background: #fbf6f4; font-weight: 700; }
+
+  /* ---- P2 分布 ---- */
+  .-w-pp-dist { display: flex; gap: 1.1rem; }
+  .-w-pp-dist-box { flex: 1; border: 1px solid #e3e6ea; border-radius: 6px; padding: 0.55rem 0.9rem; }
+  .-w-pp-dist-ttl { font-size: 0.92rem; font-weight: 700; margin-bottom: 1.1rem; }
+  .-w-pp-dist-bar { position: relative; height: 0.85rem; border-radius: 999px; background: linear-gradient(90deg, #f4d3d5, #c8161d); margin: 0 0.3rem 0.3rem; }
+  .-w-pp-dist-marker {
+    position: absolute;
+    top: -1.15rem;
+    transform: translateX(-50%);
+    font-size: 0.78rem;
+    font-weight: 900;
+    color: #1f2933;
     white-space: nowrap;
   }
-  .-w-pp-judge-pass { color: #15803d; }
-  .-w-pp-judge-warn { color: #b45309; }
-  .-w-pp-judge-fail { color: #c0271d; }
+  .-w-pp-dist-scale { display: flex; justify-content: space-between; font-size: 0.72rem; color: #9aa3ac; padding: 0 0.3rem; }
+  .-w-pp-dist-cap { font-size: 0.92rem; margin-top: 0.25rem; }
+  .-w-pp-dist-cap strong { color: #c8161d; }
 
+  /* ---- P2 ベンチマーク ---- */
+  .-w-pp-bench-legend { font-size: 0.78rem; color: #5b6672; text-align: right; margin-bottom: 0.25rem; }
+  .-w-pp-bench-row { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 0.3rem; }
+  .-w-pp-bench-label { flex: 0 0 11rem; font-size: 0.88rem; font-weight: 700; text-align: right; }
+  .-w-pp-bench-track { flex: 1; position: relative; height: 0.8rem; background: #f0f1f3; border-radius: 3px; }
+  .-w-pp-bench-you { position: absolute; left: 0; top: 0; bottom: 0; background: #c8161d; border-radius: 3px; }
+  .-w-pp-bench-avg { position: absolute; top: -0.15rem; bottom: -0.15rem; width: 2px; background: #5b6672; }
+  .-w-pp-bench-top { position: absolute; top: -0.15rem; bottom: -0.15rem; width: 2px; background: #15803d; }
+  .-w-pp-bench-val { flex: 0 0 4.6rem; font-size: 0.88rem; font-weight: 700; }
+
+  /* ---- P2 TOP3 ---- */
   .-w-pp-action {
     display: flex;
-    gap: 1rem;
+    gap: 0.8rem;
     align-items: flex-start;
     border: 1px solid #e3e6ea;
     border-left: 4px solid #c8161d;
     border-radius: 6px;
-    padding: 0.8rem 1.2rem;
-    margin-bottom: 0.7rem;
+    padding: 0.42rem 0.9rem;
+    margin-bottom: 0.4rem;
     break-inside: avoid;
   }
   .-w-pp-action-num {
@@ -1661,57 +1672,230 @@ body.-w-modal-open { overflow: hidden; }
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 2.4rem;
-    height: 2.4rem;
+    width: 2rem;
+    height: 2rem;
     border-radius: 50%;
     background: #c8161d;
     color: #fff;
     font-weight: 900;
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
-  .-w-pp-action-ttl { font-size: 1.25rem; font-weight: 700; }
-  .-w-pp-action-text { font-size: 1.15rem; color: #414b55; }
-  .-w-pp-note-inline { font-size: 1.2rem; color: #15803d; font-weight: 700; }
-
-  /* ---- 処方箋・次の一手 ---- */
-  .-w-pp-rx {
-    border: 1px solid #e3e6ea;
-    border-left: 4px solid #c8161d;
+  .-w-pp-action-cat { font-size: 0.78rem; color: #9aa3ac; }
+  .-w-pp-action-ttl { font-size: 1.02rem; font-weight: 700; }
+  .-w-pp-action-text { font-size: 0.9rem; color: #414b55; }
+  .-w-pp-allok {
+    border: 1px solid rgba(21, 128, 61, 0.45);
+    color: #15803d;
     border-radius: 6px;
-    padding: 1rem 1.4rem;
-    margin-bottom: 0.9rem;
+    padding: 0.7rem 1rem;
+    font-weight: 700;
+    font-size: 1rem;
+  }
+
+  /* ---- カテゴリ詳細 ---- */
+  .-w-pp-cat-top {
+    display: flex;
+    gap: 1.1rem;
+    align-items: center;
+    border: 1px solid #e3e6ea;
+    border-radius: 8px;
+    padding: 0.7rem 1.1rem;
+    margin-bottom: 0.7rem;
+  }
+  .-w-pp-cat-id { flex: 1; min-width: 0; }
+  .-w-pp-cat-roman { font-size: 2rem; font-weight: 900; color: #c8161d; margin-right: 0.5rem; }
+  .-w-pp-cat-name { font-size: 1.65rem; font-weight: 900; }
+  .-w-pp-cat-latin { font-size: 0.92rem; color: #9aa3ac; margin-left: 0.7rem; }
+  .-w-pp-cat-sub { display: block; font-size: 0.92rem; color: #5b6672; margin-top: 0.2rem; }
+  .-w-pp-cat-side { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
+  .-w-pp-cat-side > div:first-child { text-align: center; }
+  .-w-pp-judge-word { font-size: 1rem; font-weight: 900; margin-bottom: 0.2rem; }
+  .-w-pp-meter { flex: 0 0 14rem; }
+  .-w-pp-meter-ttl { font-size: 0.75rem; color: #9aa3ac; }
+  .-w-pp-meter-bar { position: relative; height: 0.75rem; background: #f0f1f3; border-radius: 999px; margin: 0.25rem 0; }
+  .-w-pp-meter-fill { position: absolute; left: 0; top: 0; bottom: 0; background: #c8161d; border-radius: 999px; }
+  .-w-pp-meter-avg { position: absolute; top: -0.2rem; bottom: -0.2rem; width: 2px; background: #5b6672; }
+  .-w-pp-meter-num { font-size: 1.1rem; font-weight: 900; }
+  .-w-pp-meter-sub { font-size: 0.78rem; color: #5b6672; }
+
+  .-w-pp-brief { background: #f6f7f9; border-radius: 6px; padding: 0.6rem 1rem; font-size: 0.98rem; margin-bottom: 0.6rem; color: #414b55; }
+  .-w-pp-brief-tag { display: block; font-weight: 900; color: #c8161d; font-size: 0.8rem; letter-spacing: 0.1em; margin-bottom: 0.15rem; }
+
+  .-w-pp-item {
+    display: flex;
+    gap: 0.9rem;
+    border: 1px solid #e3e6ea;
+    border-radius: 6px;
+    padding: 0.5rem 0.9rem;
+    margin-bottom: 0.5rem;
     break-inside: avoid;
   }
-  .-w-pp-rx-ttl { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.3rem; }
-  .-w-pp-rx-text { font-size: 1.15rem; color: #414b55; margin-bottom: 0.5rem; }
-  .-w-pp-rx-media { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem; }
-  .-w-pp-rx-media span {
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: #c8161d;
-    border: 1px solid rgba(200, 22, 29, 0.4);
-    border-radius: 999px;
-    padding: 0.05em 0.9em;
-  }
-  .-w-pp-rx-ev {
-    font-size: 1.1rem;
-    background: #f6f7f9;
+  .-w-pp-item-badge {
+    flex-shrink: 0;
+    width: 3.2rem;
+    height: 1.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border-radius: 4px;
-    padding: 0.6rem 1rem;
+    font-weight: 900;
+    font-size: 0.95rem;
+    color: #fff;
   }
-  .-w-pp-rx-ev strong { color: #c8161d; }
-  .-w-pp-rx-ev span { display: block; font-size: 0.95rem; color: #5b6672; margin-top: 0.2rem; }
+  .-w-pp-item-ok .-w-pp-item-badge { background: #15803d; }
+  .-w-pp-item-ng .-w-pp-item-badge { background: #c8161d; }
+  .-w-pp-item-ng { border-left: 4px solid #c8161d; }
+  .-w-pp-item-body { flex: 1; min-width: 0; }
+  .-w-pp-item-name { font-size: 1.05rem; font-weight: 700; }
+  .-w-pp-item-desc { font-size: 0.82rem; color: #9aa3ac; }
+  .-w-pp-item-detail { font-size: 0.88rem; color: #414b55; margin-top: 0.12rem; }
+  .-w-pp-item-owl { font-size: 0.88rem; background: #f6f7f9; border-radius: 4px; padding: 0.28rem 0.6rem; margin-top: 0.28rem; color: #414b55; }
+  .-w-pp-item-owl b { color: #c8161d; font-size: 0.78rem; margin-right: 0.4em; }
+  .-w-pp-item-side {
+    flex: 0 0 8.6rem;
+    font-size: 0.82rem;
+    color: #5b6672;
+    border-left: 1px dashed #e3e6ea;
+    padding-left: 0.8rem;
+    align-self: center;
+  }
+  .-w-pp-item-kv { display: flex; justify-content: space-between; gap: 0.5rem; }
+  .-w-pp-item-kv b { color: #1f2933; }
+  .-w-pp-item-ng .-w-pp-item-kv b { color: #c8161d; }
+  .-w-pp-item-ok .-w-pp-item-kv b { color: #1f2933; }
 
-  .-w-pp-next {
+  .-w-pp-nextact {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
     border: 2px solid #c8161d;
     border-radius: 8px;
-    padding: 1.2rem 1.6rem;
-    break-inside: avoid;
+    padding: 0.6rem 1.1rem;
+    margin-top: 0.4rem;
   }
-  .-w-pp-next-ttl { font-size: 1.4rem; font-weight: 900; margin-bottom: 0.4rem; }
-  .-w-pp-next-text { font-size: 1.15rem; color: #414b55; margin-bottom: 0.6rem; }
-  .-w-pp-next-url { font-size: 1.3rem; font-weight: 700; color: #c8161d; margin-bottom: 0.4rem; }
-  .-w-pp-next-org { font-size: 1.05rem; color: #5b6672; }
+  .-w-pp-nextact-lead { flex: 1; font-size: 1rem; font-weight: 700; line-height: 1.55; }
+  .-w-pp-nextact-cta { font-size: 1.05rem; font-weight: 900; color: #c8161d; white-space: nowrap; text-align: right; }
+  .-w-pp-nextact-sub { display: block; font-size: 0.78rem; color: #5b6672; font-weight: 400; }
 
-  .-w-pp-note { margin-top: 1rem; font-size: 0.95rem; color: #5b6672; line-height: 1.7; }
+  /* ---- P10 特別章 ---- */
+  .-w-pp-dual { display: flex; gap: 1rem; }
+  .-w-pp-dual-card {
+    flex: 1;
+    display: flex;
+    gap: 0.9rem;
+    align-items: center;
+    border: 1px solid #e3e6ea;
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+  }
+  .-w-pp-dual-ttl { font-size: 0.82rem; font-weight: 700; color: #5b6672; letter-spacing: 0.08em; margin-bottom: 0.15rem; }
+  .-w-pp-dual-stats { font-size: 0.9rem; color: #414b55; }
+  .-w-pp-dual-stats strong { font-size: 1.15rem; color: #1f2933; }
+  .-w-pp-dual-note {
+    border-left: 4px solid #c8161d;
+    background: #fbf6f4;
+    padding: 0.5rem 0.9rem;
+    font-size: 0.92rem;
+    margin-top: 0.55rem;
+    color: #414b55;
+  }
+  .-w-pp-resp-bar { display: flex; height: 0.9rem; border-radius: 999px; overflow: hidden; margin-bottom: 0.45rem; }
+  .-w-pp-resp-bar i { display: block; height: 100%; }
+  .-w-pp-resp { display: flex; gap: 0.8rem; }
+  .-w-pp-resp-col { flex: 1; border: 1px solid #e3e6ea; border-radius: 6px; padding: 0.45rem 0.8rem; font-size: 0.82rem; color: #5b6672; }
+  .-w-pp-resp-col b { display: block; font-size: 0.9rem; color: #1f2933; margin-bottom: 0.1rem; }
+  .-w-pp-evd-row {
+    display: flex;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+    padding: 0.14rem 0;
+    border-bottom: 1px dotted #e3e6ea;
+    align-items: baseline;
+  }
+  .-w-pp-evd-num { flex: 0 0 1.3rem; font-weight: 900; color: #9aa3ac; text-align: right; }
+  .-w-pp-evd-name { flex: 0 0 11.4rem; font-weight: 700; }
+  .-w-pp-evd-cat { flex: 0 0 6.2rem; color: #9aa3ac; font-size: 0.78rem; }
+  .-w-pp-evd-st { flex: 0 0 2.2rem; font-weight: 900; }
+  .-w-pp-evd-ok { color: #15803d; }
+  .-w-pp-evd-ng { color: #c8161d; }
+  .-w-pp-evd-txt { flex: 1; color: #414b55; }
+  .-w-pp-abc { display: flex; gap: 0.8rem; align-items: stretch; }
+  .-w-pp-abc-card { flex: 1; border: 1px solid #e3e6ea; border-top: 3px solid #c8161d; border-radius: 6px; padding: 0.5rem 0.8rem; font-size: 0.85rem; }
+  .-w-pp-abc-ttl { font-weight: 900; font-size: 0.9rem; margin-bottom: 0.15rem; }
+  .-w-pp-abc-items { color: #c8161d; font-weight: 700; margin-bottom: 0.2rem; }
+  .-w-pp-abc-text { color: #5b6672; }
+  .-w-pp-legal { margin-top: 0.6rem; font-size: 0.72rem; color: #9aa3ac; line-height: 1.6; }
+
+  /* ---- P11 ×の埋め方 ---- */
+  .-w-pp-gap { border: 1px solid #e3e6ea; border-radius: 8px; margin-bottom: 0.6rem; break-inside: avoid; overflow: hidden; }
+  .-w-pp-gap-ttl { background: #1f2933; color: #fff; font-size: 1rem; font-weight: 700; padding: 0.3rem 1rem; }
+  .-w-pp-gap-cols { display: flex; }
+  .-w-pp-gap-col { flex: 1; padding: 0.5rem 1rem; font-size: 0.9rem; color: #414b55; }
+  .-w-pp-gap-col p { margin-bottom: 0.2rem; }
+  .-w-pp-gap-col + .-w-pp-gap-col { border-left: 1px solid #e3e6ea; }
+  .-w-pp-gap-col-ttl { font-size: 0.88rem; font-weight: 900; color: #1f2933; margin-bottom: 0.15rem; }
+  .-w-pp-gap-col-red { color: #c8161d; }
+  .-w-pp-gap-tags { margin-top: 0.25rem; font-size: 0.78rem; color: #c8161d; font-weight: 700; }
+  .-w-pp-gap-media { font-size: 0.95rem; font-weight: 900; color: #1f2933; }
+
+  .-w-pp-qr {
+    flex-shrink: 0;
+    width: 5.8rem;
+    height: 5.8rem;
+    border: 1px solid #c9cfd6;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    font-size: 0.62rem;
+    color: #9aa3ac;
+    text-align: center;
+    padding: 0.3rem;
+  }
+
+  /* ---- P12 付録 ---- */
+  .-w-pp-apx { display: flex; gap: 1.3rem; flex: 1; align-items: flex-start; }
+  .-w-pp-apx-col { flex: 1; font-size: 0.92rem; color: #414b55; min-width: 0; }
+  .-w-pp-apx-h {
+    font-size: 1.05rem;
+    font-weight: 900;
+    color: #1f2933;
+    border-left: 3px solid #c8161d;
+    padding-left: 0.6rem;
+    margin: 0.5rem 0 0.4rem;
+  }
+  .-w-pp-apx-col p { margin-bottom: 0.45rem; line-height: 1.65; }
+  .-w-pp-apx-col p b { color: #1f2933; }
+  .-w-pp-formula {
+    font-family: 'Courier New', monospace;
+    background: #f6f7f9;
+    border-radius: 4px;
+    padding: 0.2rem 0.7rem;
+    display: inline-block;
+    margin-top: 0.12rem;
+    font-size: 0.88rem;
+  }
+  .-w-pp-consult { border: 2px solid #c8161d; border-radius: 8px; padding: 0.9rem 1.1rem; }
+  .-w-pp-consult-ttl { font-size: 1.45rem; font-weight: 900; text-align: center; }
+  .-w-pp-consult-sub { text-align: center; font-size: 0.92rem; color: #5b6672; margin-bottom: 0.5rem; }
+  .-w-pp-consult-main { background: #fbf6f4; border-radius: 6px; padding: 0.6rem 0.9rem; margin: 0.5rem 0; }
+  .-w-pp-consult-line { font-size: 1.05rem; font-weight: 700; }
+  .-w-pp-consult-rec {
+    display: inline-block;
+    font-size: 0.72rem;
+    background: #c8161d;
+    color: #fff;
+    border-radius: 3px;
+    padding: 0 0.5em;
+    margin-left: 0.5em;
+    vertical-align: 0.15em;
+  }
+  .-w-pp-consult-web { font-size: 0.95rem; margin-top: 0.25rem; }
+  .-w-pp-consult-web b { color: #c8161d; margin-right: 0.3em; }
+  .-w-pp-subcards { display: flex; gap: 0.8rem; margin-top: 0.5rem; }
+  .-w-pp-subcard { flex: 1; border: 1px solid #e3e6ea; border-radius: 6px; padding: 0.45rem 0.8rem; font-size: 0.82rem; color: #5b6672; }
+  .-w-pp-subcard b { display: block; font-size: 0.92rem; color: #1f2933; margin-bottom: 0.1rem; }
+  .-w-pp-note { margin-top: 0.6rem; font-size: 0.72rem; color: #9aa3ac; line-height: 1.6; }
 }

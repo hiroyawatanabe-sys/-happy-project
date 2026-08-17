@@ -100,7 +100,7 @@
   };
 
   /* アンケート「いちばん近いお悩み」→ お困り事カード（マッピングC）
-     ※媒体の選び方はガイドカード（/solution/media-choice/）と重複するため一覧へ */
+     ※「何から手をつけるべきか」は個別ページがないため /solution/ 一覧へ */
   var SOLUTION_CARDS = {
     '折込・チラシの反応が落ちた': {
       url: '/solution/insert-response/', card: 'solution_insert',
@@ -127,6 +127,7 @@
     focusCat: null,    // ?t= で指定されたローマ数字
     reportDone: false,
     surveyTrigger: null,  // アンケート「いちばん近いお悩み」の回答
+    surveyIndustry: null, // アンケート「業種」の回答（PDF業界表示用）
     pdfSaved: false,
     exitShown: false,
     stickyClosed: false
@@ -265,7 +266,7 @@
     } else if (fails.length === 1 || warns.length) {
       // リスク中：相談＋自習系（選び方ガイド）を併記
       closeLead = 'あなたの結果に、どの処方が合うか。答え合わせは無料です。';
-      closeSub = '<a class="-w-bridge-close-sub" href="/solution/media-choice/" data-tsn-card data-card="guide">先に「媒体の選び方」を自分で読む</a>';
+      closeSub = '<a class="-w-bridge-close-sub" href="/column/" data-tsn-card data-card="column">先に関連コラムを読んでみる</a>';
     } else {
       // リスク小（全○）：攻めの一手の相談
       closeLead = '攻めの一手のご相談も無料です。御社の商圏に合う媒体からご提案します。';
@@ -290,166 +291,736 @@
 
   /* -----------------------------------------------------------
      2b. 印刷専用レポート生成（PDF発行＝window.print 時のみ表示）
-         参考: ガーディアン本番PDF（print_pdf.php）の構成を東宣仕様へ転換
-         表紙 → 成績表サマリ → 処方箋・次の一手 の3ページ構成
+         構成: 承認済みサンプルPDF「七つの取りこぼし診断
+         Webサイト品質診断レポート」（12ページ）に準拠
+         表紙 / 成績表 / カテゴリ詳細×7 / 制作会社 納品品質 /
+         ×の埋め方（東宣提案） / 付録
+         ※判定（○△×）はエンジン出力を変更せず使用。
+           得点・偏差値・順位は表示層の導出値、平均・母数は
+           承認サンプル準拠の参考値（本番API接続時に実数へ差し替え）
   ----------------------------------------------------------- */
+  var PP_EN = 'WEB PRESENCE QUALITY CHECK REPORT';
+  var PP_PAGES = 12;
+  var PP_POP_ALL = 76075;   // 全体母数（承認サンプル準拠）
+  var PP_POP_IND = 7903;    // 業界内母数（承認サンプル準拠）
+  var PP_SIGMA = 15.8;      // 偏差値の標準偏差（付録の計算式と同一）
+  var PP_MU_TOTAL = 72;     // 総合平均（付録の計算式と同一）
+  var PP_MU_IND = 70.2;     // 業界平均（承認サンプル準拠）
+
+  var PP_CATS = {
+    'I':   { no: 1, name: '集客基礎力', latin: 'Superbia', sin: '傲慢',
+      sub: '見つけてもらう努力を怠る取りこぼし', avg: 83.05,
+      brief: '集客力は、「インデックス設定」「構造化データ」「サイトマップ」の3点セットで作られます。検索エンジンに正しく認識してもらうための基礎設定です。' },
+    'II':  { no: 2, name: '接客力', latin: 'Avaritia', sin: '強欲',
+      sub: '与えずして奪おうとする取りこぼし', avg: 79.95,
+      brief: '接客力は、「USP」「採用情報」「ファーストビュー」の3点セットで作られます。訪問者に「選ぶ理由」を届けるためのコンテンツ力です。' },
+    'III': { no: 3, name: '会社信用力', latin: 'Invidia', sin: '嫉妬',
+      sub: '他社が持つ信用を羨みながら、自らは信用構築を怠る取りこぼし', avg: 55.23,
+      brief: '信用力は、「会社名明記」「ポリシー」「最新情報」の3点セットで作られます。訪問者が「この会社は信頼できる」と判断するための材料です。' },
+    'IV':  { no: 4, name: '顧客誘導力', latin: 'Acedia', sin: '怠惰',
+      sub: '顧客を導く努力を放棄する取りこぼし', avg: 74.7,
+      brief: '誘導力は、「グロナビ」「リンク視認性」「文字サイズ」の3点セットで作られます。訪問者を迷わせず目的地へ導くための道案内です。' },
+    'V':   { no: 5, name: '防御力', latin: 'Gula', sin: '暴食',
+      sub: '利便性を貪り、セキュリティを犠牲にする取りこぼし', avg: 93.93,
+      brief: '防御力は、「WPID対策」「TLS証明書」「Mixed Content」の3点セットで作られます。Webサイトの防犯システム。攻撃者から守るための基本装備です。' },
+    'VI':  { no: 6, name: '基礎力', latin: 'Ira', sin: '憤怒',
+      sub: '遅さに苛立つユーザーの怒りを招く取りこぼし', avg: 52.58,
+      brief: '基礎力は、「スマホ対応」「Core Web Vitals」「画像最適化」の3点セットで作られます。サイトの「基礎工事」。ユーザー体験の土台となる技術品質です。' },
+    'VII': { no: 7, name: 'PDCA改善力', latin: 'Luxuria', sin: '色欲',
+      sub: '表面の美しさに溺れ、数値による改善を放棄する取りこぼし', avg: 52.03,
+      brief: 'PDCA力は、「GA4タグ」「GTM」「計測阻害チェック」の3点セットで作られます。サイトの「体温計」。計測なくして改善なしです。' }
+  };
+
+  /* 項目定義（承認サンプルの表記・重要度に準拠。順序はエンジンの項目順と同一）
+     w: 表示層スコアの重み（必須=2/推奨=1）
+     ok/ng: 検出結果行（デモは定性表現。実測値は本番APIが出力）
+     resp: 責任区分 agency=制作会社 / shared=共同 / client=運営者 */
+  var PP_ITEMS = {
+    'I': [
+      { n: 'インデックス拒否設定', imp: '必須', w: 2, resp: 'agency',
+        desc: '検索エンジンへの登録（インデックス）を拒否する設定の有無を確認',
+        ok: '診断対象ページのindexを阻害する誤設定はありませんでした',
+        ng: '診断対象ページのindexを阻害する設定の可能性を検出しました',
+        owlOk: '玄関のドアがちゃんと開いている状態です。検索エンジンを歓迎できていますね。合格です。',
+        owlNg: '玄関のドアに鍵がかかったままの状態です。検索エンジンがサイトに入れず、検索結果に載れません。最優先で解除しましょう。',
+        top3: '検索結果に載らなければ、存在しないのと同じです。',
+        fix: 'noindex等の誤設定を確認し解除。設定箇所の修正のみで、即日対応が可能です。' },
+      { n: '構造化データの実装', imp: '推奨', w: 1, resp: 'agency',
+        desc: '検索エンジンにサイトの意味を伝える「構造化データ」の有無を確認',
+        ok: 'JSON-LD構造化データの実装を検知できました',
+        ng: '有効な構造化データを検知できませんでした',
+        owlOk: 'Googleに「うちはこういう会社です」と名刺を渡せている状態ですね。検索結果で目立てるチャンスがあります。',
+        owlNg: 'Googleに名刺を渡せていない状態です。会社情報や事業内容を構造化データで伝えると、検索結果で目立てるようになります。',
+        top3: '検索結果での見え方で、同業に差をつけられています。',
+        fix: 'JSON-LD形式で構造化データを実装。テンプレート適用で数日で対応できます。' },
+      { n: 'XMLサイトマップ取得', imp: '必須', w: 2, resp: 'agency',
+        desc: '検索エンジン向けのサイトマップファイル（sitemap.xml）の設置を確認',
+        ok: 'sitemap.xml の設置を確認できました',
+        ng: 'sitemap.xml を取得できませんでした',
+        owlOk: '会社の「フロアマップ」をGoogleに渡せていますね。全部屋を見つけてもらえます。合格です。',
+        owlNg: 'Googleに「フロアマップ」を渡せていない状態です。奥のページまで見つけてもらえず、せっかくのコンテンツが検索に載りません。',
+        top3: 'サイトの奥のページが検索エンジンに届いていません。',
+        fix: 'sitemap.xmlを生成・設置し、Search Consoleへ登録。数日で対応できます。' }
+    ],
+    'II': [
+      { n: 'USP（強み）の明文化', imp: '必須', w: 2, resp: 'shared',
+        desc: 'ファーストビュー等における独自の強み（USP）の記載有無を確認',
+        ok: 'USPを訴求する見出し・コンテンツを検知できました',
+        ng: 'USPを訴求する見出し・コンテンツを検知できませんでした',
+        owlOk: '「なぜうちを選ぶべきか」がしっかり言語化されていますね。来店したお客さんを迷わせない接客ができています。',
+        owlNg: '「なぜうちを選ぶべきか」が伝わっていない状態です。価格や立地だけで比較され、選ばれる理由を作れていません。',
+        top3: '選ばれる理由が言葉になっておらず、比較で負けやすい状態です。',
+        fix: '「選ばれる理由」を見出し化してファーストビューへ。既存の強みの言語化から始めましょう。' },
+      { n: '採用情報ページ', imp: '推奨', w: 1, resp: 'client',
+        desc: '採用情報またはリクルートページの存在を確認',
+        ok: '人材採用情報用のページ・リンクを検知できました',
+        ng: '人材採用情報用のページ・リンクを検知できませんでした',
+        owlOk: '「人が集まる会社」という活力をアピールできていますね。取引先から見ても好印象です。',
+        owlNg: '採用情報が見当たりません。「人が集まっている会社か」は、お客様や取引先が信頼を判断する材料のひとつです。',
+        top3: '会社の活気が伝わる材料が不足しています。',
+        fix: '採用・スタッフ紹介ページを用意。募集がない時期も「働く人の顔」が見えるだけで印象が変わります。' },
+      { n: 'ファーストビュー', imp: '推奨', w: 1, resp: 'shared',
+        desc: 'ファーストビューで「何のサイトか」がMETA情報と合致しているかを確認',
+        ok: 'ファーストビューの訴求とMETA情報の合致を確認できました',
+        ng: 'ファーストビューの訴求とMETA情報の合致度が低い可能性があります',
+        owlOk: 'パッと見て「何屋さんか」がすぐわかります。3秒ルールに勝てていますね！',
+        owlNg: 'パッと見て「何屋さんか」が伝わりにくい状態です。訪問者は3秒で読むか離れるかを決めてしまいます。',
+        top3: '最初の3秒で「何のサイトか」が伝わっていません。',
+        fix: 'ファーストビューの見出し・画像を「何屋か＋強み」が3秒で伝わる構成に再設計します。' }
+    ],
+    'III': [
+      { n: '会社名明記', imp: '必須', w: 2, resp: 'client',
+        desc: '特定商取引法に基づく表記や会社概要など、運営元の明記を確認',
+        ok: '運営元の会社情報の明記を確認できました',
+        ng: '運営元の会社情報を確認できませんでした',
+        owlOk: 'ちゃんと名札をつけている状態ですね。「誰がやっているサイトか」が一目でわかります。合格です。',
+        owlNg: '名札のないサイトになっています。「誰がやっているか」が見えないサイトは、それだけで問い合わせをためらわせます。',
+        top3: '運営元が見えず、信頼の入口でつまずいています。',
+        fix: '会社概要ページに社名・所在地・連絡先を明記。1ページの整備で即日対応できます。' },
+      { n: 'プライバシーポリシー', imp: '必須', w: 2, resp: 'shared',
+        desc: '個人情報保護方針ページの設置有無を確認',
+        ok: 'プライバシーポリシーページの存在を確認できました',
+        ng: 'プライバシーポリシーページを確認できませんでした',
+        owlOk: '個人情報の扱いをきちんと約束できていますね。法的にも安心です。このまま維持しましょう。',
+        owlNg: '個人情報の扱いが約束されていません。フォーム入力をためらわせるうえ、法令面でもリスクがあります。',
+        top3: '個人情報の約束がなく、問い合わせをためらわせています。',
+        fix: 'プライバシーポリシーページを設置し、フォームからリンク。数日で対応できます。' },
+      { n: '最新情報の更新頻度', imp: '推奨', w: 1, resp: 'client',
+        desc: 'お知らせやブログの最終更新日が直近であるかを確認',
+        ok: 'お知らせ・ブログの直近の更新を確認できました',
+        ng: '直近の更新情報を確認できませんでした',
+        owlOk: '「動いている会社」であることが伝わっていますね。更新の習慣は信頼の積み立てです。',
+        owlNg: 'お店の看板は出ているけど、電気が消えている状態です。「まだやってるの？」と思われてしまいます。月1回の更新だけでも印象はガラリと変わりますよ。',
+        top3: '更新停止は「まだやってるの？」の不安を生みます。',
+        fix: 'お知らせの月1回更新を運用ルール化。更新担当と型を決めれば数日で改善できます。' }
+    ],
+    'IV': [
+      { n: 'グロナビ常設', imp: '必須', w: 2, resp: 'agency',
+        desc: '全ページ共通のグローバルナビゲーションの設置を確認',
+        ok: 'ヘッダーリンク・グローバルナビを検知できました',
+        ng: '共通のグローバルナビを検知できませんでした',
+        owlOk: '全ページに案内板が設置されていますね。百貨店でいう「フロアガイド」がちゃんとあります。合格です。',
+        owlNg: 'サイト内に案内板がない状態です。訪問者は目的のページへたどり着けず、途中で帰ってしまいます。',
+        top3: '案内板がなく、訪問者が目的地に着く前に離脱しています。',
+        fix: '全ページ共通のグローバルナビを設置。主要5〜7項目に絞った設計が効果的です。' },
+      { n: 'リンク視認性', imp: '推奨', w: 1, resp: 'agency',
+        desc: 'テキストリンクが周囲の文字と区別可能かを確認',
+        ok: 'リンクと本文の区別性を確認できました',
+        ng: 'リンク色と背景色のコントラストがWCAG AA基準（4.5:1）に届いていない可能性があります',
+        owlOk: 'リンクが「押せる場所」だと一目でわかりますね。迷わせない誘導ができています。',
+        owlNg: 'リンク色と背景色のコントラスト比がWCAG AA基準（4.5:1）に届いていません。弱視・色覚特性のある方や明るい屋外画面では「文字が見えない」状態となり、せっかくのリンクがクリックされません。',
+        top3: 'リンクが見えず、クリックの機会を逃しています。',
+        fix: 'リンク色をWCAG AA基準（コントラスト比4.5:1以上）に修正。CSSの変更のみで即日対応可能です。' },
+      { n: '文字が小さすぎない', imp: '推奨', w: 1, resp: 'agency',
+        desc: '本文のフォントサイズが読みやすい大きさ（推奨16px以上）かを確認',
+        ok: '本文フォントサイズが推奨基準を満たしていることを確認できました',
+        ng: '本文フォントサイズが推奨基準を下回っている可能性があります',
+        owlOk: '読みやすい文字サイズですね。スマホでもストレスなく情報を届けられています。',
+        owlNg: '文字が小さく、スマホでは拡大しないと読めない状態です。読みにくさは、そのまま離脱につながります。',
+        top3: '小さい文字がスマホ閲覧者の離脱を招いています。',
+        fix: '本文フォントサイズを16px以上に統一。CSSの変更のみで即日対応可能です。' }
+    ],
+    'V': [
+      { n: 'WPIDチェック', imp: '推奨', w: 1, resp: 'shared',
+        desc: 'WordPressのユーザーIDや管理画面URLが露見していないか確認',
+        ok: '管理画面ログインIDの露出を検出しませんでした',
+        ng: '管理画面ログインID等が露出している可能性を検出しました',
+        owlOk: '管理画面の場所と鍵穴を上手に隠せていますね。泥棒が下見しても手がかりを掴めません。合格です。',
+        owlNg: '管理画面の鍵穴が外から見えている状態です。攻撃の足がかりになる前に、露出を塞ぎましょう。',
+        top3: '管理情報の露出が攻撃の足がかりになりかねません。',
+        fix: 'ユーザーID露出の停止・ログインURL変更などの基本対策を実施。数日で対応できます。' },
+      { n: 'TLS証明書有効', imp: '必須', w: 2, resp: 'agency',
+        desc: 'SSL/TLSサーバー証明書が有効で、HTTPS通信が行われているか確認',
+        ok: '証明書が有効で、HTTPS通信を確認できました',
+        ng: '有効なTLS証明書によるHTTPS通信を確認できませんでした',
+        owlOk: '通信の暗号化がバッチリです。お客さんとの会話が盗み聞きされる心配はありません。',
+        owlNg: '通信が暗号化されておらず、ブラウザに「保護されていない通信」と警告されます。それだけで訪問者は引き返します。',
+        top3: '「保護されていない通信」警告が訪問者を追い返しています。',
+        fix: 'TLS証明書を導入しHTTPS化。サーバー会社のオプションで数日で対応できます。' },
+      { n: 'Mixed Contentなし', imp: '必須', w: 2, resp: 'shared',
+        desc: 'HTTPSページ内にHTTP（非暗号化）リソースが混在していないか確認',
+        ok: 'Mixed Contentは検出されませんでした',
+        ng: 'HTTPS内にHTTP読み込み（Mixed Content）の可能性を検出しました',
+        owlOk: 'すべての荷物が安全な経路で届いていますね。セキュリティに穴がありません。合格です。',
+        owlNg: '安全な経路に、鍵のかかっていない荷物が混ざっています。警告表示や表示崩れの原因になります。',
+        top3: '混在コンテンツが警告と表示崩れを招いています。',
+        fix: '画像・スクリプトの読み込みURLをhttpsへ統一。置換作業のみで数日で対応できます。' }
+    ],
+    'VI': [
+      { n: 'スマホ対応', imp: '必須', w: 2, resp: 'shared',
+        desc: 'モバイルフレンドリーテスト相当の表示確認',
+        ok: 'viewport設定・横スクロールなしを確認できました',
+        ng: 'モバイル表示に問題がある可能性を検出しました',
+        owlOk: 'スマホでもきれいに表示されていますね。お客さんの7割以上はスマホから来ます。しっかり対応できています。',
+        owlNg: 'スマホで見づらい状態です。お客さんの7割以上はスマホから来ます。ここが崩れていると大半を逃します。',
+        top3: '訪問者の7割が使うスマホで、見づらさが発生しています。',
+        fix: 'レスポンシブ対応でスマホ表示を最適化。テンプレート改修から始めましょう。' },
+      { n: 'Core Web Vitals合格', imp: '必須', w: 2, resp: 'agency',
+        desc: 'LCP, CLS, INPなどのWeb Vitals指標が基準値内か確認',
+        ok: 'Core Web Vitalsの合格基準を満たしていることを確認できました',
+        ng: 'Core Web Vitalsの合格基準を満たしていない可能性を検出しました',
+        owlOk: '表示がサクサクですね。待たせないサイトは、それだけでおもてなしになっています。',
+        owlNg: 'レジで延々と待たされるお店と同じ状態です。ページが遅いだけで半数以上のお客さんが「もういいや」と帰ってしまいます。',
+        top3: 'CV低下とSEO順位低下の二重苦を招きます。',
+        fix: '画像のWebP化・圧縮とLCP改善で表示速度を回復。離脱による取りこぼしを止めます。' },
+      { n: '画像最適化', imp: '推奨', w: 1, resp: 'shared',
+        desc: '画像のサイズ圧縮や次世代フォーマット（WebP等）の使用状況を確認',
+        ok: '画像の圧縮・次世代フォーマット利用を確認できました',
+        ng: '未圧縮・旧形式の画像が多い可能性を検出しました',
+        owlOk: '画像がきちんとダイエットできていますね。速さと画質のバランスが取れています。',
+        owlNg: '巨大な荷物を狭い通路で運んでいるようなものです。画像が重すぎてページの表示を遅くしています。ダイエットしましょう。',
+        top3: '重い画像が表示速度と離脱率を悪化させます。',
+        fix: '画像をWebP等へ変換・圧縮。一括変換ツールで数日で対応できます。' }
+    ],
+    'VII': [
+      { n: 'GA4タグ存在', imp: '必須', w: 2, resp: 'agency',
+        desc: 'Google Analytics 4 (GA4) の計測タグ設置を確認',
+        ok: 'GA4計測タグの設置を確認できました',
+        ng: 'GA4計測タグを検出できませんでした',
+        owlOk: 'サイトの体温計がきちんと動いていますね。データに基づく改善ができる状態です。',
+        owlNg: '体温計のない病院と同じ状態です。サイトの健康状態がまったくわからず、「何を直せばいいか」の手がかりがゼロです。まずここから。',
+        top3: '未設置は「計器のない飛行機」。改善データが取れません。',
+        fix: 'GA4を設置し「診断→出稿→流入・問い合わせ」を計測できる状態に。以後の全施策の判断基盤になります。' },
+      { n: 'GTM存在', imp: '推奨', w: 1, resp: 'agency',
+        desc: 'Google Tag Manager (GTM) の導入有無を確認',
+        ok: 'Tag Managerの導入を確認できました',
+        ng: 'Tag Managerを検出できませんでした',
+        owlOk: 'タグの管理ツールが入っていますね。マーケティング施策をスピーディーに展開できる体制です。',
+        owlNg: 'タグを直書きで管理している状態です。GTMを入れると、計測や広告タグの追加が安全・迅速になります。',
+        top3: 'タグ管理が整わず、施策のスピードが落ちています。',
+        fix: 'GTMを導入しタグを一元管理。GA4と合わせての導入が効率的です。' },
+      { n: '致命的な計測阻害なし', imp: '必須', w: 2, resp: 'agency',
+        desc: 'CSP設定やJSエラーによる計測タグのブロックがないか確認',
+        ok: '重大なConsoleエラーは検知されませんでした',
+        ng: '計測を阻害しうる重大なエラーの可能性を検知しました',
+        owlOk: '計測の邪魔をするものがありませんね。データが正しく届いています。安心です。',
+        owlNg: '計測タグの動作を妨げるエラーの疑いがあります。数字が欠けたまま判断すると、改善の方向を誤ります。',
+        top3: '計測エラーがデータの欠落を招いています。',
+        fix: 'Consoleエラーの原因スクリプトを特定・修正。計測の土台を先に固めます。' }
+    ]
+  };
+
+  /* ×の埋め方（P11）: カテゴリ→マス媒体で塞ぐ打ち手（承認サンプル準拠＋RXと整合） */
+  var PP_GAP = {
+    'I':   { text: '検索やWeb広告に頼らず商圏へ直接届く媒体で「検索しない層」からの認知を確保。サイト改善と並行して、反響の母数をつくります。',
+      tags: '#商圏配布 #検索しない層', media: '折込チラシ∕地域TV∕ラジオ' },
+    'II':  { text: '紙面の一覧性を活かし、強み・事例を1枚で「伝わる形」に編集して商圏へ届けます（制作はグループ会社TACと一気通貫）。',
+      tags: '#伝わる訴求 #紙の一覧性', media: '新聞広告∕雑誌・専門誌' },
+    'III': { text: '更新が止まっていた期間の「認知の空白」は、商圏への折込・地域メディアで再アプローチ。「まだやってるの？」を「よく見るね」に変えます。',
+      tags: '#商圏配布 #エリア認知', media: '折込チラシ∕交通・OOH' },
+    'IV':  { text: 'サイト改善と同時に、紙面・音声など「見え方に左右されない媒体」を併用し、シニア層への到達を確保します。',
+      tags: '#シニア層 #ABC公査部数', media: '新聞広告∕ラジオ' },
+    'V':   { text: '防御の改善が完了するまでの集客は、サイトの状態に左右されない紙媒体で継続。安心して直せる時間をつくります。',
+      tags: '#並走集客 #商圏配布', media: '折込チラシ∕ラジオ' },
+    'VI':  { text: '受け皿の改善が完了するまでの集客は、電話・来店を直接促せる折込・ラジオで補完。改善後にWeb広告を再開する段取りが無駄がありません。',
+      tags: '#反応率改善 #ながら聴取', media: '折込チラシ∕ラジオ' },
+    'VII': { text: '計測が整えば、マス出稿の効果（放送・配布期間中の指名検索や問い合わせの変化）も数字で確認可能に。「効いたか分からない広告」から卒業します。',
+      tags: '#成果の実数 #実数提案', media: '効果測定つきマス出稿（全媒体）' }
+  };
+
+  var PP_GRADE_WORD = { A: '優秀', B: '良好', C: '要改善', D: '要対策' };
+  var PP_JUDGE_WORD = { pass: '合格', warn: '要改善', fail: '不合格' };
+  var PP_OWL_TOTAL = {
+    A: '総合評価はA。守りは万全です。次は"攻めの認知"で商圏シェアを取りにいきましょう。',
+    B: '総合評価はB。改善ポイントは明確です。一つずつ直していきましょう。',
+    C: '総合評価はC。取りこぼしが複数見つかりました。優先度の高い×から着手しましょう。',
+    D: '総合評価はD。複数の経路でお客様を逃している可能性があります。まず対処の順番を整理しましょう。'
+  };
+
+  function ppScore(row) {
+    var defs = PP_ITEMS[row.roman] || [];
+    var tw = 0, ts = 0;
+    row.items.forEach(function (it, i) {
+      var w = (defs[i] && defs[i].w) || 1;
+      tw += w; if (it.pass) ts += w;
+    });
+    return tw ? Math.round(ts / tw * 100) : 0;
+  }
+  function ppGrade(score) { return score >= 90 ? 'A' : score >= 70 ? 'B' : score >= 50 ? 'C' : 'D'; }
+  function ppDevi(score, mu) { return Math.round((50 + 10 * (score - mu) / PP_SIGMA) * 10) / 10; }
+  function ppTopPct(t) {  // 偏差値→上位%（正規分布のロジスティック近似）
+    var p = 1 / (1 + Math.exp(-1.702 * (t - 50) / 10));
+    return Math.max(0.1, Math.min(99.9, Math.round((100 - p * 100) * 10) / 10));
+  }
+  function ppRank(t, n) { return Math.max(1, Math.round(n * ppTopPct(t) / 100)); }
+  function ppNum(n) { return Number(n).toLocaleString('ja-JP'); }
+
   function buildPrintReport(container, results) {
     var root = $('tosen-print');
     if (!root) return;
 
+    /* --- 成績表DOMから素材回収（エンジン非干渉） --- */
     var metaEl = container.querySelector('.-w-report-meta');
     var metaText = metaEl ? metaEl.textContent : '';
     var urlMatch = metaText.match(/診断URL：(.+?)診断日時：/);
     var dateMatch = metaText.match(/診断日時：([0-9\/]+ [0-9:]+)/);
-    var passMatch = metaText.match(/合格項目：(\d+)\s*\/\s*21/);
-    var diagUrl = urlMatch ? urlMatch[1] : '';
-    var diagDate = dateMatch ? dateMatch[1].trim() : '';
-    var passCount = passMatch ? passMatch[1] : '-';
+    var diagUrl = urlMatch ? urlMatch[1].trim() : '';
+    var diagDate = dateMatch ? dateMatch[1].trim().split(' ')[0] : '';
+    var host = diagUrl;
+    try { host = new URL(diagUrl).hostname; } catch (e) { /* 続行 */ }
 
-    var stampEl = container.querySelector('.-w-report-stamp');
-    var stampHtml = stampEl ? stampEl.outerHTML : '';
-    var gradeEl = container.querySelector('.-w-report-stamp-grade');
-    var gradeLabel = gradeEl ? gradeEl.textContent.trim() : '';
-
-    var radarEl = container.querySelector('.-w-report-radar svg');
-    var radarHtml = radarEl ? radarEl.outerHTML : '';
-
-    var GRADE_MSG = {
-      '小': '大きな取りこぼしは見当たりませんでした。次は「攻めの認知」で商圏シェアを取りにいく段階です。',
-      '中': '放置すると機会損失につながる項目があります。×の項目から一つずつ塞いでいきましょう。',
-      '大': '集客の取りこぼしが起きている可能性が高い状態です。優先度の高い×から着手をおすすめします。',
-      '特大': '複数の経路でお客様を逃している可能性があります。まずは無料相談で対処の順番を整理しましょう。'
-    };
-    var JUDGE_LABEL = { pass: '合格', warn: '要注意', fail: '要改善' };
-
-    // 各カテゴリ行のコメント・項目を成績表から回収
     var rows = [];
     container.querySelectorAll('.-w-report-row').forEach(function (row) {
       var roman = row.querySelector('.-w-report-row-roman');
       var name = row.querySelector('.-w-report-row-name');
       var judge = row.querySelector('.-w-report-row-judge');
-      var comment = row.querySelector('.-w-report-row-comment');
       var items = [];
       row.querySelectorAll('.-w-report-item').forEach(function (item) {
-        items.push({
-          pass: item.classList.contains('-w-item-pass'),
-          label: item.textContent.replace(/：(合格|不合格)$/, '').trim()
-        });
+        items.push({ pass: item.classList.contains('-w-item-pass') });
       });
       if (roman && judge) {
         rows.push({
           roman: roman.textContent.trim(),
-          name: name ? name.textContent.trim() : '',
-          judgeText: judge.textContent.trim(),
           judgeCls: judge.classList.contains('-w-judge-fail') ? 'fail' : (judge.classList.contains('-w-judge-warn') ? 'warn' : 'pass'),
-          comment: comment ? comment.textContent.trim() : '',
           items: items
         });
       }
     });
 
-    var failRows = rows.filter(function (r) { return r.judgeCls === 'fail'; });
-    var warnRows = rows.filter(function (r) { return r.judgeCls === 'warn'; });
+    /* --- 表示層スコアリング --- */
+    rows.forEach(function (row) {
+      var cat = PP_CATS[row.roman] || {};
+      row.cat = cat;
+      row.score = ppScore(row);
+      row.grade = ppGrade(row.score);
+      row.devi = ppDevi(row.score, cat.avg || PP_MU_TOTAL);
+      row.rank = ppRank(row.devi, PP_POP_ALL);
+      row.passCount = row.items.filter(function (it) { return it.pass; }).length;
+    });
+    var passTotal = rows.reduce(function (s, r) { return s + r.passCount; }, 0);
+    var allW = 0, gotW = 0;
+    rows.forEach(function (row) {
+      (PP_ITEMS[row.roman] || []).forEach(function (d, i) {
+        allW += d.w; if (row.items[i] && row.items[i].pass) gotW += d.w;
+      });
+    });
+    var totScore = allW ? Math.round(gotW / allW * 100) : 0;
+    var totGrade = ppGrade(totScore);
+    var totDevi = ppDevi(totScore, PP_MU_TOTAL);
+    var indDevi = ppDevi(totScore, PP_MU_IND);
+    var rankAll = ppRank(totDevi, PP_POP_ALL);
+    var rankInd = ppRank(indDevi, PP_POP_IND);
+    var industry = state.surveyIndustry || '建設業';
 
-    function header(pageTitle) {
+    /* 不合格項目（重要度＝必須を優先） */
+    var failItems = [];
+    rows.forEach(function (row) {
+      row.items.forEach(function (it, i) {
+        if (!it.pass) failItems.push({ row: row, def: PP_ITEMS[row.roman][i] });
+      });
+    });
+    failItems.sort(function (a, b) { return b.def.w - a.def.w; });
+
+    /* --- 共通部品 --- */
+    var pageNo = 0;
+    function pad2(n) { return (n < 10 ? '0' : '') + n; }
+    function head(kicker, sub) {
+      pageNo++;
       return '<div class="-w-pp-head">' +
         '<img class="-w-pp-logo" src="assets/logo-tosen.jpg" alt="株式会社東宣（TOSEN）">' +
-        '<div class="-w-pp-head-right">' +
-          '<span class="-w-pp-head-title">' + pageTitle + '</span>' +
-          '<span class="-w-pp-provided">PROVIDED BY 株式会社ガーディアン</span>' +
+        '<div class="-w-pp-head-mid">' +
+          '<span class="-w-pp-kicker">' + kicker + '</span>' +
+          '<span class="-w-pp-kicker-sub">' + sub + '</span>' +
         '</div>' +
+        '<div class="-w-pp-head-meta">診断対象　' + diagUrl + '<br>診断日　' + diagDate + '</div>' +
+        '<span class="-w-pp-num">' + pad2(pageNo) + '</span>' +
       '</div>';
     }
-    function footer(num) {
+    function foot() {
       return '<div class="-w-pp-foot">' +
-        '<span>PROVIDED BY 株式会社ガーディアン　｜　WEB集客 取りこぼし診断</span>' +
-        '<span>Page 0' + num + ' / 03</span>' +
+        '<span>PROVIDED BY ｜ 診断エンジン提供：株式会社ガーディアン（OWLet）　七つの取りこぼし診断 Webサイト品質診断</span>' +
+        '<span>Page ' + pad2(pageNo) + ' / ' + PP_PAGES + '</span>' +
       '</div>';
+    }
+    function sec(no, jp, en) {
+      return '<h2 class="-w-pp-sec">§ ' + pad2(no) + '　' + jp + ' <span>' + en + '</span></h2>';
+    }
+    function gradeBadge(tag, letter, word, small) {
+      return '<div class="-w-ppg -w-ppg-' + letter.toLowerCase() + (small ? ' -w-ppg-sm' : '') + '">' +
+        '<span class="-w-ppg-tag">' + tag + '</span>' +
+        '<span class="-w-ppg-letter">' + letter + '</span>' +
+        '<span class="-w-ppg-word">' + word + '</span>' +
+      '</div>';
+    }
+    function owlBox(text, sig) {
+      return '<div class="-w-pp-owl"><span class="-w-pp-owl-tag">OWLet</span>' + text +
+        (sig ? '<span class="-w-pp-owl-sig">―― OWLet先生の一言</span>' : '') + '</div>';
+    }
+
+    /* --- レーダー（あなた vs 平均・表示層で生成） --- */
+    function printRadar() {
+      var cx = 128, cy = 100, R = 62, N = rows.length || 7;
+      function pt(i, ratio) {
+        var a = -Math.PI / 2 + i * 2 * Math.PI / N;
+        return (cx + R * ratio * Math.cos(a)).toFixed(1) + ',' + (cy + R * ratio * Math.sin(a)).toFixed(1);
+      }
+      var svg = '<svg viewBox="0 0 256 200" role="img" aria-label="7科目レーダーチャート">';
+      [1 / 3, 2 / 3, 1].forEach(function (g) {
+        var ps = []; for (var i = 0; i < N; i++) ps.push(pt(i, g));
+        svg += '<polygon points="' + ps.join(' ') + '" fill="none" stroke="#e3e6ea"/>';
+      });
+      for (var i = 0; i < N; i++) svg += '<line x1="' + cx + '" y1="' + cy + '" x2="' + pt(i, 1).split(',')[0] + '" y2="' + pt(i, 1).split(',')[1] + '" stroke="#e3e6ea"/>';
+      var avgPs = [], youPs = [];
+      rows.forEach(function (row, i) {
+        avgPs.push(pt(i, (row.cat.avg || 0) / 100));
+        youPs.push(pt(i, row.score / 100));
+      });
+      svg += '<polygon points="' + avgPs.join(' ') + '" fill="rgba(91,102,114,0.15)" stroke="#5b6672" stroke-width="1.2"/>';
+      svg += '<polygon points="' + youPs.join(' ') + '" fill="rgba(200,22,29,0.18)" stroke="#c8161d" stroke-width="1.8"/>';
+      rows.forEach(function (row, i) {
+        var a = -Math.PI / 2 + i * 2 * Math.PI / N;
+        var lx = cx + (R + 16) * Math.cos(a), ly = cy + (R + 14) * Math.sin(a);
+        var anchor = Math.abs(Math.cos(a)) < 0.3 ? 'middle' : (Math.cos(a) > 0 ? 'start' : 'end');
+        svg += '<text x="' + lx.toFixed(1) + '" y="' + (ly + 3).toFixed(1) + '" text-anchor="' + anchor + '" font-size="9" font-weight="700" fill="#1f2933">' + row.cat.name + '</text>';
+      });
+      svg += '</svg>';
+      return '<div class="-w-pp-radar">' + svg +
+        '<div class="-w-pp-radar-legend"><span><i style="background:#c8161d"></i>あなた</span><span><i style="background:#5b6672"></i>平均</span></div></div>';
     }
 
     /* ---- Page 1: 表紙 ---- */
-    var p1 = '<section class="-w-pp -w-pp-cover">' + header('WEB MARKETING LEAK CHECK REPORT') +
+    var p1 = '<section class="-w-pp -w-pp-cover">' + head(PP_EN, '七つの取りこぼし診断 ∕ Webサイト品質診断レポート') +
       '<div class="-w-pp-cover-main">' +
-        '<p class="-w-pp-cover-en">WEB MARKETING LEAK CHECK REPORT</p>' +
-        '<h1 class="-w-pp-cover-title">WEB集客 取りこぼし診断<br>レポート</h1>' +
-        '<div class="-w-pp-cover-stamp">' + stampHtml + '</div>' +
+        '<img class="-w-pp-cover-logo" src="assets/logo-tosen.jpg" alt="株式会社東宣（TOSEN）">' +
+        '<p class="-w-pp-cover-en">' + PP_EN + '</p>' +
+        '<h1 class="-w-pp-cover-title">七つの取りこぼし診断</h1>' +
+        '<p class="-w-pp-cover-sub">Webサイト品質診断レポート</p>' +
         '<table class="-w-pp-cover-meta"><tbody>' +
+          '<tr><th>診断サイト</th><td>' + host + '</td></tr>' +
           '<tr><th>診断URL</th><td>' + diagUrl + '</td></tr>' +
           '<tr><th>診断日</th><td>' + diagDate + '</td></tr>' +
-          '<tr><th>診断項目</th><td>7カテゴリ 21項目（自動診断）／合格 ' + passCount + ' / 21</td></tr>' +
         '</tbody></table>' +
-        '<p class="-w-pp-cover-org">株式会社 東宣（TOSEN）　創業1948年／全省庁統一資格／日本ABC協会加盟</p>' +
-      '</div>' + footer(1) + '</section>';
+        '<p class="-w-pp-provided">PROVIDED BY<br>診断エンジン提供：株式会社ガーディアン（OWLet）</p>' +
+      '</div>' + foot() + '</section>';
 
-    /* ---- Page 2: 成績表サマリ ---- */
-    var tableRows = rows.map(function (r, i) {
-      var ok = r.items.filter(function (it) { return it.pass; }).length;
+    /* ---- Page 2: 成績表 ---- */
+    var tableRows = rows.map(function (r) {
       return '<tr>' +
-        '<td class="-w-pp-td-roman">' + r.roman + '</td>' +
-        '<td>' + r.name + '</td>' +
-        '<td class="-w-pp-td-num">' + ok + ' / ' + r.items.length + '</td>' +
-        '<td><span class="-w-pp-judge -w-pp-judge-' + r.judgeCls + '">' + JUDGE_LABEL[r.judgeCls] + '</span></td>' +
+        '<td>' + r.cat.no + '</td>' +
+        '<td class="-w-l">' + r.cat.name + ' <span class="-w-sin">∕' + r.cat.sin + '</span></td>' +
+        '<td>' + r.score + '</td>' +
+        '<td>' + r.cat.avg + '</td>' +
+        '<td>' + r.devi + '</td>' +
+        '<td class="-w-pp-gl -w-gl-' + r.grade.toLowerCase() + '">' + r.grade + '</td>' +
+        '<td>' + ppNum(r.rank) + '</td>' +
       '</tr>';
+    }).join('') +
+      '<tr class="-w-pp-tr-total"><td></td><td class="-w-l">総合</td><td>' + totScore + '</td><td>' + PP_MU_IND + '</td><td>' + totDevi + '</td>' +
+      '<td class="-w-pp-gl -w-gl-' + totGrade.toLowerCase() + '">' + totGrade + '</td><td>' + ppNum(rankAll) + '</td></tr>';
+
+    function distBox(ttl, rank, pop, topPct, devi) {
+      var left = Math.max(3, Math.min(97, 100 - topPct));
+      return '<div class="-w-pp-dist-box">' +
+        '<p class="-w-pp-dist-ttl">' + ttl + '</p>' +
+        '<div class="-w-pp-dist-bar"><span class="-w-pp-dist-marker" style="left:' + left + '%">あなた ↓</span></div>' +
+        '<div class="-w-pp-dist-scale"><span>~30</span><span>78~</span></div>' +
+        '<p class="-w-pp-dist-cap"><strong>' + ppNum(rank) + '</strong> / ' + ppNum(pop) + '位　上位 約' + topPct + '%（偏差値' + devi + '）</p>' +
+      '</div>';
+    }
+
+    var benchRows = rows.map(function (r) {
+      var top10 = Math.min(100, Math.round((r.cat.avg || 0) + 20));
+      return '<div class="-w-pp-bench-row">' +
+        '<span class="-w-pp-bench-label">' + r.cat.name + '<span class="-w-sin">∕' + r.cat.sin + '</span></span>' +
+        '<span class="-w-pp-bench-track">' +
+          '<span class="-w-pp-bench-you" style="width:' + r.score + '%"></span>' +
+          '<span class="-w-pp-bench-avg" style="left:' + r.cat.avg + '%"></span>' +
+          '<span class="-w-pp-bench-top" style="left:' + top10 + '%"></span>' +
+        '</span>' +
+        '<span class="-w-pp-bench-val">' + r.score + ' / 100</span>' +
+      '</div>';
     }).join('');
 
-    var topActions = failRows.slice(0, 3).map(function (r, i) {
+    var top3 = failItems.slice(0, 3).map(function (f, i) {
       return '<div class="-w-pp-action">' +
         '<span class="-w-pp-action-num">' + (i + 1) + '</span>' +
-        '<div><p class="-w-pp-action-ttl">' + r.roman + '. ' + r.name + '</p>' +
-        '<p class="-w-pp-action-text">' + r.comment + '</p></div>' +
+        '<div><span class="-w-pp-action-cat">' + f.row.cat.name + '∕' + f.row.cat.sin + '</span>' +
+        '<p class="-w-pp-action-ttl">' + f.def.n + '</p>' +
+        '<p class="-w-pp-action-text">' + f.def.top3 + '</p></div>' +
       '</div>';
-    }).join('') || '<p class="-w-pp-note-inline">要改善（×）のカテゴリはありませんでした。</p>';
+    }).join('') || '<p class="-w-pp-allok">不合格（×）の項目はありませんでした。守りは合格です。</p>';
 
-    var p2 = '<section class="-w-pp">' + header('成績表　SCORE REPORT') +
-      '<h2 class="-w-pp-sec">§01　総合判定 <span>TOTAL</span></h2>' +
+    var p2 = '<section class="-w-pp">' + head('成績表', '七つの取りこぼし診断 ∕ Webサイト品質診断 ∕ 全7科目 総合評価') +
+      sec(1, '総合評価', 'TOTAL SCORE') +
       '<div class="-w-pp-total">' +
-        '<div class="-w-pp-total-stamp">' + stampHtml + '</div>' +
+        gradeBadge('TOTAL', totGrade, PP_GRADE_WORD[totGrade]) +
         '<div class="-w-pp-total-body">' +
-          '<p class="-w-pp-total-line">合格項目：<strong>' + passCount + ' / 21</strong>　取りこぼしリスク：<strong>' + gradeLabel + '</strong></p>' +
-          '<p class="-w-pp-total-msg">' + (GRADE_MSG[gradeLabel] || '') + '</p>' +
+          '<p class="-w-pp-total-headline">あなたのサイトの業界内順位は <strong>' + ppNum(rankInd) + '位</strong> です</p>' +
+          '<div class="-w-pp-total-stats">' +
+            '<span>偏差値 <strong>' + indDevi + '</strong></span>' +
+            '<span>総合得点 <strong>' + totScore + '</strong>/100</span>' +
+            '<span>合格項目 <strong>' + passTotal + '</strong>/21</span>' +
+            '<span>総合順位 <strong>' + ppNum(rankInd) + '位</strong> / ' + ppNum(PP_POP_IND) + '（' + industry + '）</span>' +
+          '</div>' +
         '</div>' +
+        owlBox(PP_OWL_TOTAL[totGrade], true) +
       '</div>' +
-      '<h2 class="-w-pp-sec">§02　7カテゴリバランス <span>CATEGORY BREAKDOWN</span></h2>' +
-      '<div class="-w-pp-balance">' +
-        '<div class="-w-pp-radar">' + radarHtml + '</div>' +
-        '<table class="-w-pp-table"><thead><tr><th></th><th>カテゴリ</th><th>合格</th><th>判定</th></tr></thead>' +
+      sec(2, '科目別バランス ＆ 成績一覧', 'CATEGORY BREAKDOWN') +
+      '<div class="-w-pp-balance">' + printRadar() +
+        '<table class="-w-pp-table"><thead><tr><th></th><th>科目（七つの取りこぼし）</th><th>得点</th><th>平均</th><th>偏差値</th><th>評価</th><th>順位</th></tr></thead>' +
         '<tbody>' + tableRows + '</tbody></table>' +
       '</div>' +
-      '<h2 class="-w-pp-sec">§03　最優先で直したい項目 <span>TOP ACTIONS</span></h2>' +
-      topActions +
-      footer(2) + '</section>';
-
-    /* ---- Page 3: 処方箋・次の一手 ---- */
-    var targets = failRows.length ? failRows : warnRows;
-    var rxCards = targets.slice(0, 3).map(function (r) {
-      var rx = RX[r.roman];
-      if (!rx) return '';
-      var media = rx.media.map(function (m) { return '<span>' + m.label + '</span>'; }).join('');
-      return '<div class="-w-pp-rx">' +
-        '<p class="-w-pp-rx-ttl">' + r.roman + '. ' + r.name + '：' + rx.hole + '</p>' +
-        '<p class="-w-pp-rx-text">' + rx.rx + '</p>' +
-        '<div class="-w-pp-rx-media">' + media + '</div>' +
-        (rx.ev ? '<p class="-w-pp-rx-ev">' + rx.ev + (rx.src ? '<span>' + rx.src + '</span>' : '') + '</p>' : '') +
-      '</div>';
-    }).join('') || '<div class="-w-pp-rx"><p class="-w-pp-rx-ttl">守りは合格。次は攻めの認知です。</p>' +
-      '<p class="-w-pp-rx-text">サイトの受け皿は整っています。王道メディアで商圏の認知シェアを取りにいく打ち手をご提案できます。</p></div>';
-
-    var p3 = '<section class="-w-pp">' + header('処方箋　PRESCRIPTION') +
-      '<h2 class="-w-pp-sec">§04　王道メディア処方 <span>PRESCRIPTION</span></h2>' +
-      '<p class="-w-pp-lead">×の原因ごとに、Web施策だけでなく新聞折込・地域TV・ラジオ・交通広告などの"王道メディア"まで含めた打ち手を処方します。</p>' +
-      rxCards +
-      '<h2 class="-w-pp-sec">§05　次の一手 <span>NEXT ACTION</span></h2>' +
-      '<div class="-w-pp-next">' +
-        '<p class="-w-pp-next-ttl">この成績表を見ながら、30分の無料相談ができます</p>' +
-        '<p class="-w-pp-next-text">オンラインOK。結果の見方と「最初の一手」だけお伝えします。売り込みはしません。</p>' +
-        '<p class="-w-pp-next-url">無料相談・お問い合わせ　▶　https://www.tosen-net.co.jp/contact/</p>' +
-        '<p class="-w-pp-next-org">株式会社 東宣（TOSEN）　〒104-0031 東京都中央区京橋3-7-10 東宣ビル2階</p>' +
+      sec(3, '全体分布マップ ― あなたはここ', 'DISTRIBUTION MAP') +
+      '<div class="-w-pp-dist">' +
+        distBox('全体分布（' + ppNum(PP_POP_ALL) + 'サイト）', rankAll, PP_POP_ALL, ppTopPct(totDevi), totDevi) +
+        distBox('業界内分布（' + industry + '）', rankInd, PP_POP_IND, ppTopPct(indDevi), indDevi) +
       '</div>' +
-      '<p class="-w-pp-note">※本診断は公開情報の自動解析による簡易診断であり、結果は推定を含みます。実際の集客状況・改善効果を保証するものではありません。<br>' +
-      '※掲載の数値は各案件の実績であり、同様の効果をお約束するものではありません。</p>' +
-      footer(3) + '</section>';
+      sec(4, 'あなた vs 業界平均 vs トップ10%', 'BENCHMARK') +
+      '<p class="-w-pp-bench-legend">■あなた　｜業界平均　｜トップ10%</p>' + benchRows +
+      sec(5, '最優先で直したい3項目', 'TOP 3 ACTIONS') + top3 +
+      '<p class="-w-pp-refnote">※平均点・分布・順位はOWLet診断データベースの蓄積値に基づく参考値です。</p>' +
+      foot() + '</section>';
 
-    root.innerHTML = p1 + p2 + p3;
+    /* ---- Page 3-9: カテゴリ詳細 ×7 ---- */
+    var catPages = rows.map(function (row) {
+      var defs = PP_ITEMS[row.roman] || [];
+      var okNames = [], ngNames = [];
+      row.items.forEach(function (it, i) { (it.pass ? okNames : ngNames).push(defs[i] ? defs[i].n : ''); });
+      var briefState = ngNames.length === 0
+        ? '3つとも合格！この調子で維持していきましょう。'
+        : (okNames.length ? okNames.join('・') + 'は合格。' : '') + 'ただし「' + ngNames.join('」「') + '」に課題があります。まずはここから直しましょう。';
+
+      var itemsHtml = row.items.map(function (it, i) {
+        var d = defs[i];
+        if (!d) return '';
+        return '<div class="-w-pp-item ' + (it.pass ? '-w-pp-item-ok' : '-w-pp-item-ng') + '">' +
+          '<span class="-w-pp-item-badge">' + (it.pass ? 'OK' : 'NG') + '</span>' +
+          '<div class="-w-pp-item-body">' +
+            '<p class="-w-pp-item-name">' + d.n + '</p>' +
+            '<p class="-w-pp-item-desc">' + d.desc + '</p>' +
+            '<p class="-w-pp-item-detail">▶ ' + (it.pass ? d.ok : d.ng) + '</p>' +
+            '<p class="-w-pp-item-owl"><b>OWLet</b>' + (it.pass ? d.owlOk : d.owlNg) + '</p>' +
+          '</div>' +
+          '<div class="-w-pp-item-side">' +
+            '<p class="-w-pp-item-kv"><span>重要度</span><b>' + d.imp + '</b></p>' +
+            '<p class="-w-pp-item-kv"><span>結果</span><b>' + (it.pass ? '合格' : '不合格') + '</b></p>' +
+            '<p class="-w-pp-item-kv"><span>改修</span><b>' + (it.pass ? '不要' : '要対応') + '</b></p>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+
+      var nextLead = ngNames.length === 0
+        ? 'この章は全項目クリア！素晴らしい成績です。'
+        : 'この章で直すべきは' + ngNames.length + '項目。数日で対応できます。';
+      var nextCta = ngNames.length === 0
+        ? 'この状態を維持する運用を相談する →'
+        : 'この×の直し方を無料で相談する →';
+
+      return '<section class="-w-pp">' +
+        head('カテゴリ詳細 ∕ 第' + row.cat.no + 'の取りこぼし', '七つの取りこぼし診断 ∕ Webサイト品質診断 ∕ ' + row.cat.name + 'の章') +
+        '<div class="-w-pp-cat-top">' +
+          '<div class="-w-pp-cat-id">' +
+            '<span class="-w-pp-cat-roman">' + row.roman + '</span>' +
+            '<span class="-w-pp-cat-name">' + row.cat.name + '</span>' +
+            '<span class="-w-pp-cat-latin">' + row.cat.latin + ' / ' + row.cat.sin + '</span>' +
+            '<span class="-w-pp-cat-sub">― ' + row.cat.sub + '</span>' +
+          '</div>' +
+          '<div class="-w-pp-cat-side">' +
+            '<div><p class="-w-pp-judge-word -w-gl-' + row.grade.toLowerCase() + '">' + PP_JUDGE_WORD[row.judgeCls] + '</p>' +
+            gradeBadge('GRADE', row.grade, PP_GRADE_WORD[row.grade], true) + '</div>' +
+            '<div class="-w-pp-meter">' +
+              '<p class="-w-pp-meter-ttl">得点メーター</p>' +
+              '<div class="-w-pp-meter-bar"><span class="-w-pp-meter-fill" style="width:' + row.score + '%"></span>' +
+              '<span class="-w-pp-meter-avg" style="left:' + row.cat.avg + '%"></span></div>' +
+              '<p class="-w-pp-meter-num">' + row.score + ' / 100</p>' +
+              '<p class="-w-pp-meter-sub">平均 ' + row.cat.avg + '点∕偏差値 ' + row.devi + '</p>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="-w-pp-brief"><span class="-w-pp-brief-tag">OWLet&#39;s BRIEF</span>' + row.cat.brief + '<br>' + briefState + '</div>' +
+        sec(1, 'チェック項目の詳細', 'ITEM BREAKDOWN　合格 ' + row.passCount + ' ∕ ' + row.items.length + '項目') +
+        itemsHtml +
+        '<div class="-w-pp-nextact">' +
+          '<p class="-w-pp-nextact-lead">NEXT ACTION ∕ 次の一手<br>' + nextLead + '</p>' +
+          '<p class="-w-pp-nextact-cta">' + nextCta + '<span class="-w-pp-nextact-sub">無料相談はこちら　tosen-net.co.jp/contact/</span></p>' +
+        '</div>' +
+        foot() + '</section>';
+    }).join('');
+
+    /* ---- Page 10: 特別章 制作会社 納品品質レポート ---- */
+    var agencyDefs = [], sharedFails = [], clientFails = [], agencyFails = [];
+    var agW = 0, agGot = 0, agPass = 0, agencyRows = [];
+    rows.forEach(function (row) {
+      (PP_ITEMS[row.roman] || []).forEach(function (d, i) {
+        var pass = !!(row.items[i] && row.items[i].pass);
+        if (d.resp === 'agency') {
+          agW += d.w; if (pass) { agGot += d.w; agPass++; }
+          agencyRows.push({ d: d, cat: row.cat, pass: pass });
+          if (!pass) agencyFails.push(d.n);
+        } else if (!pass) {
+          (d.resp === 'client' ? clientFails : sharedFails).push(d.n);
+        }
+      });
+    });
+    var agScore = agW ? Math.round(agGot / agW * 100) : 0;
+    var agGrade = ppGrade(agScore);
+    var agDevi = ppDevi(agScore, PP_MU_TOTAL);
+    var agPct = Math.round(agPass / 11 * 1000) / 10;
+    var totPct = Math.round(passTotal / 21 * 1000) / 10;
+    var diffPt = Math.round((totPct - agPct) * 10) / 10;
+    var failCount = 21 - passTotal;
+    var nonAgencyShare = failCount ? Math.round((sharedFails.length + clientFails.length) / failCount * 100) : 0;
+    function bandWord(t) { return t >= 60 ? '上位圏' : t >= 55 ? 'やや上位' : t >= 45 ? '平均圏' : t >= 40 ? 'やや下位' : '下位圏'; }
+    var dualNote;
+    if (failCount === 0) {
+      dualNote = '◆ 制作会社スコア・サイト総合ともに全項目合格です。納品品質・運用のどちらにも大きな課題は見つかりませんでした。';
+    } else if (diffPt > 0) {
+      dualNote = '◆ 制作会社スコア（' + agGrade + ' / ' + agPct + '%）はサイト総合（' + ppGrade(totScore) + ' / ' + totPct + '%）より ' + Math.abs(diffPt) + 'ポイント低い。つまりサイトの課題のうち約' + (100 - nonAgencyShare) + '%は制作会社の納品範囲にあり、残る約' + nonAgencyShare + '%は運営者側の責任範囲です。';
+    } else if (diffPt < 0) {
+      dualNote = '◆ 制作会社スコア（' + agGrade + ' / ' + agPct + '%）はサイト総合（' + ppGrade(totScore) + ' / ' + totPct + '%）より ' + Math.abs(diffPt) + 'ポイント高い。つまりサイトの課題のうち約' + nonAgencyShare + '%は運営者側（御社）の責任範囲であり、制作会社だけでは解消できない部分が含まれています。';
+    } else {
+      dualNote = '◆ 制作会社スコアとサイト総合は同水準（' + agPct + '%）です。納品範囲と運用範囲の双方に、同程度の改善余地があります。';
+    }
+
+    var evidence = agencyRows.map(function (a, i) {
+      return '<div class="-w-pp-evd-row">' +
+        '<span class="-w-pp-evd-num">' + (i + 1) + '</span>' +
+        '<span class="-w-pp-evd-name">' + a.d.n + '</span>' +
+        '<span class="-w-pp-evd-cat">' + a.cat.name + '</span>' +
+        '<span class="-w-pp-evd-st ' + (a.pass ? '-w-pp-evd-ok' : '-w-pp-evd-ng') + '">' + (a.pass ? 'OK' : 'NG') + '</span>' +
+        '<span class="-w-pp-evd-txt">' + (a.pass ? a.d.ok : a.d.ng) + '</span>' +
+      '</div>';
+    }).join('');
+
+    function abcCard(label, ttl, names, text) {
+      return '<div class="-w-pp-abc-card"><p class="-w-pp-abc-ttl">' + label + '｜' + ttl + (names.length ? names.length + '項目' : '') + '</p>' +
+        '<p class="-w-pp-abc-items">' + (names.length ? names.join('・') : '該当なし（全項目クリア）') + '</p>' +
+        (names.length ? '<p class="-w-pp-abc-text">' + text + '</p>' : '') + '</div>';
+    }
+
+    var p10 = '<section class="-w-pp">' + head('特別章 ∕ 制作会社 納品品質レポート', '七つの取りこぼし診断 ∕ 責任分析に基づく 客観的評価') +
+      '<p class="-w-pp-lead"><strong>SPECIAL CHAPTER</strong>　制作会社の納品品質を、根拠データで可視化する章　<span class="-w-sin">客観性への配慮：運営者側の責任範囲はスコアから除外しています</span></p>' +
+      sec(1, '二重評価 ― サイト総合 vs 制作会社納品', 'DUAL GRADING') +
+      '<div class="-w-pp-dual">' +
+        '<div class="-w-pp-dual-card">' + gradeBadge('DELIVERY', agGrade, PP_GRADE_WORD[agGrade], true) +
+          '<div><p class="-w-pp-dual-ttl">制作会社 納品品質スコア</p>' +
+          '<p class="-w-pp-dual-stats">合格率 <strong>' + agPct + '%</strong>　合格数 ' + agPass + ' / 11項目<br>偏差値 ' + agDevi + '　業界内 ' + bandWord(agDevi) + '</p></div></div>' +
+        '<div class="-w-pp-dual-card">' + gradeBadge('TOTAL', totGrade, PP_GRADE_WORD[totGrade], true) +
+          '<div><p class="-w-pp-dual-ttl">サイト総合評価（全21項目）</p>' +
+          '<p class="-w-pp-dual-stats">合格率 <strong>' + totPct + '%</strong>　合格数 ' + passTotal + ' / 21項目<br>偏差値 ' + totDevi + '　業界内 ' + bandWord(indDevi) + '</p></div></div>' +
+      '</div>' +
+      '<p class="-w-pp-dual-note">' + dualNote + '</p>' +
+      sec(2, '21項目の責任分担マップ', 'RESPONSIBILITY MAP') +
+      '<div class="-w-pp-resp-bar"><i style="width:52%;background:#c8161d"></i><i style="width:33%;background:#b45309"></i><i style="width:15%;background:#5b6672"></i></div>' +
+      '<div class="-w-pp-resp">' +
+        '<div class="-w-pp-resp-col"><b>AGENCY　制作会社 11項目 / 52%</b>納品物として当然含まれるべき技術実装・デザイン基礎。スコアの算出対象。</div>' +
+        '<div class="-w-pp-resp-col"><b>SHARED　共同責任 7項目 / 33%</b>テンプレ提供は制作会社、内容承認は運営者。契約次第で責任が分かれる領域。</div>' +
+        '<div class="-w-pp-resp-col"><b>CLIENT　運営者 3項目 / 15%</b>日々のコンテンツ更新・運用など。スコアから除外。</div>' +
+      '</div>' +
+      sec(3, '制作会社責任 11項目 ― 合否の根拠', 'EVIDENCE　合格 ' + agPass + ' ∕ 不合格 ' + (11 - agPass)) +
+      evidence +
+      sec(4, '推奨アクション ― 対話の始め方', 'NEXT STEPS') +
+      '<div class="-w-pp-abc">' +
+        abcCard('ACTION A', '制作会社に相談すべき', agencyFails, '「この項目は標準実装に含まれていましたか？含まれていれば再対応を、含まれていなければ追加見積もりをお願いします」') +
+        abcCard('ACTION B', '御社が主導すべき', clientFails, '社内の担当者を決めて、運用ルールから始めましょう。') +
+        abcCard('ACTION C', '契約を確認すべき', sharedFails, '「納品時の仕様書に、この項目の記載はありましたか？」と当時の資料をご確認ください。') +
+      '</div>' +
+      '<p class="-w-pp-legal">本章の性質について ― 本章は特定の制作会社・事業者への評価・格付け・推奨・非推奨を行うものではありません。診断結果（客観的データ）に基づき、「制作会社が納品物として標準的に対応する項目」の合否を機械的に計測したものです。個別の契約内容・納品範囲・運用体制によって責任範囲は変動しますので、実際のアクションを取る前に必ず原契約書・見積書・仕様書をご確認ください。</p>' +
+      foot() + '</section>';
+
+    /* ---- Page 11: ×の埋め方（東宣提案） ---- */
+    var gapCats = rows.filter(function (row) {
+      return row.items.some(function (it) { return !it.pass; });
+    });
+    var gapLead, gapBody;
+    if (gapCats.length) {
+      gapLead = '今回の診断で見つかった×（取りこぼし）は' + gapCats.length + 'テーマ。Webの改善だけで終わらせず、「Webでは届かない層を、どの媒体で塞ぐか」までセットでご提案するのが、東宣の診断です。以下は貴社の×に対応した打ち手の一覧です。';
+      gapBody = gapCats.map(function (row, gi) {
+        var defs = PP_ITEMS[row.roman] || [];
+        var ngDefs = [];
+        row.items.forEach(function (it, i) { if (!it.pass && defs[i]) ngDefs.push(defs[i]); });
+        var gap = PP_GAP[row.roman] || {};
+        return '<div class="-w-pp-gap">' +
+          '<p class="-w-pp-gap-ttl">×' + (gi + 1) + '｜' + ngDefs.map(function (d) { return d.n; }).join('・') + '（' + row.cat.name + '）</p>' +
+          '<div class="-w-pp-gap-cols">' +
+            '<div class="-w-pp-gap-col"><p class="-w-pp-gap-col-ttl">◤ Webで直す打ち手</p>' +
+              ngDefs.map(function (d) { return '<p>' + d.fix + '</p>'; }).join('') + '</div>' +
+            '<div class="-w-pp-gap-col"><p class="-w-pp-gap-col-ttl -w-pp-gap-col-red">◤ マス媒体で塞ぐ打ち手（東宣）</p>' +
+              '<p>' + gap.text + '</p>' +
+              '<p class="-w-pp-gap-tags">' + gap.tags + '</p>' +
+              '<p class="-w-pp-gap-media">▶ ' + gap.media + '</p>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    } else {
+      gapLead = '今回の診断で×（取りこぼし）は見つかりませんでした。守りは合格です。次は、王道メディアで商圏の認知シェアを取りにいく「攻めの認知」の段階です。';
+      gapBody = '<div class="-w-pp-gap">' +
+        '<p class="-w-pp-gap-ttl">攻めの認知｜商圏シェアを取りにいく</p>' +
+        '<div class="-w-pp-gap-cols">' +
+          '<div class="-w-pp-gap-col"><p class="-w-pp-gap-col-ttl">◤ Webの現状維持</p><p>受け皿は整っています。定期的な再診断で品質を維持しましょう。</p></div>' +
+          '<div class="-w-pp-gap-col"><p class="-w-pp-gap-col-ttl -w-pp-gap-col-red">◤ マス媒体で攻める（東宣）</p>' +
+            '<p>新聞折込・地域TV・ラジオ・交通広告で「検索される前」の認知をつくり、商圏の第一想起を取りにいきます。</p>' +
+            '<p class="-w-pp-gap-tags">#商圏認知 #第一想起</p>' +
+            '<p class="-w-pp-gap-media">▶ 全媒体（媒体プランは無料相談で）</p>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }
+
+    var p11 = '<section class="-w-pp">' + head('×の埋め方 ── Webで直す∕マス媒体で塞ぐ', '七つの取りこぼし診断 ∕ 東宣からの改善提案') +
+      '<p class="-w-pp-lead">' + gapLead + '</p>' +
+      gapBody +
+      '<div class="-w-pp-nextact">' +
+        '<p class="-w-pp-nextact-lead">NEXT ACTION ∕ 次の一手<br>この表の実行プランとお見積りを、無料でご提案します。<br><span class="-w-sin">あなたの業種で効いた実数（媒体×費用×成果）を根拠にご説明します。</span></p>' +
+        '<div class="-w-pp-qr"><span>Scan to apply</span><span>QRは本番出力時に発行</span></div>' +
+        '<p class="-w-pp-nextact-cta">結果を持って無料相談する →<span class="-w-pp-nextact-sub">tosen-net.co.jp/contact/</span></p>' +
+      '</div>' +
+      foot() + '</section>';
+
+    /* ---- Page 12: 付録・解決策のご案内 ---- */
+    var p12 = '<section class="-w-pp">' + head('付録・解決策のご案内', '七つの取りこぼし診断 ∕ 判定基準と次の一手') +
+      '<div class="-w-pp-apx">' +
+        '<div class="-w-pp-apx-col">' +
+          '<h3 class="-w-pp-apx-h">診断レポートについて</h3>' +
+          '<p><b>■ 七つの取りこぼし診断とは</b><br>WEBサイト運用において「知らず知らずのうちに犯しがちな7つの欠落＝取りこぼし」を診断する簡易診断サービスです。検出された×の改善方法や、Webでは届かない層への打ち手（折込・テレビ・ラジオ・新聞・交通等）について、診断結果をもとに無料でご相談いただけます。お見積りも無料です。</p>' +
+          '<p><b>■ 判定基準</b><br>合格：基準クリア　要改善：推奨項目を満たさず　不合格：最低基準を満たさず</p>' +
+          '<p><b>■ 重要度</b><br>必須：ひとつ×があれば不合格　推奨：ふたつ×があれば不合格</p>' +
+          '<p><b>■ 診断アルゴリズム</b><br>診断対象のURLへ指定サーバからWEBサイトへのクロールを実施し、分析・解析を行います。WEBサイトのWAF等のセキュリティにより診断が正しく行われない可能性があります。また、診断には一部AIを取り入れた判定が含まれます。そのため、AIの誤判定により診断結果が変わる可能性があります。予めご了承ください。</p>' +
+          '<p><b>■ 偏差値の計算式</b><br><span class="-w-pp-formula">T = 50 + 10 × (X − μ) / σ</span><br>X:総合スコア, μ:平均(72), σ:標準偏差(15.8)</p>' +
+          '<p><b>■ 総合スコアの計算式</b><br><span class="-w-pp-formula">X = Σ(Wi × Si) / ΣWi × 100</span><br>Wi:項目の重み, Si:結果(OK=1, NG=0)</p>' +
+        '</div>' +
+        '<div class="-w-pp-apx-col">' +
+          '<div class="-w-pp-consult">' +
+            '<p class="-w-pp-consult-ttl">結果を持って、無料相談へ。</p>' +
+            '<p class="-w-pp-consult-sub">― ×の埋め方を、一緒に考えます ―</p>' +
+            '<p>検出された×について、「Webで直す打ち手」と「マス媒体で塞ぐ打ち手」の実行プランを無料でご提案します。あなたの業種で実際に効いた実数（媒体×費用×成果）を根拠にご説明しますので、印象論の売り込みはありません。</p>' +
+            '<div class="-w-pp-consult-main">' +
+              '<p class="-w-pp-consult-line">✔ 結果を持って無料相談する<span class="-w-pp-consult-rec">推奨</span></p>' +
+              '<p>診断結果を元に、何から着手すべきか・どの媒体が合うかを具体的にご案内します。しつこい営業はいたしません。</p>' +
+              '<p class="-w-pp-consult-web"><b>WEB</b> tosen-net.co.jp/contact/　<b>TEL</b> 00-0000-0000（平日 9:00–18:00）</p>' +
+            '</div>' +
+            '<div class="-w-pp-subcards">' +
+              '<div class="-w-pp-subcard"><b>お見積りを依頼する</b>改善と出稿の概算費用を、内訳明示でお出しします。</div>' +
+              '<div class="-w-pp-subcard"><b>同業の事例を見る</b>業種別の「効いた実数」を公開中。</div>' +
+            '</div>' +
+          '</div>' +
+          '<p class="-w-pp-note">※成果に関する数値は特定案件の一例であり、成果を保証するものではありません。掲載は出典・条件・許諾に基づきます。<br>※本診断は公開情報の自動解析による簡易診断であり、結果は推定を含みます。実際の集客状況・改善効果を保証するものではありません。</p>' +
+        '</div>' +
+      '</div>' +
+      foot() + '</section>';
+
+    root.innerHTML = p1 + p2 + catPages + p10 + p11 + p12;
   }
 
   /* -----------------------------------------------------------
@@ -481,6 +1052,8 @@
         state.surveyTrigger = checked.value;
         updateSolutionCard();
       }
+      var ind = form.querySelector('#industry-select');
+      if (ind && ind.value) state.surveyIndustry = ind.value;
     });
   }
 
