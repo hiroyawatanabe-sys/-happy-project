@@ -481,7 +481,7 @@
         ng: 'Core Web Vitalsの合格基準を満たしていない可能性を検出しました',
         owlOk: '表示がサクサクですね。待たせないサイトは、それだけでおもてなしになっています。',
         owlNg: 'レジで延々と待たされるお店と同じ状態です。ページが遅いだけで半数以上のお客さんが「もういいや」と帰ってしまいます。',
-        top3: 'CV低下とSEO順位低下の二重苦を招きます。',
+        top3: '不合格はCV低下とSEO検索順位低下の二重苦を招きます。',
         fix: '画像のWebP化・圧縮とLCP改善で表示速度を回復。離脱による取りこぼしを止めます。' },
       { n: '画像最適化', imp: '推奨', w: 1, resp: 'shared',
         desc: '画像のサイズ圧縮や次世代フォーマット（WebP等）の使用状況を確認',
@@ -489,7 +489,7 @@
         ng: '未圧縮・旧形式の画像が多い可能性を検出しました',
         owlOk: '画像がきちんとダイエットできていますね。速さと画質のバランスが取れています。',
         owlNg: '巨大な荷物を狭い通路で運んでいるようなものです。画像が重すぎてページの表示を遅くしています。ダイエットしましょう。',
-        top3: '重い画像が表示速度と離脱率を悪化させます。',
+        top3: '巨大な画像の乱用は表示速度を直撃し、ユーザーの怒りを加速させ離脱率を上昇させます。',
         fix: '画像をWebP等へ変換・圧縮。一括変換ツールで数日で対応できます。' }
     ],
     'VII': [
@@ -499,7 +499,7 @@
         ng: 'GA4計測タグを検出できませんでした',
         owlOk: 'サイトの体温計がきちんと動いていますね。データに基づく改善ができる状態です。',
         owlNg: '体温計のない病院と同じ状態です。サイトの健康状態がまったくわからず、「何を直せばいいか」の手がかりがゼロです。まずここから。',
-        top3: '未設置は「計器のない飛行機」。改善データが取れません。',
+        top3: 'GA4未設置は「計器のない飛行機」と同じです。改善の起点となるデータがなければPDCAは永遠に回りません。',
         fix: 'GA4を設置し「診断→出稿→流入・問い合わせ」を計測できる状態に。以後の全施策の判断基盤になります。' },
       { n: 'GTM存在', imp: '推奨', w: 1, resp: 'agency',
         desc: 'Google Tag Manager (GTM) の導入有無を確認',
@@ -565,11 +565,9 @@
   function ppRank(t, n) { return Math.max(1, Math.round(n * ppTopPct(t) / 100)); }
   function ppNum(n) { return Number(n).toLocaleString('ja-JP'); }
 
-  function buildPrintReport(container, results) {
-    var root = $('tosen-print');
-    if (!root) return;
-
-    /* --- 成績表DOMから素材回収（エンジン非干渉） --- */
+  /* 成績表DOMから素材回収＋表示層スコアリング（エンジン非干渉・純関数）
+     ページ内成績表（buildScoreboard）と印刷レポート（buildPrintReport）で共用 */
+  function ppCompute(container) {
     var metaEl = container.querySelector('.-w-report-meta');
     var metaText = metaEl ? metaEl.textContent : '';
     var urlMatch = metaText.match(/診断URL：(.+?)診断日時：/);
@@ -591,13 +589,13 @@
       if (roman && judge) {
         rows.push({
           roman: roman.textContent.trim(),
+          name: name ? name.textContent.trim() : '',
           judgeCls: judge.classList.contains('-w-judge-fail') ? 'fail' : (judge.classList.contains('-w-judge-warn') ? 'warn' : 'pass'),
           items: items
         });
       }
     });
 
-    /* --- 表示層スコアリング --- */
     rows.forEach(function (row) {
       var cat = PP_CATS[row.roman] || {};
       row.cat = cat;
@@ -615,21 +613,38 @@
       });
     });
     var totScore = allW ? Math.round(gotW / allW * 100) : 0;
-    var totGrade = ppGrade(totScore);
-    var totDevi = ppDevi(totScore, PP_MU_TOTAL);
-    var indDevi = ppDevi(totScore, PP_MU_IND);
-    var rankAll = ppRank(totDevi, PP_POP_ALL);
-    var rankInd = ppRank(indDevi, PP_POP_IND);
-    var industry = state.surveyIndustry || '建設業';
 
-    /* 不合格項目（重要度＝必須を優先） */
+    /* 不合格項目（承認サンプル準拠＝掲載順） */
     var failItems = [];
     rows.forEach(function (row) {
       row.items.forEach(function (it, i) {
         if (!it.pass) failItems.push({ row: row, def: PP_ITEMS[row.roman][i] });
       });
     });
-    failItems.sort(function (a, b) { return b.def.w - a.def.w; });
+
+    var totDevi = ppDevi(totScore, PP_MU_TOTAL);
+    var indDevi = ppDevi(totScore, PP_MU_IND);
+    return {
+      diagUrl: diagUrl, diagDate: diagDate, host: host,
+      rows: rows, passTotal: passTotal, failItems: failItems,
+      totScore: totScore, totGrade: ppGrade(totScore),
+      totDevi: totDevi, indDevi: indDevi,
+      rankAll: ppRank(totDevi, PP_POP_ALL), rankInd: ppRank(indDevi, PP_POP_IND),
+      industry: state.surveyIndustry || null
+    };
+  }
+
+  function buildPrintReport(container, results) {
+    var root = $('tosen-print');
+    if (!root) return;
+
+    var __d = ppCompute(container);
+    var diagUrl = __d.diagUrl, diagDate = __d.diagDate, host = __d.host,
+      rows = __d.rows, passTotal = __d.passTotal, failItems = __d.failItems,
+      totScore = __d.totScore, totGrade = __d.totGrade,
+      totDevi = __d.totDevi, indDevi = __d.indDevi,
+      rankAll = __d.rankAll, rankInd = __d.rankInd,
+      industry = __d.industry || '建設業';
 
     /* --- 共通部品 --- */
     var pageNo = 0;
@@ -1024,6 +1039,196 @@
   }
 
   /* -----------------------------------------------------------
+     2b-2. ページ内成績表（承認済み成績表UIに準拠）
+        §01 総合評価 / §02 バランス＆成績一覧 / §03 分布マップ /
+        §04 ベンチマーク / §05 TOP3
+        エンジンの成績表カード（21項目内訳）はその下に温存し、
+        重複するヘッダー・レーダーのみCSSで非表示にする
+  ----------------------------------------------------------- */
+  var SB_BUCKETS = ['~30', '30-40', '40-50', '50-60', '60-70', '70-78', '78~'];
+  var SB_HEIGHTS = [8, 22, 52, 100, 62, 24, 9]; // 分布形状（最大100の相対値・参考形状）
+  function sbBucketIdx(t) {
+    return t < 30 ? 0 : t < 40 ? 1 : t < 50 ? 2 : t < 60 ? 3 : t < 70 ? 4 : t < 78 ? 5 : 6;
+  }
+
+  function sbSec(no, jp, en) {
+    return '<h3 class="-w-sb-sec">§ 0' + no + '　' + jp + ' <span>' + en + '</span></h3>';
+  }
+
+  function sbHistogram(t) {
+    var idx = sbBucketIdx(t);
+    var bars = SB_BUCKETS.map(function (label, i) {
+      return '<div class="-w-sb-hist-col">' +
+        (i === idx ? '<span class="-w-sb-hist-marker">あなた ↓</span>' : '') +
+        '<div class="-w-sb-hist-bar' + (i === idx ? ' -w-sb-hist-you' : '') + '" style="height:' + SB_HEIGHTS[i] + '%"></div>' +
+        '<span class="-w-sb-hist-label">' + label + '</span>' +
+      '</div>';
+    }).join('');
+    return '<div class="-w-sb-hist">' + bars + '</div>';
+  }
+
+  function sbRadar(rows) {
+    var cx = 160, cy = 122, R = 84, N = rows.length || 7;
+    function pt(i, ratio) {
+      var a = -Math.PI / 2 + i * 2 * Math.PI / N;
+      return (cx + R * ratio * Math.cos(a)).toFixed(1) + ',' + (cy + R * ratio * Math.sin(a)).toFixed(1);
+    }
+    var svg = '<svg viewBox="-50 0 420 250" role="img" aria-label="7科目レーダーチャート">';
+    [1 / 3, 2 / 3, 1].forEach(function (g) {
+      var ps = []; for (var i = 0; i < N; i++) ps.push(pt(i, g));
+      svg += '<polygon points="' + ps.join(' ') + '" fill="none" stroke="var(--border-light, #e3e6ea)"/>';
+    });
+    for (var i = 0; i < N; i++) {
+      var e = pt(i, 1).split(',');
+      svg += '<line x1="' + cx + '" y1="' + cy + '" x2="' + e[0] + '" y2="' + e[1] + '" stroke="var(--border-light, #e3e6ea)"/>';
+    }
+    var avgPs = [], youPs = [];
+    rows.forEach(function (row, i) {
+      avgPs.push(pt(i, (row.cat.avg || 0) / 100));
+      youPs.push(pt(i, row.score / 100));
+    });
+    svg += '<polygon points="' + avgPs.join(' ') + '" fill="rgba(91,102,114,0.10)" stroke="#5b6672" stroke-width="1.2" stroke-dasharray="4 3"/>';
+    svg += '<polygon points="' + youPs.join(' ') + '" fill="rgba(200,22,29,0.16)" stroke="#c8161d" stroke-width="2"/>';
+    rows.forEach(function (row, i) {
+      var a = -Math.PI / 2 + i * 2 * Math.PI / N;
+      var lx = cx + (R + 20) * Math.cos(a), ly = cy + (R + 16) * Math.sin(a);
+      var anchor = Math.abs(Math.cos(a)) < 0.3 ? 'middle' : (Math.cos(a) > 0 ? 'start' : 'end');
+      svg += '<text x="' + lx.toFixed(1) + '" y="' + (ly + 4).toFixed(1) + '" text-anchor="' + anchor + '" font-size="11" font-weight="700" fill="var(--o-r-colors-base_text, #1f2933)">' + row.name + '</text>';
+    });
+    svg += '</svg>';
+    return svg;
+  }
+
+  function buildScoreboard(container) {
+    var old = $('tosen-scoreboard');
+    if (old) old.parentNode.removeChild(old);
+    var d = ppCompute(container);
+    if (!d.rows.length) return;
+
+    /* §01 */
+    var s01 = sbSec(1, '総合評価', 'TOTAL SCORE') +
+      '<div class="-w-sb-total">' +
+        '<div class="-w-sb-grade -w-gl-' + d.totGrade.toLowerCase() + '">' +
+          '<span class="-w-sb-grade-tag">TOTAL</span>' +
+          '<strong>' + d.totGrade + '</strong>' +
+          '<span class="-w-sb-grade-word">' + PP_GRADE_WORD[d.totGrade] + '<br>GRADE</span>' +
+        '</div>' +
+        '<div class="-w-sb-total-body">' +
+          '<p class="-w-sb-headline">あなたのサイトは <strong>' + ppNum(PP_POP_ALL) + 'サイト中 ' + ppNum(d.rankAll) + '番目</strong></p>' +
+          '<div class="-w-sb-stats">' +
+            '<div><span>偏差値</span><strong>' + d.totDevi + '</strong></div>' +
+            '<div><span>総合得点</span><strong>' + d.totScore + '</strong><i>/100</i></div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="-w-sb-owl">' +
+          '<span class="-w-sb-owl-corner">OWLet</span>' +
+          '<p>' + PP_OWL_TOTAL[d.totGrade] + '</p>' +
+          '<span class="-w-sb-owl-sig">―― OWLet先生の一言</span>' +
+        '</div>' +
+      '</div>';
+
+    /* §02 */
+    var tableRows = d.rows.map(function (r) {
+      return '<tr>' +
+        '<td class="-w-sb-td-subject"><span class="-w-sb-no">' + r.cat.no + '</span>' + r.cat.name + ' <i class="-w-sb-sin">∕' + r.cat.sin + '</i></td>' +
+        '<td>' + r.score + '</td>' +
+        '<td>' + r.cat.avg + '</td>' +
+        '<td>' + r.devi + '</td>' +
+        '<td><span class="-w-sb-eval -w-gl-' + r.grade.toLowerCase() + '">' + r.grade + '</span></td>' +
+        '<td>' + ppNum(r.rank) + '</td>' +
+      '</tr>';
+    }).join('') +
+      '<tr class="-w-sb-tr-total"><td class="-w-sb-td-subject">総合</td><td>' + d.totScore + '</td><td>' + PP_MU_IND + '</td><td>' + d.indDevi + '</td>' +
+      '<td><span class="-w-sb-eval -w-gl-' + d.totGrade.toLowerCase() + '">' + d.totGrade + '</span></td><td>' + ppNum(d.rankAll) + '</td></tr>';
+
+    var s02 = sbSec(2, '科目別バランス ＆ 成績一覧', 'CATEGORY BREAKDOWN') +
+      '<div class="-w-sb-balance">' +
+        '<div class="-w-sb-radar">' +
+          '<p class="-w-sb-box-ttl">7科目レーダー<span class="-w-sb-radar-legend"><i class="-w-sb-lg-you"></i>あなた　<i class="-w-sb-lg-avg"></i>平均</span></p>' +
+          sbRadar(d.rows) +
+        '</div>' +
+        '<div class="-w-sb-table-wrap">' +
+          '<p class="-w-sb-box-ttl">科目別 成績表<span class="-w-sb-box-en">Score Table</span></p>' +
+          '<div class="-w-sb-table-scroll"><table class="-w-sb-table">' +
+            '<thead><tr><th class="-w-sb-td-subject">科目（七つの取りこぼし）</th><th>得点</th><th>平均</th><th>偏差値</th><th>評価</th><th>順位</th></tr></thead>' +
+            '<tbody>' + tableRows + '</tbody>' +
+          '</table></div>' +
+        '</div>' +
+      '</div>';
+
+    /* §03 */
+    var indBox;
+    if (d.industry) {
+      indBox = '<div class="-w-sb-dist-box">' +
+        '<p class="-w-sb-box-ttl">業界内分布（' + d.industry + '）<span class="-w-sb-box-en">Industry</span></p>' +
+        sbHistogram(d.indDevi) +
+        '<p class="-w-sb-dist-cap"><strong>' + ppNum(d.rankInd) + '</strong> / ' + ppNum(PP_POP_IND) + '位（偏差値' + d.indDevi + '）</p>' +
+      '</div>';
+    } else {
+      indBox = '<div class="-w-sb-dist-box -w-sb-dist-empty"><p>業界を指定すると分布が表示されます</p></div>';
+    }
+    var s03 = sbSec(3, '全体分布マップ ― あなたはここ', 'DISTRIBUTION MAP') +
+      '<div class="-w-sb-dist">' +
+        '<div class="-w-sb-dist-box">' +
+          '<p class="-w-sb-box-ttl">全体分布（' + ppNum(PP_POP_ALL) + 'サイト）<span class="-w-sb-box-en">Overall</span></p>' +
+          sbHistogram(d.totDevi) +
+        '</div>' + indBox +
+      '</div>';
+
+    /* §04 */
+    var bench = d.rows.map(function (r) {
+      var top10 = Math.min(100, Math.round((r.cat.avg || 0) + 20));
+      return '<div class="-w-sb-bench-row">' +
+        '<span class="-w-sb-bench-label">' + r.cat.name + '<i class="-w-sb-sin">∕' + r.cat.sin + '</i></span>' +
+        '<span class="-w-sb-bench-track">' +
+          '<span class="-w-sb-bench-you" style="width:' + r.score + '%"></span>' +
+          '<span class="-w-sb-bench-avg" style="left:' + r.cat.avg + '%"></span>' +
+          '<span class="-w-sb-bench-top" style="left:' + top10 + '%"></span>' +
+        '</span>' +
+        '<span class="-w-sb-bench-val">' + r.score + ' / 100</span>' +
+      '</div>';
+    }).join('');
+    var s04 = sbSec(4, 'あなた vs 業界平均 vs トップ10%', 'BENCHMARK') +
+      '<div class="-w-sb-bench">' +
+        '<p class="-w-sb-bench-legend"><i class="-w-sb-lg-you"></i>あなた　<i class="-w-sb-lg-line -w-sb-lg-avgline"></i>業界平均　<i class="-w-sb-lg-line -w-sb-lg-topline"></i>トップ10%</p>' +
+        bench +
+      '</div>';
+
+    /* §05 */
+    var top3;
+    if (d.failItems.length) {
+      top3 = '<div class="-w-sb-top3">' + d.failItems.slice(0, 3).map(function (f, i) {
+        return '<div class="-w-sb-top3-card">' +
+          '<span class="-w-sb-top3-num">' + (i + 1) + '</span>' +
+          '<p class="-w-sb-top3-cat">' + f.row.cat.name + '∕' + f.row.cat.sin + '</p>' +
+          '<p class="-w-sb-top3-ttl">' + f.def.n + '</p>' +
+          '<p class="-w-sb-top3-text">' + f.def.top3 + '</p>' +
+        '</div>';
+      }).join('') + '</div>';
+    } else {
+      top3 = '<p class="-w-sb-allok">不合格（×）の項目はありませんでした。守りは合格です。</p>';
+    }
+    var s05 = sbSec(5, '最優先で直したい3項目', 'TOP 3 ACTIONS') + top3;
+
+    var div = document.createElement('div');
+    div.id = 'tosen-scoreboard';
+    div.className = '-w-sb no-print';
+    div.innerHTML =
+      '<div class="-w-sb-head">' +
+        '<div>' +
+          '<p class="-w-sb-en">WEB PRESENCE QUALITY CHECK REPORT</p>' +
+          '<h2 class="-w-sb-title">成績表</h2>' +
+          '<p class="-w-sb-sub">七つの取りこぼし診断 ∕ Webサイト品質診断 ∕ 全7科目 総合評価</p>' +
+        '</div>' +
+        '<div class="-w-sb-meta">診断対象　<span>' + d.diagUrl + '</span><br>診断日　' + d.diagDate + '</div>' +
+      '</div>' +
+      s01 + s02 + s03 + s04 + s05 +
+      '<p class="-w-sb-refnote">※平均点・分布・順位はOWLet診断データベースの蓄積値に基づく参考値です。</p>' +
+      sbSec(6, '科目別詳細', 'ITEM BREAKDOWN');
+    container.parentNode.insertBefore(div, container);
+  }
+
+  /* -----------------------------------------------------------
      2c. アンケート回答 → お困り事カード切替（入口文脈の引き継ぎ）
   ----------------------------------------------------------- */
   function updateSolutionCard() {
@@ -1066,6 +1271,7 @@
       if (container.querySelector('.-w-report-card')) {
         state.reportDone = true;
         var results = parseReport(container);
+        buildScoreboard(container);
         renderBridge(results);
         buildPrintReport(container, results);
         updateSticky();

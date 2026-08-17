@@ -1452,6 +1452,320 @@ body.-w-modal-open { overflow: hidden; }
 }
 
 /* -------------------------------------------------------------
+   13.5 ページ内成績表（承認済み成績表UI準拠）
+   §01 総合評価 / §02 バランス＆成績一覧 / §03 分布マップ /
+   §04 ベンチマーク / §05 TOP3 ― tosen-cta.js が生成。
+   エンジンカードの重複部（ヘッダー・レーダー）は非表示にし、
+   21項目の内訳（.-w-report-rows）は「§06 科目別詳細」として温存
+------------------------------------------------------------- */
+#seven-report-container .-w-report-head,
+#seven-report-container .-w-report-radar { display: none; }
+
+.-w-sb {
+  background: var(--o-r-colors-base, #ffffff);
+  border: var(--ti-bw, 1px) solid var(--border-light, #e3e6ea);
+  border-top: 4px solid var(--o-r-colors-accent, #c8161d);
+  border-radius: var(--ti-rc, 12px) var(--ti-rc, 12px) 0 0;
+  box-shadow: var(--ti-sh, 0 8px 24px rgba(31, 41, 51, 0.12));
+  padding: clamp(2rem, 4vw, 3.2rem) clamp(1.6rem, 4vw, 4rem) 0;
+  margin-bottom: 0;
+}
+/* 直後のエンジンカード（科目別詳細）と一体化 */
+.-w-sb + .-w-report-container .-w-report-card {
+  border-top: none;
+  border-radius: 0 0 var(--ti-rc, 12px) var(--ti-rc, 12px);
+  box-shadow: var(--ti-sh, 0 8px 24px rgba(31, 41, 51, 0.12));
+}
+
+.-w-sb-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 0.8rem 2rem;
+  border-bottom: 2px solid var(--o-r-colors-base_text, #1f2933);
+  padding-bottom: 1.2rem;
+}
+.-w-sb-en {
+  font-size: 1.05rem;
+  font-weight: var(--ti-fwbo, 700);
+  letter-spacing: 0.3em;
+  color: var(--o-r-colors-accent, #c8161d);
+}
+.-w-sb-title { font-size: clamp(2.2rem, 4vw, 2.8rem); font-weight: var(--ti-fwbk, 900); line-height: 1.3; }
+.-w-sb-sub { font-size: 1.25rem; color: var(--text-secondary, #5b6672); }
+.-w-sb-meta { font-size: 1.15rem; color: var(--text-secondary, #5b6672); text-align: right; line-height: 1.7; word-break: break-all; }
+.-w-sb-meta span { color: var(--o-r-colors-base_text, #1f2933); font-weight: var(--ti-fwbo, 700); }
+
+.-w-sb-sec {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+  font-size: clamp(1.5rem, 2.6vw, 1.8rem);
+  font-weight: var(--ti-fwbk, 900);
+  border-left: 4px solid var(--o-r-colors-accent, #c8161d);
+  padding-left: 1rem;
+  margin: 2.8rem 0 1.4rem;
+}
+.-w-sb-sec span { font-size: 1.05rem; font-weight: var(--ti-fwbo, 700); color: #9aa3ac; letter-spacing: 0.14em; }
+
+/* 評価カラー（画面用） */
+.-w-sb .-w-gl-a { color: var(--success-text, #15803d); }
+.-w-sb .-w-gl-b { color: #1d4ed8; }
+.-w-sb .-w-gl-c { color: var(--warning-text, #b45309); }
+.-w-sb .-w-gl-d { color: var(--o-r-colors-accent, #c8161d); }
+
+/* --- §01 総合評価 --- */
+.-w-sb-total {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+@media (min-width: 1024px) { .-w-sb-total { flex-direction: row; align-items: stretch; } }
+.-w-sb-grade {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  width: 11rem;
+  min-height: 11rem;
+  margin: 0 auto;
+  border: 2px solid currentColor;
+  border-radius: var(--ti-rin, 8px);
+  box-shadow: inset 0 0 0 3px var(--o-r-colors-base, #ffffff), inset 0 0 0 4px currentColor;
+  text-align: center;
+}
+@media (min-width: 1024px) { .-w-sb-grade { margin: 0; } }
+.-w-sb-grade-tag { font-size: 1rem; font-weight: var(--ti-fwbo, 700); letter-spacing: 0.22em; }
+.-w-sb-grade strong { font-size: 4.4rem; font-weight: var(--ti-fwbk, 900); line-height: 1; }
+.-w-sb-grade-word { font-size: 1rem; font-weight: var(--ti-fwbo, 700); letter-spacing: 0.14em; line-height: 1.4; }
+.-w-sb-total-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  border-left: none;
+  padding-left: 0;
+}
+@media (min-width: 1024px) { .-w-sb-total-body { border-left: var(--ti-bw, 1px) solid var(--border-light, #e3e6ea); padding-left: 2.4rem; } }
+.-w-sb-headline { font-size: clamp(1.7rem, 3vw, 2.1rem); font-weight: var(--ti-fwbk, 900); }
+.-w-sb-headline strong {
+  color: var(--o-r-colors-accent, #c8161d);
+  border-bottom: 2px solid currentColor;
+  padding-bottom: 0.1em;
+}
+.-w-sb-stats { display: flex; flex-wrap: wrap; gap: 1rem 4rem; }
+.-w-sb-stats span { display: block; font-size: 1.2rem; color: var(--text-secondary, #5b6672); }
+.-w-sb-stats strong { font-size: 2.4rem; font-weight: var(--ti-fwbk, 900); font-feature-settings: "tnum"; }
+.-w-sb-stats i { font-style: normal; font-size: 1.3rem; color: var(--text-secondary, #5b6672); }
+.-w-sb-owl {
+  position: relative;
+  flex: 0 0 auto;
+  max-width: 34rem;
+  background: var(--bg-secondary, #f6f7f9);
+  border: var(--ti-bw, 1px) solid var(--border-light, #e3e6ea);
+  border-radius: var(--ti-rin, 8px);
+  padding: 1.6rem 1.6rem 1.2rem;
+  font-size: 1.35rem;
+  line-height: 1.8;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.-w-sb-owl-corner {
+  position: absolute;
+  top: 0.6rem;
+  right: 1rem;
+  font-size: 1rem;
+  font-weight: var(--ti-fwbk, 900);
+  letter-spacing: 0.18em;
+  color: var(--o-r-colors-accent, #c8161d);
+}
+.-w-sb-owl-sig { display: block; text-align: right; font-size: 1.05rem; color: #9aa3ac; margin-top: 0.4rem; }
+
+/* --- §02 バランス＆成績一覧 --- */
+.-w-sb-balance { display: flex; flex-direction: column; gap: 1.6rem; }
+@media (min-width: 1024px) { .-w-sb-balance { flex-direction: row; align-items: stretch; } }
+.-w-sb-radar,
+.-w-sb-table-wrap,
+.-w-sb-dist-box,
+.-w-sb-bench {
+  border: var(--ti-bw, 1px) solid var(--border-light, #e3e6ea);
+  border-radius: var(--ti-rin, 8px);
+  padding: 1.4rem 1.6rem;
+  background: var(--o-r-colors-base, #ffffff);
+}
+.-w-sb-radar { flex: 0 0 auto; }
+@media (min-width: 1024px) { .-w-sb-radar { flex: 0 0 36rem; } }
+.-w-sb-radar svg { width: 100%; height: auto; }
+.-w-sb-table-wrap { flex: 1; min-width: 0; }
+.-w-sb-box-ttl {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  font-size: 1.35rem;
+  font-weight: var(--ti-fwbo, 700);
+  margin-bottom: 1rem;
+}
+.-w-sb-box-en { font-size: 1rem; font-weight: var(--ti-fwbo, 700); color: #9aa3ac; letter-spacing: 0.12em; }
+.-w-sb-radar-legend { font-size: 1.1rem; font-weight: 400; color: var(--text-secondary, #5b6672); }
+.-w-sb-radar-legend i,
+.-w-sb-bench-legend i { display: inline-block; vertical-align: -0.1em; }
+.-w-sb-lg-you { width: 1.1em; height: 1.1em; background: var(--o-r-colors-accent, #c8161d); border-radius: 2px; margin-right: 0.35em; }
+.-w-sb-lg-avg { width: 1.1em; height: 1.1em; background: #5b6672; opacity: 0.55; border-radius: 2px; margin-right: 0.35em; }
+.-w-sb-lg-line { width: 3px; height: 1.1em; margin-right: 0.35em; }
+.-w-sb-lg-avgline { background: #5b6672; }
+.-w-sb-lg-topline { background: var(--success-text, #15803d); }
+
+.-w-sb-table-scroll { overflow-x: auto; }
+.-w-sb-table { width: 100%; min-width: 52rem; border-collapse: collapse; font-feature-settings: "tnum"; }
+.-w-sb-table th, .-w-sb-table td {
+  border-bottom: var(--ti-bw, 1px) solid var(--border-light, #e3e6ea);
+  padding: 0.9rem 0.8rem;
+  font-size: 1.35rem;
+  text-align: center;
+  white-space: nowrap;
+}
+.-w-sb-table thead th {
+  font-size: 1.2rem;
+  color: var(--text-secondary, #5b6672);
+  border-bottom: 2px solid var(--o-r-colors-base_text, #1f2933);
+}
+.-w-sb-table .-w-sb-td-subject { text-align: left; font-weight: var(--ti-fwbo, 700); }
+.-w-sb-no {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  margin-right: 0.7rem;
+  border-radius: 50%;
+  background: var(--o-r-colors-accent, #c8161d);
+  color: var(--o-r-colors-accent_text, #ffffff);
+  font-size: 1.1rem;
+  font-weight: var(--ti-fwbo, 700);
+}
+.-w-sb-sin { font-style: normal; font-size: 0.82em; color: #9aa3ac; font-weight: 400; }
+.-w-sb-eval {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.6em;
+  padding: 0.1em 0.5em;
+  border-radius: 4px;
+  font-weight: var(--ti-fwbk, 900);
+}
+.-w-sb-eval.-w-gl-a { background: var(--success-bg, rgba(21, 128, 61, 0.09)); }
+.-w-sb-eval.-w-gl-b { background: rgba(29, 78, 216, 0.08); }
+.-w-sb-eval.-w-gl-c { background: var(--warning-bg, rgba(180, 83, 9, 0.1)); }
+.-w-sb-eval.-w-gl-d { background: var(--red-soft, rgba(200, 22, 29, 0.08)); }
+.-w-sb-tr-total td { background: #fbf6f4; font-weight: var(--ti-fwbo, 700); }
+
+/* --- §03 分布マップ --- */
+.-w-sb-dist { display: flex; flex-direction: column; gap: 1.6rem; }
+@media (min-width: 768px) { .-w-sb-dist { flex-direction: row; } }
+.-w-sb-dist-box { flex: 1; min-width: 0; }
+.-w-sb-dist-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 16rem;
+  color: #9aa3ac;
+  font-size: 1.3rem;
+  background: var(--bg-secondary, #f6f7f9);
+}
+.-w-sb-hist {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.6rem;
+  height: 13rem;
+  padding-top: 2.4rem;
+}
+.-w-sb-hist-col {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  gap: 0.4rem;
+}
+.-w-sb-hist-bar {
+  width: 100%;
+  background: var(--bg-tertiary, #eceef1);
+  border-radius: 3px 3px 0 0;
+  min-height: 2px;
+}
+.-w-sb-hist-you { background: var(--o-r-colors-accent, #c8161d); }
+.-w-sb-hist-marker {
+  position: absolute;
+  top: -2.2rem;
+  font-size: 1.05rem;
+  font-weight: var(--ti-fwbk, 900);
+  color: var(--o-r-colors-accent, #c8161d);
+  white-space: nowrap;
+}
+.-w-sb-hist-label { font-size: 0.95rem; color: #9aa3ac; }
+.-w-sb-dist-cap { margin-top: 0.8rem; font-size: 1.2rem; color: var(--text-secondary, #5b6672); }
+.-w-sb-dist-cap strong { color: var(--o-r-colors-accent, #c8161d); font-feature-settings: "tnum"; }
+
+/* --- §04 ベンチマーク --- */
+.-w-sb-bench-legend { font-size: 1.15rem; color: var(--text-secondary, #5b6672); margin-bottom: 1.2rem; }
+.-w-sb-bench-row { display: flex; align-items: center; gap: 1.2rem; margin-bottom: 0.9rem; }
+.-w-sb-bench-row:last-child { margin-bottom: 0; }
+.-w-sb-bench-label { flex: 0 0 30%; max-width: 16rem; font-size: 1.2rem; font-weight: var(--ti-fwbo, 700); text-align: right; }
+.-w-sb-bench-track { flex: 1; position: relative; height: 1.1rem; background: var(--bg-tertiary, #eceef1); border-radius: 3px; }
+.-w-sb-bench-you { position: absolute; left: 0; top: 0; bottom: 0; background: var(--o-r-colors-accent, #c8161d); border-radius: 3px; }
+.-w-sb-bench-avg { position: absolute; top: -0.25rem; bottom: -0.25rem; width: 3px; background: #5b6672; }
+.-w-sb-bench-top { position: absolute; top: -0.25rem; bottom: -0.25rem; width: 3px; background: var(--success-text, #15803d); }
+.-w-sb-bench-val { flex: 0 0 7rem; font-size: 1.2rem; font-weight: var(--ti-fwbo, 700); font-feature-settings: "tnum"; }
+
+/* --- §05 TOP3 --- */
+.-w-sb-top3 { display: grid; grid-template-columns: 1fr; gap: 1.2rem; }
+@media (min-width: 768px) { .-w-sb-top3 { grid-template-columns: repeat(3, 1fr); } }
+.-w-sb-top3-card {
+  position: relative;
+  border: var(--ti-bw, 1px) solid var(--border-light, #e3e6ea);
+  border-left: 4px solid var(--o-r-colors-accent, #c8161d);
+  border-radius: var(--ti-rin, 8px);
+  padding: 1.4rem 1.6rem 1.4rem 4.6rem;
+}
+.-w-sb-top3-num {
+  position: absolute;
+  left: 1.2rem;
+  top: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  background: var(--o-r-colors-accent, #c8161d);
+  color: var(--o-r-colors-accent_text, #ffffff);
+  font-weight: var(--ti-fwbk, 900);
+  font-size: 1.2rem;
+}
+.-w-sb-top3-cat { font-size: 1.05rem; color: #9aa3ac; margin-bottom: 0.2rem; }
+.-w-sb-top3-ttl { font-size: 1.5rem; font-weight: var(--ti-fwbk, 900); margin-bottom: 0.4rem; }
+.-w-sb-top3-text { font-size: 1.25rem; line-height: 1.8; color: var(--text-secondary, #5b6672); }
+.-w-sb-allok {
+  border: var(--ti-bw, 1px) solid var(--success-border, rgba(21, 128, 61, 0.45));
+  color: var(--success-text, #15803d);
+  border-radius: var(--ti-rin, 8px);
+  padding: 1.4rem 1.6rem;
+  font-weight: var(--ti-fwbo, 700);
+  font-size: 1.4rem;
+}
+.-w-sb-refnote { margin-top: 1.6rem; font-size: 1.05rem; color: #9aa3ac; }
+.-w-sb > .-w-sb-sec:last-child { margin-bottom: 0; padding-bottom: 0; }
+
+/* -------------------------------------------------------------
    14. 印刷（PDF発行）
    承認済みサンプルPDF「七つの取りこぼし診断 Webサイト品質診断
    レポート」（12ページ構成）に準拠した印刷専用レポート。
