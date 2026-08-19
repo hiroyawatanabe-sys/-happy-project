@@ -112,7 +112,7 @@ ul, ol { margin: 0; padding-left: 1.8em; }
 img, svg { max-width: 100%; height: auto; }
 
 /* 数値は等幅で整列（tone13 必須仕様） */
-.-w-num, table, .-w-price, .-w-count {
+.-w-num, table, .-w-price, .-w-count, .-w-metric, .-w-author-facts, .-w-compare {
   font-variant-numeric: tabular-nums;
   font-feature-settings: 'tnum' 1;
 }
@@ -214,8 +214,9 @@ a { color: var(--o-r-colors-accent, #17549e); }
   justify-content: center;
   gap: 1rem;
   padding-inline: 1.2rem;
-  background: var(--o-r-colors-button, #0b3d91);
-  color: var(--o-r-colors-button_text, #ffffff);
+  /* CTA（button色）と同色にするとCTAの独立性が薄れるため、中立のダークにする */
+  background: var(--o-r-colors-base_text, #1f2d3d);
+  color: #ffffff;                 /* 対 #1f2d3d CR 13.99:1 */
   font-size: 1.25rem;
   font-weight: var(--ti-fwbo, 700);
   letter-spacing: 0.01em;
@@ -338,7 +339,7 @@ a { color: var(--o-r-colors-accent, #17549e); }
   background: var(--o-r-colors-button, #0b3d91);
   color: var(--o-r-colors-button_text, #ffffff);
   font-family: inherit;
-  font-size: 1.7rem;
+  font-size: 1.5rem;
   font-weight: var(--ti-fwbo, 700);
   line-height: 1.35;
   text-align: center;
@@ -351,11 +352,40 @@ a { color: var(--o-r-colors-accent, #17549e); }
 .-w-cta:hover { background: var(--button-hover, #0a2f6f); }
 .-w-cta:active { transform: translateY(1px); }
 
-/* ボタン直下の一文＝⑮摩擦回避の主力 */
-.-w-cta .-w-cta-sub {
+/* ②便益サブテキスト（ボタン内部サブ行・規格12〜18字・1行） */
+.-w-cta .-w-cta-benefit {
+  order: -1;                 /* 本体の上に置く */
   font-size: 1.2rem;
   font-weight: var(--ti-fw-base, 400);
-  opacity: 0.92;
+  line-height: 1.3;
+  opacity: 0.9;
+  white-space: nowrap;       /* 1行を保証 */
+}
+
+/* ①行動文言（ボタン本体・規格4〜13字／最適帯6〜10字）
+   絶対条件：スマホ表示で折り返さないこと */
+.-w-cta .-w-cta-main {
+  font-size: 1.9rem;
+  font-weight: var(--ti-fwbo, 700);
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+/* ③不安解消マイクロコピー（ボタン直下・規格15〜22字・1行／2行化の禁止） */
+.-w-cta-micro {
+  margin: 0.9rem 0 0;
+  text-align: center;
+  font-size: 1.25rem;
+  line-height: 1.4;
+  color: var(--text-secondary, #45607b);
+  white-space: nowrap;       /* 2行化の禁止を実装で担保 */
+}
+
+/* 補足（マイクロコピーではない。ボタンから離して置く） */
+.-w-form-note {
+  margin: 1.2rem 0 0;
+  font-size: 1.3rem;
+  color: var(--text-secondary, #45607b);
 }
 
 .-w-micro {
@@ -444,7 +474,18 @@ a { color: var(--o-r-colors-accent, #17549e); }
   -webkit-overflow-scrolling: touch;
   border: var(--ti-bw, 1px) solid var(--border-light, #e2e9f0);
   border-radius: var(--ti-rc, 8px);
-  background: var(--o-r-colors-base, #fff);
+  background-color: var(--o-r-colors-base, #fff);
+  /* 端の影。スクロール位置に応じて自動で出入りし、
+     「まだ右に続く」ことを手がかりとして示す（local と scroll の重ね技） */
+  background-image:
+    linear-gradient(90deg, var(--o-r-colors-base, #fff) 40%, rgba(255, 255, 255, 0)),
+    linear-gradient(90deg, rgba(255, 255, 255, 0), var(--o-r-colors-base, #fff) 60%),
+    radial-gradient(farthest-side at 0 50%, rgba(31, 45, 61, 0.16), rgba(31, 45, 61, 0)),
+    radial-gradient(farthest-side at 100% 50%, rgba(31, 45, 61, 0.16), rgba(31, 45, 61, 0));
+  background-position: left center, right center, left center, right center;
+  background-size: 3.2rem 100%, 3.2rem 100%, 1.2rem 100%, 1.2rem 100%;
+  background-repeat: no-repeat;
+  background-attachment: local, local, scroll, scroll;
 }
 
 .-w-scroll-hint {
@@ -590,10 +631,13 @@ a { color: var(--o-r-colors-accent, #17549e); }
   color: var(--o-r-colors-accent_text, #fff);
 }
 
+/* 演算子は接続記号であって項ではない。SPでは主役級に見えないよう抑える */
 .-w-equation .-w-eq-op {
-  font-size: 1.8rem;
+  margin: -0.2rem 0;
+  font-size: 1.4rem;
   font-weight: var(--ti-fwbo, 700);
-  color: var(--o-r-colors-accent, #17549e);
+  line-height: 1;
+  color: var(--border-mid, #c3cedb);
 }
 
 /* -------------------------------------------------------------
@@ -1075,7 +1119,9 @@ a { color: var(--o-r-colors-accent, #17549e); }
 
 .-w-sticky.-w-on { transform: translateY(0); }
 
-.-w-sticky .-w-cta { min-height: 5.4rem; font-size: 1.55rem; }
+.-w-sticky .-w-cta { min-height: 5.6rem; gap: 0.1rem; }
+.-w-sticky .-w-cta .-w-cta-main { font-size: 1.7rem; }
+.-w-sticky .-w-cta .-w-cta-benefit { font-size: 1.15rem; }
 
 /* -------------------------------------------------------------
    15. フッター
@@ -1087,7 +1133,11 @@ a { color: var(--o-r-colors-accent, #17549e); }
   font-size: 1.25rem;
 }
 
-.-w-foot a { color: var(--text-on-dark, #dbe6f2); }
+.-w-foot a {
+  color: var(--text-on-dark, #dbe6f2);
+  display: inline-block;
+  padding-block: 1.2rem;    /* タップ領域を44px以上にする */
+}
 .-w-foot .-w-corp { font-weight: var(--ti-fwbo, 700); font-size: 1.4rem; margin-bottom: 0.6rem; }
 
 /* -------------------------------------------------------------
@@ -1124,7 +1174,9 @@ a { color: var(--o-r-colors-accent, #17549e); }
   .-w-sec-head h2 { font-size: 2.8rem; }
   .-w-sec-head .-w-lead { font-size: 1.6rem; }
 
-  .-w-cta { min-height: 7rem; font-size: 2rem; }
+  .-w-cta { min-height: 7rem; }
+  .-w-cta .-w-cta-main { font-size: 2.2rem; }
+  .-w-cta .-w-cta-benefit { font-size: 1.3rem; }
   .-w-cta-block { max-width: 56rem; margin-inline: auto; }
 
   .-w-table { font-size: 1.45rem; min-width: 0; }
