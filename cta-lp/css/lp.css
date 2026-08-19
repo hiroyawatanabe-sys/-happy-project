@@ -260,6 +260,18 @@ a { color: var(--o-r-colors-accent, #17549e); }
   color: var(--o-r-colors-accent, #17549e);
 }
 
+/* 日本語は語中で折り返すと見出しの強度が落ちる。
+   対応ブラウザでは文節単位で改行し、非対応は -w-br-sp の明示改行で担保する */
+.-w-fv h1 {
+  word-break: auto-phrase;
+  text-wrap: balance;
+}
+
+/* SP専用の改行（768px以上では改行しない） */
+@media (min-width: 768px) {
+  .-w-br-sp { display: none; }
+}
+
 .-w-fv-sub {
   font-size: 1.5rem;
   color: var(--text-secondary, #45607b);
@@ -268,6 +280,18 @@ a { color: var(--o-r-colors-accent, #17549e); }
 
 .-w-fv-sub strong {
   color: var(--o-r-colors-base_text, #1f2d3d);
+}
+
+/* CTAの用語定義。専門用語は滑り台の段差になるためFVで必ず解く（教科書1-4） */
+.-w-fv-def {
+  margin-bottom: 2rem;
+  padding: 0.9rem 1.1rem;
+  border-left: 3px solid var(--border-mid, #c3cedb);
+  background: var(--o-r-colors-base, #fff);
+  border-radius: 0 var(--ti-rb, 4px) var(--ti-rb, 4px) 0;
+  font-size: 1.3rem;
+  line-height: 1.65;
+  color: var(--text-secondary, #45607b);
 }
 
 .-w-trust {
@@ -717,6 +741,108 @@ a { color: var(--o-r-colors-accent, #17549e); }
   font-weight: var(--ti-fwbo, 700);
   color: var(--c-success, #15803d);
   margin-bottom: 0.4rem;
+}
+
+/* 実費換算との対比（取消線つきの価格対比＝二重価格表示は使わない） */
+.-w-offer .-w-compare {
+  display: inline-block;
+  margin-top: 0.3rem;
+  font-size: 2rem;
+  color: var(--o-r-colors-base_text, #1f2d3d);
+}
+
+.-w-offer .-w-compare-note {
+  display: inline-block;
+  margin-top: 0.2rem;
+  font-size: 1.2rem;
+  color: var(--text-secondary, #45607b);
+}
+
+.-w-offer .-w-arrow {
+  margin: 0.8rem 0 0.4rem;
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--border-mid, #c3cedb);
+}
+
+/* 打消し表示は本文と同等の視認性が必要（景表法） */
+.-w-note-legal {
+  margin-top: 1.6rem;
+  padding: 1.2rem 1.4rem;
+  border: var(--ti-bw, 1px) solid var(--border-mid, #c3cedb);
+  border-radius: var(--ti-rb, 4px);
+  background: var(--o-r-colors-base, #fff);
+  font-size: 1.5rem;
+  line-height: 1.7;
+  color: var(--o-r-colors-base_text, #1f2d3d);
+}
+
+/* 設計者（E-E-A-T：誰が作業するのかを見せる） */
+.-w-author {
+  display: flex;
+  gap: 1.4rem;
+  align-items: flex-start;
+  margin-bottom: 2.4rem;
+  padding: var(--ti-spc, 20px);
+  border: var(--ti-bw, 1px) solid var(--border-light, #e2e9f0);
+  border-radius: var(--ti-rc, 8px);
+  background: var(--o-r-colors-assort, #edf2f7);
+}
+
+.-w-author-mark {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 4.4rem;
+  height: 4.4rem;
+  border-radius: var(--ti-rb, 4px);
+  background: var(--o-r-colors-accent, #17549e);
+  color: var(--o-r-colors-accent_text, #fff);
+  font-size: 2.2rem;
+}
+
+.-w-author-name {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: var(--ti-fwbo, 700);
+}
+
+.-w-author-role {
+  margin: 0.2rem 0 0.8rem;
+  font-size: 1.3rem;
+  color: var(--text-secondary, #45607b);
+}
+
+.-w-author-facts {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.3rem;
+  font-size: 1.35rem;
+  line-height: 1.6;
+  color: var(--o-r-colors-base_text, #1f2d3d);
+}
+
+.-w-author-facts strong { color: var(--o-r-colors-accent, #17549e); }
+
+/* LINE返信導線（入力前に聞きたい層の受け皿） */
+.-w-line-back {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  margin-top: 1.6rem;
+  padding: 1.2rem;
+  border-radius: var(--ti-rb, 4px);
+  background: var(--o-r-colors-assort, #edf2f7);
+  font-size: 1.35rem;
+  line-height: 1.65;
+  color: var(--o-r-colors-base_text, #1f2d3d);
+}
+
+.-w-line-back .-w-icon {
+  margin-top: 0.3em;
+  color: var(--o-r-colors-accent, #17549e);
 }
 
 /* 三点セット要約 */
