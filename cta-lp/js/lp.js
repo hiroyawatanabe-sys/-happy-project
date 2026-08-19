@@ -7,11 +7,12 @@
    担当する機能
      1. セグメント出し分け（?s=lec|scsc|cue）… tosen/js/tosen-cta.js の ?from= 方式を踏襲
      2. 申込期限のカウントダウン（②希少性。在庫・枠数の演出は行わない）
-     3. 動画の開閉（セグメントで初期状態が変わる）
-     4. 追従CTA（モバイル・スクロール25%以降）
-     5. スクロール表示アニメーション
-     6. 申込フォーム（その場エラー表示・支払い方法2択）
-     7. 4段階効果測定（接触 → 品質 → 中間 → 事業）
+     3. 追従CTA（モバイル）
+     4. スクロール表示アニメーション
+     5. 申込フォーム（その場エラー表示・支払い方法2択）
+     6. 4段階効果測定（接触 → 品質 → 中間 → 事業）
+
+   ※動画は常時展開のため開閉制御は持たない
 ============================================================= */
 (function () {
   'use strict';
@@ -42,28 +43,24 @@
       /* 受講者のみ、痛みより⑥一貫性（あのとき納得した自分との整合）を優先する */
       head: '先日の第9回でお話しした<br class="-w-br-sp">「死んだCTA」。<br>御社サイトの、<span class="-w-hl">約175箇所</span>の話です。',
       sub: 'あの90分でご覧いただいた型を、御社のサイトへ丸ごと実装します。閲覧者を迷わせない文言へ、35ページ分すべてを。9月7日まで、<strong>39,750円（税別）</strong>。',
-      video: 'closed',  // 90分受講済みのため既定で折りたたむ
       pay: 'scsc'       // ※受講2名がSCSC顧客かCUE顧客かは要確認（原稿 §8）
     },
     scsc: {
       head: PAIN,
       sub: '原因は、御社サイトの<strong>約175箇所のボタン</strong>が「詳しく見る」のままだからです。' + LOSS +
            '弊社へ都度ご依頼いただくと約292,000円相当。9月7日まで、<strong>39,750円（税別）</strong>で一括代行します。',
-      video: 'closed',  // 月次MTGで人が説明するため補助扱い
       pay: 'scsc'
     },
     cue: {
       head: PAIN,
       sub: '原因は、御社サイトの<strong>約175箇所のボタン</strong>が「詳しく見る」のままだからです。' + LOSS +
            '修正チケット換算で約58枚分。9月7日まで、<strong>39,750円（税別）</strong>で一括代行します。',
-      video: 'open',    // 対人接点が構造的に無いため、動画が唯一の説明者
       pay: 'cue'
     },
     'default': {
       head: PAIN,
       sub: '原因は、サイトの<strong>約175箇所のボタン</strong>が「詳しく見る」のままだからです。' + LOSS +
            '9月7日まで、35ページ分すべてを<strong>39,750円（税別）</strong>で書き換えます。',
-      video: 'closed',
       pay: 'scsc'
     }
   };
@@ -231,32 +228,6 @@
       el.textContent = '残り' + (Math.round((end - today) / day) + 1) + '日';
     }
     el.hidden = false;
-  }
-
-  /* -----------------------------------------------------------
-     4. 動画の開閉（セグメントで初期状態が変わる）
-  ----------------------------------------------------------- */
-  function initVideo() {
-    var btn = $('video-toggle');
-    var body = $('video-body');
-    if (!btn || !body) return;
-
-    function setOpen(open) {
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      body.hidden = !open;
-    }
-
-    btn.addEventListener('click', function () {
-      var open = btn.getAttribute('aria-expanded') !== 'true';
-      setOpen(open);
-      /* 【第2段階：品質】 */
-      if (open) track('lp_video_open', { lp_segment: state.seg });
-    });
-
-    if (SEGMENTS[state.seg].video === 'open') {
-      setOpen(true);
-      track('lp_video_open', { lp_segment: state.seg, lp_auto: 1 });
-    }
   }
 
   /* -----------------------------------------------------------
@@ -467,7 +438,6 @@
   function init() {
     initSegment();
     initCountdown();
-    initVideo();
     initSticky();
     initReveal();
     initCtaTracking();

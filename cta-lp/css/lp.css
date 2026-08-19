@@ -422,24 +422,16 @@ a { color: var(--o-r-colors-accent, #17549e); }
   display: flex;
   align-items: center;
   gap: 0.8rem;
-  width: 100%;
+  margin: 0;
   padding: 1.4rem 1.6rem;
-  border: 0;
-  background: var(--o-r-colors-base, #fff);
-  font-family: inherit;
   font-size: 1.5rem;
   font-weight: var(--ti-fwbo, 700);
   color: var(--o-r-colors-base_text, #1f2d3d);
-  text-align: left;
-  cursor: pointer;
 }
 
-.-w-video-head .-w-icon:first-child { color: var(--o-r-colors-accent, #17549e); }
-.-w-video-head .-w-chev { margin-left: auto; transition: transform 0.2s ease; }
-.-w-video-head[aria-expanded="true"] .-w-chev { transform: rotate(180deg); }
+.-w-video-head .-w-icon { color: var(--o-r-colors-accent, #17549e); }
 
 .-w-video-body { border-top: var(--ti-bw, 1px) solid var(--border-light, #e2e9f0); }
-.-w-video-body[hidden] { display: none; }
 
 .-w-video-frame {
   position: relative;
@@ -562,6 +554,162 @@ a { color: var(--o-r-colors-accent, #17549e); }
 }
 
 .-w-ba-after strong { color: var(--o-r-colors-accent, #17549e); }
+
+/* -------------------------------------------------------------
+   8-2. 図1：CTAの構造比較
+   ボタンは実物大のモックとして描き、文章ではなく形で違いを見せる。
+   NG/OKの色は固定色相のセマンティック色を使う（8色から派生させない＝禁則3）
+------------------------------------------------------------- */
+.-w-fig {
+  margin: 0;
+  padding: var(--ti-spc, 20px);
+  background: var(--o-r-colors-base, #fff);
+  border: var(--ti-bw, 1px) solid var(--border-light, #e2e9f0);
+  border-radius: var(--ti-rc, 8px);
+}
+
+.-w-fig-body {
+  display: grid;
+  gap: var(--ti-gap, 12px);
+  align-items: stretch;
+}
+
+.-w-fig-col {
+  padding: 1.4rem;
+  border-radius: var(--ti-rb, 4px);
+  border: var(--ti-bw, 1px) solid transparent;
+}
+
+.-w-fig-ng {
+  background: var(--c-error-bg, rgba(192, 39, 29, 0.08));
+  border-color: rgba(192, 39, 29, 0.28);
+}
+
+.-w-fig-ok {
+  background: var(--c-success-bg, rgba(21, 128, 61, 0.08));
+  border-color: rgba(21, 128, 61, 0.32);
+}
+
+.-w-fig-label {
+  margin: 0 0 1rem;
+  font-size: 1.2rem;
+  font-weight: var(--ti-fwbo, 700);
+  letter-spacing: 0.04em;
+  color: var(--text-secondary, #45607b);
+}
+
+.-w-fig-ng .-w-fig-label { color: var(--c-error, #c0271d); }
+.-w-fig-ok .-w-fig-label { color: var(--c-success, #15803d); }
+
+/* ボタンのモック（実物に近い見え方にする） */
+.-w-mock {
+  margin: 0;
+  padding: 1.2rem 1.4rem;
+  border-radius: var(--ti-rb, 4px);
+  font-size: 1.4rem;
+  font-weight: var(--ti-fwbo, 700);
+  line-height: 1.4;
+  text-align: center;
+  box-shadow: var(--ti-sh, 0 2px 8px rgba(0, 0, 0, 0.08));
+}
+
+.-w-mock-ng {
+  background: #d8dee6;                      /* 埋没した汎用ボタンの見え方 */
+  color: #5b6672;                           /* 対 #d8dee6 CR 4.6:1 */
+}
+
+.-w-mock-ok {
+  background: var(--o-r-colors-button, #0b3d91);
+  color: var(--o-r-colors-button_text, #fff);
+}
+
+/* 疑問の吹き出し（ボタンの直上に置く＝疑問が生まれた瞬間の直後） */
+.-w-mock-q {
+  position: relative;
+  margin: 0 0 1.4rem;
+  padding: 1rem 1.2rem;
+  border-radius: var(--ti-rb, 4px);
+  background: var(--o-r-colors-base, #fff);
+  border: var(--ti-bw, 1px) solid var(--accent-line, rgba(23, 84, 158, 0.28));
+  font-size: 1.35rem;
+  font-weight: var(--ti-fwbo, 700);
+  color: var(--o-r-colors-accent, #17549e);
+  text-align: center;
+}
+
+.-w-mock-q::after {                          /* 吹き出しの尾 */
+  content: '';
+  position: absolute;
+  inset-block-start: 100%;
+  inset-inline-start: 50%;
+  translate: -50% 0;
+  border: 7px solid transparent;
+  border-block-start-color: var(--accent-line, rgba(23, 84, 158, 0.28));
+}
+
+.-w-fig-list {
+  margin: 1.4rem 0 0;
+  padding-left: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.5rem;
+  font-size: 1.3rem;
+  line-height: 1.55;
+}
+
+.-w-fig-list li { display: flex; gap: 0.5rem; align-items: flex-start; }
+
+.-w-fig-list li::before {
+  flex: none;
+  font-weight: var(--ti-fwbo, 700);
+  line-height: 1.55;
+}
+
+.-w-fig-ng .-w-fig-list li::before { content: '✕'; color: var(--c-error, #c0271d); }
+.-w-fig-ok .-w-fig-list li::before { content: '○'; color: var(--c-success, #15803d); }
+
+.-w-fig-verdict {
+  margin: 1.4rem 0 0;
+  padding-top: 1rem;
+  border-top: var(--ti-bw, 1px) dashed var(--border-mid, #c3cedb);
+  font-size: 1.35rem;
+  text-align: center;
+}
+
+.-w-fig-ng .-w-fig-verdict strong { color: var(--c-error, #c0271d); }
+.-w-fig-ok .-w-fig-verdict strong { color: var(--c-success, #15803d); }
+
+.-w-fig-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: var(--ti-fwbo, 700);
+  color: var(--o-r-colors-accent, #17549e);
+}
+
+.-w-fig-arrow .-w-icon { font-size: 2rem; rotate: 90deg; }   /* SPは下向き */
+
+.-w-fig-concl {
+  margin: var(--ti-gap, 12px) 0 0;
+  padding: 1.2rem;
+  border-radius: var(--ti-rb, 4px);
+  background: var(--accent-soft, rgba(23, 84, 158, 0.07));
+  border-left: 3px solid var(--o-r-colors-accent, #17549e);
+  font-size: 1.35rem;
+  line-height: 1.6;
+}
+
+.-w-fig-concl strong { color: var(--o-r-colors-accent, #17549e); }
+
+.-w-fig figcaption {
+  margin-top: 1.2rem;
+  font-size: 1.2rem;
+  text-align: center;
+  color: var(--text-secondary, #45607b);
+}
 
 /* -------------------------------------------------------------
    9. カード・リスト
@@ -833,22 +981,28 @@ a { color: var(--o-r-colors-accent, #17549e); }
   background: var(--o-r-colors-assort, #edf2f7);
 }
 
-.-w-author-mark {
-  display: grid;
-  place-items: center;
+.-w-author-photo {
   flex: none;
-  width: 4.4rem;
-  height: 4.4rem;
+  width: 8.8rem;
+  height: 8.8rem;
   border-radius: var(--ti-rb, 4px);
-  background: var(--o-r-colors-accent, #17549e);
-  color: var(--o-r-colors-accent_text, #fff);
-  font-size: 2.2rem;
+  object-fit: cover;
+  border: var(--ti-bw, 1px) solid var(--border-mid, #c3cedb);
+}
+
+.-w-author-label {
+  margin: 0 0 0.3rem;
+  font-size: 1.2rem;
+  font-weight: var(--ti-fwbo, 700);
+  letter-spacing: 0.04em;
+  color: var(--o-r-colors-accent, #17549e);
 }
 
 .-w-author-name {
   margin: 0;
-  font-size: 1.6rem;
+  font-size: 2rem;
   font-weight: var(--ti-fwbo, 700);
+  line-height: 1.3;
 }
 
 .-w-author-role {
@@ -1183,6 +1337,15 @@ a { color: var(--o-r-colors-accent, #17549e); }
   .-w-scroll-hint { display: none; }
 
   .-w-cards { grid-template-columns: repeat(2, 1fr); }
+
+  .-w-fig { padding: 3.2rem; }
+  .-w-fig-body { grid-template-columns: 1fr auto 1fr; }
+  .-w-fig-col { padding: 2rem; }
+  .-w-fig-arrow { flex-direction: column; }
+  .-w-fig-arrow .-w-icon { rotate: none; font-size: 2.6rem; }
+  .-w-fig-concl { text-align: center; border-left: 0; border-top: 3px solid var(--o-r-colors-accent, #17549e); }
+
+  .-w-author-photo { width: 11rem; height: 11rem; }
 
   .-w-equation { grid-template-columns: 1fr auto 1fr auto 1fr; align-items: center; }
 

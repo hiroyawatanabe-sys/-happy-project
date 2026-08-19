@@ -101,26 +101,26 @@
   </header>
 
   <!-- =======================================================
-       【B2】90秒動画 ─ S1→S5の圧縮リフト
-       役割はセグメントで異なる：
-         ?s=cue  … 唯一の説明者（開いた状態で表示）
-         ?s=scsc … 補助（折りたたみ）
-         ?s=lec  … 90分受講済みのため既定で折りたたみ
+       【B2】90秒動画 ─ 常時展開（折りたたまない）
+       セグメントによる開閉の出し分けは廃止。
+       架電のみで説明を受けたCUE顧客にとっては唯一の説明者であり、
+       受講者・MTG後の顧客にとっても要点の再確認として機能するため、
+       全セグメントで最初から見える状態に置く。
   ======================================================== -->
   <section class="-w-section" aria-labelledby="video-h">
     <div class="-w-container">
       <div class="-w-video-wrap -w-reveal">
-        <button type="button" class="-w-video-head" id="video-toggle"
-                aria-expanded="false" aria-controls="video-body">
+        <p class="-w-video-head">
           <svg class="-w-icon" aria-hidden="true"><use href="#i-play"></use></svg>
           <span id="video-h">なぜ「詳しく見る」では押されないのか（90秒）</span>
-          <svg class="-w-icon -w-chev" aria-hidden="true"><use href="#i-chevron"></use></svg>
-        </button>
-        <div class="-w-video-body" id="video-body" hidden>
+        </p>
+        <div class="-w-video-body">
           <div class="-w-video-frame">
-            <!-- ▼ 本番差し替え：WEB学校 第9回 のハイライト90秒（字幕焼き込み・ミュート自動再生）
+            <!-- ▼ 本番差し替え：WEB学校 第9回 のハイライト90秒
+                 （字幕焼き込み・ミュート自動再生・16:9・poster必須）
                  <video src="assets/cta-90s.mp4" poster="assets/cta-90s.jpg"
-                        muted autoplay playsinline loop controls></video> -->
+                        muted autoplay playsinline loop controls
+                        preload="metadata"></video> -->
             <svg class="-w-icon -w-ph-icon" aria-hidden="true"><use href="#i-play"></use></svg>
             <span class="-w-ph-text">
               動画プレースホルダー<br>
@@ -136,29 +136,60 @@
   </section>
 
   <!-- =======================================================
-       【B3】対象となる「35ページ」とは
+       【B3】CTAの構造比較 ─ 図解が主役。本文は図が語れないことだけ書く
   ======================================================== -->
   <section class="-w-section -w-tinted" aria-labelledby="scope-h">
     <div class="-w-container">
       <div class="-w-sec-head -w-reveal">
-        <span class="-w-eyebrow">対象範囲</span>
-        <h2 id="scope-h">対象となる「35ページ」とは</h2>
+        <span class="-w-eyebrow">構造の比較</span>
+        <h2 id="scope-h">「詳しく見る」は、何も伝えていない</h2>
       </div>
 
-      <div class="-w-card -w-reveal">
-        <p>
-          SCSC／SCSC CUE の初期構築は <strong>35ページ程度</strong>。ブログ・事例紹介・お客様の声・商品紹介・会社概要・採用情報・お問い合わせフォームなど、選択ページ群から構成されています。
+      <!-- 図1：従来CTAと3D-CMF準拠CTAの構造比較
+           ボタンは実物大のモックとして描き、文章ではなく形で違いを見せる -->
+      <figure class="-w-fig -w-reveal">
+        <div class="-w-fig-body">
+
+          <div class="-w-fig-col -w-fig-ng">
+            <p class="-w-fig-label">いまの状態</p>
+            <p class="-w-mock -w-mock-ng">詳しく見る ▶</p>
+            <ul class="-w-fig-list">
+              <li>クリック先が予測できない</li>
+              <li>誰の疑問にも答えていない</li>
+              <li>押す理由（価値）が不明</li>
+              <li>どのページも同じ文言</li>
+            </ul>
+            <p class="-w-fig-verdict">情報の香り＝<strong>ゼロ</strong></p>
+          </div>
+
+          <p class="-w-fig-arrow" aria-hidden="true">
+            <span>全面刷新</span>
+            <svg class="-w-icon" ><use href="#i-arrow-right"></use></svg>
+          </p>
+
+          <div class="-w-fig-col -w-fig-ok">
+            <p class="-w-fig-label">刷新後</p>
+            <p class="-w-mock-q">Q. 相談だけでもいいの？</p>
+            <p class="-w-mock -w-mock-ok">無理な営業なし・専門家が無料で現状診断 ▶</p>
+            <ul class="-w-fig-list">
+              <li>閲覧者の頭の中の声を代弁する</li>
+              <li>自社の強みを根拠として提示する</li>
+              <li>クリック後に得られる情報を予告する</li>
+            </ul>
+            <p class="-w-fig-verdict">情報の香り＝<strong>濃い</strong></p>
+          </div>
+
+        </div>
+        <p class="-w-fig-concl">
+          「どこへ移動させるか」の設計から、<strong>「何を理解させ、どの心理段階へ進めるか」の設計へ</strong>
         </p>
-        <p>
-          その1ページごとに、ヘッダー・本文中・フッター・フォーム前などへCTAが置かれ、<strong>合計で約175箇所</strong>になります。
-        </p>
-        <p>
-          このうち何箇所が、いま「詳しく見る」「お問い合わせはこちら」「料金はこちら」のままでしょうか。
-        </p>
-        <p class="-w-note">
-          ※対象35ページの選定と現状の棚卸しは、お申込み後に<strong>無償で</strong>実施します。実際の箇所数はそこで確定します。
-        </p>
-      </div>
+        <figcaption>図1：従来CTAと3D-CMF準拠CTAの構造比較</figcaption>
+      </figure>
+
+      <p class="-w-note">
+        対象は基本かつ重要な35ページ。1ページあたり5つ・<strong>合計で約175箇所</strong>のCTAが、この左側の状態のまま置かれています。
+        対象35ページの選定と現状の棚卸しは、お申込み後に<strong>無償で</strong>実施します。
+      </p>
     </div>
   </section>
 
@@ -382,7 +413,7 @@
         <div class="-w-faq-item">
           <p class="-w-faq-q">なぜ「詳しく見る」ではいけないのですか？</p>
           <p class="-w-faq-a">
-            親切の問題ではなく、<strong>原則の問題</strong>だからです。W3CのWCAGガイドラインは「リンクの目的を文言から判断できること」を求めており、「ここをクリック」「詳しく見る」のような文脈依存の文言は、スクリーンリーダー利用者や認知負荷を抱えるユーザーにとって明確な障壁になります。またGoogleは公式に「説明的・簡潔・関連性のあるアンカーテキスト」を推奨しています。今回の刷新は、この両方に沿ったものです。
+            親切の問題ではなく、<strong>原則の問題</strong>だからです。W3CのWCAGはリンクの目的が文言から判断できることを求め、Googleは公式に「説明的・簡潔・関連性のある」アンカーテキストを推奨しています。UX・アクセシビリティ・検索エンジン理解の、いずれの基本原則にも反しているのが「詳しく見る」です。
           </p>
         </div>
         <div class="-w-faq-item">
@@ -526,11 +557,12 @@
 
       <!-- BtoBでは「誰が作業するのか」が見えないこと自体が信頼低下要因になる（E-E-A-T） -->
       <div class="-w-author -w-reveal">
-        <span class="-w-author-mark" aria-hidden="true">
-          <svg class="-w-icon" ><use href="#i-person-check"></use></svg>
-        </span>
+        <img class="-w-author-photo" src="assets/aoyama.jpg" width="256" height="256"
+             loading="lazy" decoding="async"
+             alt="株式会社ガーディアン 代表取締役社長 青山裕一">
         <div>
-          <p class="-w-author-name">本サービスの設計者：青山 裕一</p>
+          <p class="-w-author-label">本サービスの設計者</p>
+          <p class="-w-author-name">青山 裕一</p>
           <p class="-w-author-role">株式会社ガーディアン 代表取締役社長</p>
           <ul class="-w-author-facts">
             <li>直接手掛けたサイト <strong>7,000超</strong>／携わったサイト <strong>74,000超</strong></li>
