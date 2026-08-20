@@ -112,7 +112,7 @@ ul, ol { margin: 0; padding-left: 1.8em; }
 img, svg { max-width: 100%; height: auto; }
 
 /* 数値は等幅で整列（tone13 必須仕様） */
-.-w-num, table, .-w-price, .-w-count, .-w-metric, .-w-author-facts, .-w-compare {
+.-w-num, table, .-w-price, .-w-count, .-w-case-dl, .-w-author-facts, .-w-compare {
   font-variant-numeric: tabular-nums;
   font-feature-settings: 'tnum' 1;
 }
@@ -737,23 +737,83 @@ a { color: var(--o-r-colors-accent, #17549e); }
   color: var(--o-r-colors-base_text, #1f2d3d);
 }
 
-/* 実績カード */
-.-w-metric {
+/* 仮定の断り（見出し直下・本文サイズ。小さくしない） */
+.-w-assume {
   display: flex;
-  align-items: baseline;
-  gap: 0.6rem;
-  font-size: 1.9rem;
+  gap: 0.7rem;
+  align-items: flex-start;
+  margin: 0 0 2.4rem;
+  padding: 1.4rem;
+  border-radius: var(--ti-rb, 4px);
+  background: var(--c-warning-bg, rgba(146, 64, 14, 0.09));
+  border: var(--ti-bw, 1px) solid rgba(146, 64, 14, 0.32);
+  font-size: 1.5rem;
+  line-height: 1.7;
+  color: var(--o-r-colors-base_text, #1f2d3d);
+}
+
+.-w-assume .-w-icon {
+  margin-top: 0.35em;
+  color: var(--c-warning, #92400e);
+  font-size: 1.8rem;
+}
+
+.-w-assume strong { color: var(--c-warning, #92400e); }
+
+/* 仮定ケース：打ち手が主役、数値は従属させる */
+.-w-cases {
+  display: grid;
+  gap: var(--ti-gap, 12px);
+  padding-left: 0;
+  list-style: none;
+}
+
+.-w-case {
+  padding: var(--ti-spc, 20px);
+  background: var(--o-r-colors-base, #fff);
+  border: var(--ti-bw, 1px) solid var(--border-light, #e2e9f0);
+  border-radius: var(--ti-rc, 8px);
+}
+
+.-w-case-no {
+  margin: 0 0 0.5rem;
+  font-size: 1.2rem;
   font-weight: var(--ti-fwbo, 700);
+  letter-spacing: 0.02em;
   color: var(--o-r-colors-accent, #17549e);
 }
 
-.-w-metric .-w-from {
-  font-size: 1.4rem;
-  font-weight: var(--ti-fw-base, 400);
+.-w-case h3 {
+  margin: 0 0 1.2rem;
+  padding-bottom: 1rem;
+  border-bottom: var(--ti-bw, 1px) solid var(--border-light, #e2e9f0);
+  font-size: 1.7rem;
+}
+
+.-w-case-dl {
+  margin: 0;
+  display: grid;
+  gap: 0.4rem 1.2rem;
+  font-size: 1.35rem;
+  line-height: 1.65;
+}
+
+.-w-case-dl dt {
+  font-size: 1.2rem;
+  font-weight: var(--ti-fwbo, 700);
   color: var(--text-secondary, #45607b);
 }
 
-.-w-metric .-w-icon { color: var(--text-secondary, #45607b); font-size: 1.4rem; }
+.-w-case-dl dd { margin: 0 0 0.8rem; }
+.-w-case-dl dd:last-child { margin-bottom: 0; }
+.-w-case-dl dd strong { color: var(--o-r-colors-accent, #17549e); }
+
+/* 想定される変化：数値は本文と同格に留める（大きく置くと実績に見える） */
+.-w-case-change {
+  padding: 0.8rem 1rem;
+  border-radius: var(--ti-rb, 4px);
+  background: var(--accent-soft, rgba(23, 84, 158, 0.07));
+}
 
 /* 方程式 */
 .-w-equation {
@@ -832,45 +892,67 @@ a { color: var(--o-r-colors-accent, #17549e); }
 .-w-faq-a strong { color: var(--c-error, #c0271d); }
 
 /* -------------------------------------------------------------
-   11. 工程（⑮摩擦回避）
+   11. 実装ロードマップ（提案書p13 図8 準拠）
 ------------------------------------------------------------- */
-.-w-steps { padding-left: 0; list-style: none; display: grid; gap: 0; }
-
-.-w-step {
+.-w-roadmap {
   display: grid;
-  grid-template-columns: 3.4rem 1fr;
-  gap: 1.2rem;
-  padding: 1.2rem 0;
-  border-bottom: var(--ti-bw, 1px) solid var(--border-light, #e2e9f0);
-  font-size: 1.4rem;
+  gap: var(--ti-gap, 12px);
+  padding-left: 0;
+  list-style: none;
+  counter-reset: none;
 }
 
-.-w-step:last-child { border-bottom: 0; }
+.-w-rm {
+  position: relative;
+  padding: 1.6rem;
+  background: var(--o-r-colors-base, #fff);
+  border: var(--ti-bw, 1px) solid var(--border-light, #e2e9f0);
+  border-top: 3px solid var(--o-r-colors-accent, #17549e);
+  border-radius: 0 0 var(--ti-rc, 8px) var(--ti-rc, 8px);
+}
 
-.-w-step-no {
-  display: grid;
-  place-items: center;
-  width: 3.4rem;
-  height: 3.4rem;
-  border-radius: var(--ti-rb, 4px);
-  background: var(--o-r-colors-assort, #edf2f7);
-  color: var(--text-secondary, #45607b);
+/* SPは縦並びなので、カード間を矢印でつなぐ */
+.-w-rm:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  inset-block-start: 100%;
+  inset-inline-start: 50%;
+  translate: -50% 0;
+  border: 6px solid transparent;
+  border-block-start-color: var(--border-mid, #c3cedb);
+  z-index: 1;
+}
+
+.-w-rm-no {
+  margin: 0 0 0.4rem;
   font-size: 1.2rem;
   font-weight: var(--ti-fwbo, 700);
+  letter-spacing: 0.08em;
+  color: var(--o-r-colors-accent, #17549e);
 }
 
-/* 御社の作業＝2回だけ、を視覚的に際立たせる */
-.-w-step.-w-yours { background: var(--accent-soft, rgba(23, 84, 158, 0.07)); }
-.-w-step.-w-yours .-w-step-no {
-  background: var(--o-r-colors-accent, #17549e);
-  color: var(--o-r-colors-accent_text, #fff);
+.-w-rm-ttl {
+  margin: 0 0 0.6rem;
+  font-size: 1.6rem;
+  font-weight: var(--ti-fwbo, 700);
+  line-height: 1.35;
 }
-.-w-step.-w-yours .-w-step-body strong { color: var(--o-r-colors-accent, #17549e); }
-.-w-step-owner {
-  display: block;
-  margin-top: 0.2rem;
-  font-size: 1.2rem;
+
+.-w-rm-desc {
+  margin: 0;
+  font-size: 1.3rem;
+  line-height: 1.6;
   color: var(--text-secondary, #45607b);
+}
+
+/* 御社の関与。回数を断定せず、何をするかだけを書く */
+.-w-rm-you {
+  margin: 1rem 0 0;
+  padding-top: 0.9rem;
+  border-top: var(--ti-bw, 1px) dashed var(--border-mid, #c3cedb);
+  font-size: 1.25rem;
+  font-weight: var(--ti-fwbo, 700);
+  color: var(--o-r-colors-base_text, #1f2d3d);
 }
 
 /* -------------------------------------------------------------
@@ -1337,6 +1419,16 @@ a { color: var(--o-r-colors-accent, #17549e); }
   .-w-scroll-hint { display: none; }
 
   .-w-cards { grid-template-columns: repeat(2, 1fr); }
+  .-w-cases { grid-template-columns: repeat(3, 1fr); }
+
+  .-w-roadmap { grid-template-columns: repeat(5, 1fr); }
+  .-w-rm:not(:last-child)::after {
+    inset-block-start: 50%;
+    inset-inline-start: 100%;
+    translate: 0 -50%;
+    border-block-start-color: transparent;
+    border-inline-start-color: var(--border-mid, #c3cedb);
+  }
 
   .-w-fig { padding: 3.2rem; }
   .-w-fig-body { grid-template-columns: 1fr auto 1fr; }
