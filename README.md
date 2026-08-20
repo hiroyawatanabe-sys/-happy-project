@@ -113,14 +113,34 @@ TOSENレッド正式HEX／GA4プロパティ／実績社名の掲載許諾／代
 既存 SCSC / SCSC CUE ご契約者様向けに、CTA全面刷新パッケージ（対象35ページ・約175箇所／39,750円税別／2026-08-24〜09-07）を**申込フォームまで**運ぶ期間限定LP。診断サイトとは独立。
 
 ```
-docs/cta-lp-copy.md        … 確定コピー原稿（SSOT）＋架電トークスクリプト＋LINE送付文
-docs/cta-lp-visual-spec.md … 図解・写真・動画の挿入箇所と仕様（未制作分の仕様含む）
-tools/cta-char-audit.mjs   … CTA文字数規格の機械検査（CIで落とせる）
-cta-lp/index.html          … LP本体
-cta-lp/css/lp.css          … スタイル（トーン13.知的・堅実）
-cta-lp/js/lp.js            … セグメント出し分け・カウントダウン・フォーム・4段階計測
-cta-lp/assets/aoyama.jpg   … 設計者写真（256×256）
+docs/cta-lp-copy.md          … 確定コピー原稿（SSOT）＋架電トークスクリプト＋LINE送付文
+docs/cta-lp-visual-spec.md   … 図解・写真・動画の挿入箇所と仕様（未制作分の仕様含む）
+docs/cta-lp-3dcmf-placement.md … 「3D-CMF理論」の露出設計（使用箇所の確定）
+tools/cta-char-audit.mjs     … CTA文字数規格の機械検査（CIで落とせる）
+tools/build-standalone.mjs   … 単一HTMLの書き出し（CSS/JS/画像を埋め込み）
+cta-lp/index.html            … LP本体
+cta-lp/css/lp.css            … スタイル（トーン13.知的・堅実）
+cta-lp/js/lp.js              … セグメント出し分け・カウントダウン・フォーム・4段階計測
+cta-lp/assets/aoyama.jpg     … 設計者写真（256×256）
+dist/cta-lp.html             … 配布用の単一HTML（ビルド生成物）
 ```
+
+### 単一HTMLの書き出し
+
+```bash
+node tools/build-standalone.mjs   # → dist/cta-lp.html
+```
+
+CSS・JS・写真をすべて埋め込むため、**サーバーに置かずダブルクリックで開ける**。
+外部参照はGoogleフォントのみで、読み込めない環境でもフォールバックのフォントスタックで崩れない。
+
+### ファーストビュー（MVカンプ準拠）
+
+- **1024px以上**：左＝コピー＋CTA／右＝価格カードの2カラム
+- **SP**：1カラムで ブランド → 見出し → サブ → 用語定義 → **価格カード** → CTA → 信頼バー
+- 見出しは `clamp(1.8rem, 5.4vw, 2.6rem)`。SPで3行、PCで2行に収まる値
+- 価格カードの申込期間の帯は **accent（#17549e）**。ボタン色（#0b3d91）は押せる要素だけに使う
+- 便益サブは**ボタンの外**に `＼ 〜 ／` 付きで置く（面内3箇所。追従CTAのみボタン内）
 
 ### CTA文言（GBlueprint50 工程34 文字数規格 準拠）
 

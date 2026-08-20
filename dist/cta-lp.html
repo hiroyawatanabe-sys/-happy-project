@@ -1,0 +1,2988 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>CTA全面刷新｜35ページ・約175箇所を一括代行｜株式会社ガーディアン</title>
+<meta name="description" content="御社の対象35ページにあるCTA、約175箇所。「詳しく見る」のままの文言を「FAQ調の問い×検証可能な自社の強み」へ一括で置き換えます。2026年9月7日まで39,750円（税別）。最初の棚卸し診断は無償。">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="format-detection" content="telephone=no">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='4' fill='%230b3d91'/%3E%3Cpath d='M6 12h9m0 0-3.2-3.2M15 12l-3.2 3.2' stroke='%23fff' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+
+<!-- ▼ 本番反映時に差し替え：GA4 / GTM のタグをここに設置（開発版では発火させない）
+     計測は4段階（接触→品質→中間→事業）。イベント名は js/lp.js の track() を参照 -->
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script> -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<style>
+@charset "UTF-8";
+/* =============================================================
+   CTA全面刷新 クロージングLP スタイルシート
+
+   原稿SSOT : docs/cta-lp-copy.md
+   トーン    : 13.知的・堅実（色温度2 / 彩度2 / 明度3 / 形状2 / 密度4）
+   守備範囲  : S6 比較検討 → S7 決定（感情：緊張 → 決意）
+
+   実装規約 : 1rem = 10px、モバイルファースト（768px / 1024px）、
+              Vanilla CSS、全クラスに -w- 接頭辞、CSS変数はフォールバック必須
+============================================================= */
+
+/* -------------------------------------------------------------
+   1. デザイントークン
+------------------------------------------------------------- */
+:root {
+  /* === 8色（OWLet リソースカラー相当）=== */
+  /* 70% ベース：白。長時間の閲覧に耐える中明度トーンの受け皿 */
+  --o-r-colors-base: #ffffff;
+  --o-r-colors-base_text: #1f2d3d;      /* 対base CR 13.99:1 */
+  /* 25% アソート：薄いブルーグレー。区切り面のみに使う（文字色に使わない＝禁則1） */
+  --o-r-colors-assort: #edf2f7;
+  --o-r-colors-assort_text: #1f2d3d;    /* 対assort CR 12.42:1 */
+  /* 5% アクセント：見出し・強調。寒色2 / 低彩度2 */
+  --o-r-colors-accent: #17549e;         /* 対base CR 7.50:1 */
+  --o-r-colors-accent_text: #ffffff;
+  /* CTA：鉄則1により形容詞を超えてStage 7原則を優先。深ネイビーで重厚 */
+  --o-r-colors-button: #0b3d91;         /* 対base CR 10.06:1 */
+  --o-r-colors-button_text: #ffffff;
+
+  /* === 派生色 ===
+     計算式: base_text の L を上げて二次テキスト化
+     OWLet変換参考:
+     {d:def('hsl'=>rgb2hsl(owlet_dsl::resource('colors','base_text')))}
+     --text-secondary: hsla({=@hsl['h']=}, {=@hsl['s']=}%, {=@hsl['l']+22=}%, 1);
+     {/d:def} */
+  --text-secondary: hsla(209, 32%, 40%, 1);   /* #45607b 対base CR 5.6:1 */
+  --text-on-dark: #dbe6f2;
+
+  /* 計算式: assort の L を -4% して境界線化 */
+  --border-light: hsla(210, 33%, 90%, 1);     /* #e2e9f0 */
+  --border-mid: hsla(210, 25%, 80%, 1);       /* #c3cedb */
+
+  /* 計算式: accent を低alphaで面化 */
+  --accent-soft: hsla(211, 74%, 35%, 0.07);
+  --accent-line: hsla(211, 74%, 35%, 0.28);
+  --button-hover: hsla(217, 86%, 25%, 1);     /* button の L を -5% */
+  --button-soft: hsla(217, 86%, 30%, 0.1);
+
+  /* === セマンティック色（固定色相・8色から派生させない＝禁則3）=== */
+  --c-success: #15803d;      /* 緑 145° 対白 CR 5.0:1 */
+  --c-success-bg: rgba(21, 128, 61, 0.08);
+  --c-error: #c0271d;        /* 赤 0° */
+  --c-error-bg: rgba(192, 39, 29, 0.08);
+  --c-warning: #92400e;      /* 黄 35° 対白 CR 7.09:1 / 対warning-bg 6.08:1 */
+  --c-warning-bg: rgba(146, 64, 14, 0.09);
+
+  /* === デザイントークン（tone13：形状2＝直線寄り / 密度4＝密）=== */
+  --ti-rb: 4px;              /* radius-button */
+  --ti-rc: 8px;              /* radius-card */
+  --ti-rin: 4px;             /* radius-input */
+  --ti-sp: 40px;             /* spacing-section */
+  --ti-spc: 20px;            /* spacing-card */
+  --ti-gap: 12px;            /* gap-component */
+  --ti-fw-base: 400;
+  --ti-fwbo: 700;
+  --ti-sh: 0 2px 8px hsla(0, 0%, 0%, 0.08);
+  --ti-bw: 1px;
+
+  /* === フォント === */
+  --font-sans: 'Inter', 'IBM Plex Sans', 'Noto Sans JP',
+               'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+
+  /* === レイアウト === */
+  --w-container: 108rem;
+  --h-bar: 4.4rem;           /* 期限バーの高さ */
+}
+
+/* -------------------------------------------------------------
+   2. リセット・基盤
+------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  font-size: 62.5%;          /* 1rem = 10px */
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding-top: var(--h-bar);
+  font-family: var(--font-sans);
+  font-size: 1.6rem;
+  font-weight: var(--ti-fw-base, 400);
+  line-height: 1.7;
+  color: var(--o-r-colors-base_text, #1f2d3d);
+  background: var(--o-r-colors-base, #ffffff);
+  overflow-wrap: break-word;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  font-weight: var(--ti-fwbo, 700);
+}
+
+p { margin: 0 0 1.2em; }
+p:last-child { margin-bottom: 0; }
+ul, ol { margin: 0; padding-left: 1.8em; }
+img, svg { max-width: 100%; height: auto; }
+
+/* 数値は等幅で整列（tone13 必須仕様） */
+.-w-num, table, .-w-price, .-w-count, .-w-case-dl, .-w-author-facts, .-w-compare {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+
+a { color: var(--o-r-colors-accent, #17549e); }
+
+:focus-visible {
+  outline: 3px solid var(--o-r-colors-accent, #17549e);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* -------------------------------------------------------------
+   3. レイアウト共通
+------------------------------------------------------------- */
+.-w-container {
+  width: 100%;
+  max-width: var(--w-container, 108rem);
+  margin-inline: auto;
+  padding-inline: 2rem;
+}
+
+.-w-section {
+  padding-block: var(--ti-sp, 40px);
+}
+
+.-w-section.-w-tinted {
+  background: var(--o-r-colors-assort, #edf2f7);
+}
+
+.-w-sec-head {
+  margin-bottom: 2.4rem;
+}
+
+.-w-sec-head .-w-eyebrow {
+  display: inline-block;
+  margin-bottom: 0.8rem;
+  padding: 0.3rem 0.9rem;
+  font-size: 1.2rem;
+  font-weight: var(--ti-fwbo, 700);
+  letter-spacing: 0.04em;
+  color: var(--o-r-colors-accent, #17549e);
+  background: var(--accent-soft, rgba(23, 84, 158, 0.07));
+  border-left: 3px solid var(--o-r-colors-accent, #17549e);
+  border-radius: 0 var(--ti-rb, 4px) var(--ti-rb, 4px) 0;
+}
+
+.-w-sec-head h2 {
+  font-size: 2.2rem;
+  color: var(--o-r-colors-base_text, #1f2d3d);
+}
+
+.-w-sec-head .-w-lead {
+  margin-top: 1rem;
+  color: var(--text-secondary, #45607b);
+  font-size: 1.5rem;
+}
+
+.-w-note {
+  margin-top: 1.2rem;
+  font-size: 1.3rem;
+  line-height: 1.65;
+  color: var(--text-secondary, #45607b);
+}
+
+.-w-icon {
+  width: 1em;
+  height: 1em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vertical-align: -0.12em;
+  flex: none;
+}
+
+.-w-sp-only { display: inline; }
+.-w-pc-only { display: none; }
+
+/* -------------------------------------------------------------
+   4. 期限バー（画面上部固定）— ②希少性
+------------------------------------------------------------- */
+.-w-deadline-bar {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 60;
+  height: var(--h-bar);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding-inline: 1.2rem;
+  /* CTA（button色）と同色にするとCTAの独立性が薄れるため、中立のダークにする */
+  background: var(--o-r-colors-base_text, #1f2d3d);
+  color: #ffffff;                 /* 対 #1f2d3d CR 13.99:1 */
+  font-size: 1.25rem;
+  font-weight: var(--ti-fwbo, 700);
+  letter-spacing: 0.01em;
+  text-align: center;
+}
+
+.-w-deadline-bar .-w-count {
+  padding: 0.2rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: var(--ti-rb, 4px);
+  white-space: nowrap;
+}
+
+/* -------------------------------------------------------------
+   5. ファーストビュー（S6入口／感情：緊張）
+------------------------------------------------------------- */
+.-w-fv {
+  position: relative;
+  overflow: hidden;
+  padding-block: 2.4rem 3.2rem;
+  background:
+    radial-gradient(120% 90% at 100% 0%, rgba(23, 84, 158, 0.07) 0%, rgba(23, 84, 158, 0) 55%),
+    linear-gradient(180deg, var(--o-r-colors-assort, #edf2f7) 0%, var(--o-r-colors-base, #fff) 62%);
+  border-bottom: var(--ti-bw, 1px) solid var(--border-light, #e2e9f0);
+}
+
+.-w-fv-grid { display: grid; }
+
+.-w-fv-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  align-self: start;
+  justify-self: start;
+  margin: 0 0 1.8rem;
+  padding: 0.7rem 1.2rem;
+  border: var(--ti-bw, 1px) solid var(--accent-line, rgba(23, 84, 158, 0.28));
+  border-radius: var(--ti-rc, 8px);
+  background: var(--o-r-colors-base, #fff);
+  font-size: 1.3rem;
+  font-weight: var(--ti-fwbo, 700);
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+  color: var(--o-r-colors-accent, #17549e);
+}
+
+.-w-fv-brand .-w-icon { flex: none; font-size: 2rem; }
+
+.-w-fv h1 {
+  /* SPは3行（アクセス／デザイン／それなのに〜）で収める。
+     3行目は16文字なので、コンテンツ幅の 1/16 を上限に可変させる */
+  font-size: clamp(1.8rem, 5.4vw, 2.6rem);
+  line-height: 1.38;
+  letter-spacing: -0.01em;
+  margin: 0 0 1.6rem;
+  /* 日本語は語中で折り返すと見出しの強度が落ちる。
+     対応ブラウザでは文節単位で改行し、非対応は -w-br-sp の明示改行で担保する */
+  word-break: auto-phrase;
+  text-wrap: balance;
+}
+
+.-w-fv h1 .-w-hl { color: var(--o-r-colors-accent, #17549e); }
+
+/* SP専用の改行（768px以上では改行しない） */
+@media (min-width: 768px) {
+  .-w-br-sp { display: none; }
+}
+
+.-w-fv-sub {
+  font-size: 1.5rem;
+  line-height: 1.75;
+  color: var(--text-secondary, #45607b);
+  margin: 0 0 1.6rem;
+}
+
+.-w-fv-sub strong { color: var(--o-r-colors-base_text, #1f2d3d); }
+
+/* CTAの用語定義。専門用語は滑り台の段差になるためFVで必ず解く（教科書1-4） */
+.-w-fv-def {
+  display: flex;
+  gap: 0.8rem;
+  align-items: flex-start;
+  margin: 0 0 2rem;
+  padding: 1.2rem 1.4rem;
+  border: var(--ti-bw, 1px) solid var(--border-light, #e2e9f0);
+  border-radius: var(--ti-rc, 8px);
+  background: var(--o-r-colors-base, #fff);
+  font-size: 1.3rem;
+  line-height: 1.7;
+  word-break: auto-phrase;
+  color: var(--text-secondary, #45607b);
+}
+
+.-w-fv-def .-w-icon {
+  flex: none;
+  margin-top: 0.2em;
+  font-size: 1.9rem;
+  color: var(--o-r-colors-accent, #17549e);
+}
+
+.-w-fv-def strong { color: var(--o-r-colors-base_text, #1f2d3d); }
+
+/* -------------------------------------------------------------
+   5-2. 価格カード（⑨アンカリング／②希少性／④無料効果）
+   正規料金は取消線を使わない。積算根拠のある金額として並置する
+------------------------------------------------------------- */
+.-w-pricecard {
+  margin: 0 0 2.4rem;
+  padding: 2rem 1.8rem;
+  border: var(--ti-bw, 1px) solid var(--border-light, #e2e9f0);
+  border-radius: var(--ti-rc, 8px);
+  background: var(--o-r-colors-base, #fff);
+  box-shadow: 0 4px 20px rgba(31, 45, 61, 0.07);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.-w-pc-label {
+  margin: 0 0 0.4rem;
+  font-size: 1.3rem;
+  font-weight: var(--ti-fwbo, 700);
+  color: var(--o-r-colors-accent, #17549e);
+}
+
+.-w-pc-regular {
+  margin: 0;
+  font-size: 2.2rem;
+  font-weight: var(--ti-fwbo, 700);
+  line-height: 1.3;
+  color: var(--text-secondary, #45607b);
+}
+
+.-w-pc-regular span { font-size: 1.4rem; font-weight: var(--ti-fw-base, 400); }
+
+.-w-pc-arrow {
+  margin: 1.2rem 0 0.9rem;
+  padding-top: 1.2rem;
+  border-top: var(--ti-bw, 1px) dashed var(--border-mid, #c3cedb);
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--border-mid, #c3cedb);
+}
+
+.-w-pc-campaign {
+  margin: 0 0 0.2rem;
+  font-size: 1.4rem;
+  font-weight: var(--ti-fwbo, 700);
+  color: var(--c-success, #15803d);
+}
+
+.-w-pc-price {
+  margin: 0 0 1.4rem;
+  font-size: 5.2rem;
+  font-weight: var(--ti-fwbo, 700);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--o-r-colors-accent, #17549e);
+}
+
+.-w-pc-yen { font-size: 2.4rem; }
+.-w-pc-tax { font-size: 1.4rem; font-weight: var(--ti-fw-base, 400); color: var(--text-secondary, #45607b); }
+
+/* 申込期間の帯。ボタン色（--o-r-colors-button）は使わない＝
+   押せる要素はCTAだけ、という約束を壊さないため */
+.-w-pc-period {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 1.4rem;
+  padding: 0.9rem 1.2rem;
+  border-radius: var(--ti-rb, 4px);
+  background: var(--o-r-colors-accent, #17549e);
+  color: var(--o-r-colors-accent_text, #fff);
+  font-size: 1.25rem;
+  font-weight: var(--ti-fwbo, 700);
+  line-height: 1.45;
+  word-break: auto-phrase;
+  cursor: default;
+}
+
+.-w-pc-period .-w-icon { flex: none; font-size: 1.7rem; }
+
+.-w-pc-free {
+  padding: 1.2rem 1.4rem;
+  border: var(--ti-bw, 1px) solid rgba(21, 128, 61, 0.3);
+  border-radius: var(--ti-rb, 4px);
+  background: rgba(21, 128, 61, 0.07);
+  text-align: left;
+}
+
+.-w-pc-free-ttl {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  margin: 0 0 0.6rem;
+  font-size: 1.45rem;
+  font-weight: var(--ti-fwbo, 700);
+  color: var(--c-success, #15803d);
+}
+
+.-w-pc-free-ttl .-w-icon { flex: none; font-size: 1.9rem; }
+
+.-w-pc-free ul {
+  margin: 0;
+  padding-left: 1.6rem;
+  font-size: 1.35rem;
+  line-height: 1.8;
+  color: var(--o-r-colors-base_text, #1f2d3d);
+}
+
+/* -------------------------------------------------------------
+   5-3. 信頼バー（カード状・PCは3列／SPは3行）
+------------------------------------------------------------- */
+.-w-trust {
+  display: grid;
+  gap: 0;
+  margin: 2.4rem 0 0;
+  padding: 0;
+  list-style: none;
+  border: var(--ti-bw, 1px) solid var(--border-light, #e2e9f0);
+  border-radius: var(--ti-rc, 8px);
+  background: var(--o-r-colors-base, #fff);
+  font-size: 1.35rem;
+  color: var(--o-r-colors-base_text, #1f2d3d);
+}
+
+.-w-trust li {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 1.2rem 1.6rem;
+}
+
+.-w-trust li + li { border-top: var(--ti-bw, 1px) solid var(--border-light, #e2e9f0); }
+
+.-w-trust .-w-icon { flex: none; font-size: 2rem; color: var(--o-r-colors-accent, #17549e); }
+
+/* -------------------------------------------------------------
+   6. CTA（全4箇所で完全共通・1ページ1ゴール）
+------------------------------------------------------------- */
+.-w-cta-block { margin-block: 2.4rem; }
+
+.-w-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  width: 100%;
+  min-height: 6.4rem;          /* タッチターゲット 44px 以上を大きく超える */
+  padding: 1.4rem 2rem;
+  border: 0;
+  border-radius: var(--ti-rb, 4px);
+  background: var(--o-r-colors-button, #0b3d91);
+  color: var(--o-r-colors-button_text, #ffffff);
+  font-family: inherit;
+  font-size: 1.5rem;
+  font-weight: var(--ti-fwbo, 700);
+  line-height: 1.35;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: var(--ti-sh, 0 2px 8px rgba(0, 0, 0, 0.08));
+  transition: background-color 0.16s ease, transform 0.16s ease;
+}
+
+.-w-cta:hover { background: var(--button-hover, #0a2f6f); }
+.-w-cta:active { transform: translateY(1px); }
+
+/* ②便益サブテキスト（規格12〜18字・1行）
+   面内3箇所（fv / mid / form）はボタン外の見出しとして置く。
+   追従CTAだけは高さの制約があるためボタン内部に残す */
+p.-w-cta-benefit {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 0.8rem;
+  font-size: 1.35rem;
+  font-weight: var(--ti-fwbo, 700);
+  line-height: 1.3;
+  color: var(--o-r-colors-base_text, #1f2d3d);
+  white-space: nowrap;       /* 1行を保証 */
+}
+
+p.-w-cta-benefit::before,
+p.-w-cta-benefit::after {
+  color: var(--border-mid, #c3cedb);
+  font-weight: var(--ti-fw-base, 400);
+}
+p.-w-cta-benefit::before { content: '＼'; }
+p.-w-cta-benefit::after  { content: '／'; }
+
+/* 追従CTA内の便益（ボタン内部サブ行） */
+.-w-cta span.-w-cta-benefit {
+  order: -1;
+  font-size: 1.2rem;
+  font-weight: var(--ti-fw-base, 400);
+  line-height: 1.3;
+  opacity: 0.9;
+  white-space: nowrap;
+}
+
+/* ボタン右端のシェブロン。位置を動かさないよう絶対配置にする */
+.-w-cta { position: relative; }
+
+.-w-cta-arw {
+  position: absolute;
+  inset-inline-end: 1.8rem;
+  inset-block-start: 50%;
+  translate: 0 -50%;
+  font-size: 2rem;
+  opacity: 0.85;
+}
+
+/* ①行動文言（ボタン本体・規格4〜13字／最適帯6〜10字）
+   絶対条件：スマホ表示で折り返さないこと */
+.-w-cta .-w-cta-main {
+  font-size: 1.9rem;
+  font-weight: var(--ti-fwbo, 700);
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+/* ③不安解消マイクロコピー（ボタン直下・規格15〜22字・1行／2行化の禁止） */
+.-w-cta-micro {
+  margin: 0.9rem 0 0;
+  text-align: center;
+  font-size: 1.25rem;
+  line-height: 1.4;
+  color: var(--text-secondary, #45607b);
+  white-space: nowrap;       /* 2行化の禁止を実装で担保 */
+}
+
+/* 補足（マイクロコピーではない。ボタンから離して置く） */
+.-w-form-note {
+  margin: 1.2rem 0 0;
+  font-size: 1.3rem;
+  color: var(--text-secondary, #45607b);
+}
+
+.-w-micro {
+  margin-top: 1rem;
+  padding-left: 0;
+  list-style: none;
+  font-size: 1.25rem;
+  line-height: 1.75;
+  color: var(--text-secondary, #45607b);
+}
+
+.-w-micro li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.-w-micro .-w-icon {
+  margin-top: 0.35em;
+  color: var(--c-success, #15803d);
+}
+
+/* -------------------------------------------------------------
+   7. 動画（S1→S5 の圧縮リフト。セグメントで表示位置・開閉が変わる）
+------------------------------------------------------------- */
+.-w-video-wrap {
+  border: var(--ti-bw, 1px) solid var(--border-light, #e2e9f0);
+  border-radius: var(--ti-rc, 8px);
+  overflow: hidden;
+  background: var(--o-r-colors-base, #fff);
+}
+
+.-w-video-head {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 0;
+  padding: 1.4rem 1.6rem;
+  font-size: 1.5rem;
+  font-weight: var(--ti-fwbo, 700);
+  color: var(--o-r-colors-base_text, #1f2d3d);
+}
+
+.-w-video-head .-w-icon { color: var(--o-r-colors-accent, #17549e); }
+
+.-w-video-body { border-top: var(--ti-bw, 1px) solid var(--border-light, #e2e9f0); }
+
+.-w-video-frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: var(--o-r-colors-base_text, #1f2d3d);
+  color: var(--text-on-dark, #dbe6f2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  text-align: center;
+  padding: 2rem;
+}
+
+.-w-video-frame video { width: 100%; height: 100%; object-fit: cover; }
+.-w-video-frame .-w-ph-icon { width: 4.4rem; height: 4.4rem; opacity: 0.75; }
+.-w-video-frame .-w-ph-text { font-size: 1.3rem; line-height: 1.6; }
+
+.-w-video-cap {
+  padding: 1.2rem 1.6rem;
+  font-size: 1.25rem;
+  color: var(--text-secondary, #45607b);
+  background: var(--o-r-colors-assort, #edf2f7);
+}
+
+/* -------------------------------------------------------------
+   8. 表（4択比較・Before/After）— 密度4。モバイルは横スクロール
+------------------------------------------------------------- */
+.-w-table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: var(--ti-bw, 1px) solid var(--border-light, #e2e9f0);
+  border-radius: var(--ti-rc, 8px);
+  background-color: var(--o-r-colors-base, #fff);
+  /* 端の影。スクロール位置に応じて自動で出入りし、
+     「まだ右に続く」ことを手がかりとして示す（local と scroll の重ね技） */
+  background-image:
+    linear-gradient(90deg, var(--o-r-colors-base, #fff) 40%, rgba(255, 255, 255, 0)),
+    linear-gradient(90deg, rgba(255, 255, 255, 0), var(--o-r-colors-base, #fff) 60%),
+    radial-gradient(farthest-side at 0 50%, rgba(31, 45, 61, 0.16), rgba(31, 45, 61, 0)),
+    radial-gradient(farthest-side at 100% 50%, rgba(31, 45, 61, 0.16), rgba(31, 45, 61, 0));
+  background-position: left center, right center, left center, right center;
+  background-size: 3.2rem 100%, 3.2rem 100%, 1.2rem 100%, 1.2rem 100%;
+  background-repeat: no-repeat;
+  background-attachment: local, local, scroll, scroll;
+}
+
+.-w-scroll-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.8rem;
+  font-size: 1.2rem;
+  color: var(--text-secondary, #45607b);
+}
+
+.-w-table {
+  width: 100%;
+  min-width: 62rem;
+  border-collapse: collapse;
+  font-size: 1.35rem;
+  line-height: 1.6;
+}
+
+.-w-table th, .-w-table td {
+  padding: 1.1rem 1.2rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: var(--ti-bw, 1px) solid var(--border-light, #e2e9f0);
+}
+
+.-w-table thead th {
+  background: var(--o-r-colors-assort, #edf2f7);
+  color: var(--o-r-colors-assort_text, #1f2d3d);
+  font-size: 1.3rem;
+  font-weight: var(--ti-fwbo, 700);
+  white-space: nowrap;
+}
+
+/* 行見出し列は横スクロール中も固定 */
+.-w-table tbody th,
+.-w-table thead th:first-child {
+  position: sticky;
+  inset-inline-start: 0;
+  z-index: 1;
+  background: var(--o-r-colors-base, #fff);
+  border-right: var(--ti-bw, 1px) solid var(--border-light, #e2e9f0);
+  font-weight: var(--ti-fwbo, 700);
+  white-space: nowrap;
+}
+
+.-w-table thead th:first-child { background: var(--o-r-colors-assort, #edf2f7); }
+
+/* 本命列（②本パッケージ）の強調 — ⑧おとり効果の受け皿 */
+.-w-table .-w-col-win {
+  background: var(--accent-soft, rgba(23, 84, 158, 0.07));
+  color: var(--o-r-colors-base_text, #1f2d3d);
+}
+
+.-w-table thead .-w-col-win {
+  background: var(--o-r-colors-accent, #17549e);
+  color: var(--o-r-colors-accent_text, #ffffff);
+}
+
+.-w-table .-w-col-win strong { color: var(--o-r-colors-accent, #17549e); }
+
+.-w-table .-w-bad { color: var(--c-error, #c0271d); font-weight: var(--ti-fwbo, 700); }
+.-w-table .-w-good { color: var(--c-success, #15803d); font-weight: var(--ti-fwbo, 700); }
+
+.-w-table tbody tr:last-child th,
+.-w-table tbody tr:last-child td { border-bottom: 0; }
+
+/* Before / After 表の Before セル */
+.-w-ba-before {
+  color: var(--text-secondary, #45607b);
+  text-decoration: line-through;
+  text-decoration-color: var(--c-error, #c0271d);
+  text-decoration-thickness: 1px;
+}
+
+.-w-ba-after strong { color: var(--o-r-colors-accent, #17549e); }
+
+/* -------------------------------------------------------------
+   8-2. 図1：CTAの構造比較
+   ボタンは実物大のモックとして描き、文章ではなく形で違いを見せる。
+   NG/OKの色は固定色相のセマンティック色を使う（8色から派生させない＝禁則3）
+------------------------------------------------------------- */
+.-w-fig {
+  margin: 0;
+  padding: var(--ti-spc, 20px);
+  background: var(--o-r-colors-base, #fff);
+  border: var(--ti-bw, 1px) solid var(--border-light, #e2e9f0);
+  border-radius: var(--ti-rc, 8px);
+}
+
+.-w-fig-body {
+  display: grid;
+  gap: var(--ti-gap, 12px);
+  align-items: stretch;
+}
+
+.-w-fig-col {
+  padding: 1.4rem;
+  border-radius: var(--ti-rb, 4px);
+  border: var(--ti-bw, 1px) solid transparent;
+}
+
+.-w-fig-ng {
+  background: var(--c-error-bg, rgba(192, 39, 29, 0.08));
+  border-color: rgba(192, 39, 29, 0.28);
+}
+
+.-w-fig-ok {
+  background: var(--c-success-bg, rgba(21, 128, 61, 0.08));
+  border-color: rgba(21, 128, 61, 0.32);
+}
+
+.-w-fig-label {
+  margin: 0 0 1rem;
+  font-size: 1.2rem;
+  font-weight: var(--ti-fwbo, 700);
+  letter-spacing: 0.04em;
+  color: var(--text-secondary, #45607b);
+}
+
+.-w-fig-ng .-w-fig-label { color: var(--c-error, #c0271d); }
+.-w-fig-ok .-w-fig-label { color: var(--c-success, #15803d); }
+
+/* ボタンのモック（実物に近い見え方にする） */
+.-w-mock {
+  margin: 0;
+  padding: 1.2rem 1.4rem;
+  border-radius: var(--ti-rb, 4px);
+  font-size: 1.4rem;
+  font-weight: var(--ti-fwbo, 700);
+  line-height: 1.4;
+  text-align: center;
+  box-shadow: var(--ti-sh, 0 2px 8px rgba(0, 0, 0, 0.08));
+}
+
+.-w-mock-ng {
+  background: #d8dee6;                      /* 埋没した汎用ボタンの見え方 */
+  color: #5b6672;                           /* 対 #d8dee6 CR 4.6:1 */
+}
+
+.-w-mock-ok {
+  background: var(--o-r-colors-button, #0b3d91);
+  color: var(--o-r-colors-button_text, #fff);
+}
+
+/* 疑問の吹き出し（ボタンの直上に置く＝疑問が生まれた瞬間の直後） */
+.-w-mock-q {
+  position: relative;
+  margin: 0 0 1.4rem;
+  padding: 1rem 1.2rem;
+  border-radius: var(--ti-rb, 4px);
+  background: var(--o-r-colors-base, #fff);
+  border: var(--ti-bw, 1px) solid var(--accent-line, rgba(23, 84, 158, 0.28));
+  font-size: 1.35rem;
+  font-weight: var(--ti-fwbo, 700);
+  color: var(--o-r-colors-accent, #17549e);
+  text-align: center;
+}
+
+.-w-mock-q::after {                          /* 吹き出しの尾 */
+  content: '';
+  position: absolute;
+  inset-block-start: 100%;
+  inset-inline-start: 50%;
+  translate: -50% 0;
+  border: 7px solid transparent;
+  border-block-start-color: var(--accent-line, rgba(23, 84, 158, 0.28));
+}
+
+.-w-fig-list {
+  margin: 1.4rem 0 0;
+  padding-left: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.5rem;
+  font-size: 1.3rem;
+  line-height: 1.55;
+}
+
+.-w-fig-list li { display: flex; gap: 0.5rem; align-items: flex-start; }
+
+.-w-fig-list li::before {
+  flex: none;
+  font-weight: var(--ti-fwbo, 700);
+  line-height: 1.55;
+}
+
+.-w-fig-ng .-w-fig-list li::before { content: '✕'; color: var(--c-error, #c0271d); }
+.-w-fig-ok .-w-fig-list li::before { content: '○'; color: var(--c-success, #15803d); }
+
+.-w-fig-verdict {
+  margin: 1.4rem 0 0;
+  padding-top: 1rem;
+  border-top: var(--ti-bw, 1px) dashed var(--border-mid, #c3cedb);
+  font-size: 1.35rem;
+  text-align: center;
+}
+
+.-w-fig-ng .-w-fig-verdict strong { color: var(--c-error, #c0271d); }
+.-w-fig-ok .-w-fig-verdict strong { color: var(--c-success, #15803d); }
+
+.-w-fig-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: var(--ti-fwbo, 700);
+  color: var(--o-r-colors-accent, #17549e);
+}
+
+.-w-fig-arrow .-w-icon { font-size: 2rem; rotate: 90deg; }   /* SPは下向き */
+
+.-w-fig-concl {
+  margin: var(--ti-gap, 12px) 0 0;
+  padding: 1.2rem;
+  border-radius: var(--ti-rb, 4px);
+  background: var(--accent-soft, rgba(23, 84, 158, 0.07));
+  border-left: 3px solid var(--o-r-colors-accent, #17549e);
+  font-size: 1.35rem;
+  line-height: 1.6;
+}
+
+.-w-fig-concl strong { color: var(--o-r-colors-accent, #17549e); }
+
+.-w-fig figcaption {
+  margin-top: 1.2rem;
+  font-size: 1.2rem;
+  text-align: center;
+  color: var(--text-secondary, #45607b);
+}
+
+/* -------------------------------------------------------------
+   9. カード・リスト
+------------------------------------------------------------- */
+.-w-cards {
+  display: grid;
+  gap: var(--ti-gap, 12px);
+  padding-left: 0;
+  list-style: none;
+}
+
+.-w-card {
+  padding: var(--ti-spc, 20px);
+  background: var(--o-r-colors-base, #fff);
+  border: var(--ti-bw, 1px) solid var(--border-light, #e2e9f0);
+  border-radius: var(--ti-rc, 8px);
+}
+
+/* 親面が assort のときはカードを白にする（禁則2：親子で同色を使わない） */
+.-w-tinted .-w-card { background: var(--o-r-colors-base, #fff); }
+
+.-w-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.6rem;
+  color: var(--o-r-colors-base_text, #1f2d3d);
+}
+
+/* 仮定の断り（見出し直下・本文サイズ。小さくしない） */
+.-w-assume {
+  display: flex;
+  gap: 0.7rem;
+  align-items: flex-start;
+  margin: 0 0 2.4rem;
+  padding: 1.4rem;
+  border-radius: var(--ti-rb, 4px);
+  background: var(--c-warning-bg, rgba(146, 64, 14, 0.09));
+  border: var(--ti-bw, 1px) solid rgba(146, 64, 14, 0.32);
+  font-size: 1.5rem;
+  line-height: 1.7;
+  color: var(--o-r-colors-base_text, #1f2d3d);
+}
+
+.-w-assume .-w-icon {
+  margin-top: 0.35em;
+  color: var(--c-warning, #92400e);
+  font-size: 1.8rem;
+}
+
+.-w-assume strong { color: var(--c-warning, #92400e); }
+
+/* 仮定ケース：打ち手が主役、数値は従属させる */
+.-w-cases {
+  display: grid;
+  gap: var(--ti-gap, 12px);
+  padding-left: 0;
+  list-style: none;
+}
+
+.-w-case {
+  padding: var(--ti-spc, 20px);
+  background: var(--o-r-colors-base, #fff);
+  border: var(--ti-bw, 1px) solid var(--border-light, #e2e9f0);
+  border-radius: var(--ti-rc, 8px);
+}
+
+.-w-case-no {
+  margin: 0 0 0.5rem;
+  font-size: 1.2rem;
+  font-weight: var(--ti-fwbo, 700);
+  letter-spacing: 0.02em;
+  color: var(--o-r-colors-accent, #17549e);
+}
+
+.-w-case h3 {
+  margin: 0 0 1.2rem;
+  padding-bottom: 1rem;
+  border-bottom: var(--ti-bw, 1px) solid var(--border-light, #e2e9f0);
+  font-size: 1.7rem;
+}
+
+.-w-case-dl {
+  margin: 0;
+  display: grid;
+  gap: 0.4rem 1.2rem;
+  font-size: 1.35rem;
+  line-height: 1.65;
+}
+
+.-w-case-dl dt {
+  font-size: 1.2rem;
+  font-weight: var(--ti-fwbo, 700);
+  color: var(--text-secondary, #45607b);
+}
+
+.-w-case-dl dd { margin: 0 0 0.8rem; }
+.-w-case-dl dd:last-child { margin-bottom: 0; }
+.-w-case-dl dd strong { color: var(--o-r-colors-accent, #17549e); }
+
+/* 想定される変化：数値は本文と同格に留める（大きく置くと実績に見える） */
+.-w-case-change {
+  padding: 0.8rem 1rem;
+  border-radius: var(--ti-rb, 4px);
+  background: var(--accent-soft, rgba(23, 84, 158, 0.07));
+}
+
+/* 方程式 */
+.-w-equation {
+  display: grid;
+  gap: 0.8rem;
+  padding: var(--ti-spc, 20px);
+  background: var(--o-r-colors-base, #fff);
+  border: var(--ti-bw, 1px) solid var(--accent-line, rgba(23, 84, 158, 0.28));
+  border-radius: var(--ti-rc, 8px);
+  text-align: center;
+}
+
+.-w-equation .-w-eq-item {
+  padding: 1rem;
+  border-radius: var(--ti-rb, 4px);
+  background: var(--o-r-colors-assort, #edf2f7);
+  font-size: 1.4rem;
+  font-weight: var(--ti-fwbo, 700);
+}
+
+.-w-equation .-w-eq-item.-w-eq-result {
+  background: var(--o-r-colors-accent, #17549e);
+  color: var(--o-r-colors-accent_text, #fff);
+}
+
+/* 演算子は接続記号であって項ではない。SPでは主役級に見えないよう抑える */
+.-w-equation .-w-eq-op {
+  margin: -0.2rem 0;
+  font-size: 1.4rem;
+  font-weight: var(--ti-fwbo, 700);
+  line-height: 1;
+  color: var(--border-mid, #c3cedb);
+}
+
+/* -------------------------------------------------------------
+   10. FAQ（誠実な期待値設定）— ④権威性
+------------------------------------------------------------- */
+.-w-faq { display: grid; gap: var(--ti-gap, 12px); }
+
+.-w-faq-item {
+  border: var(--ti-bw, 1px) solid var(--border-light, #e2e9f0);
+  border-left: 3px solid var(--o-r-colors-accent, #17549e);
+  border-radius: 0 var(--ti-rc, 8px) var(--ti-rc, 8px) 0;
+  background: var(--o-r-colors-base, #fff);
+}
+
+/* summary の既定マーカーを消す。Firefox は list-style、Safari は擬似要素 */
+.-w-faq-q {
+  display: flex;
+  gap: 0.7rem;
+  align-items: flex-start;
+  padding: var(--ti-spc, 20px);
+  font-size: 1.5rem;
+  font-weight: var(--ti-fwbo, 700);
+  line-height: 1.5;
+  color: var(--o-r-colors-base_text, #1f2d3d);
+  cursor: pointer;
+  list-style: none;
+}
+
+.-w-faq-q::-webkit-details-marker { display: none; }
+
+.-w-faq-q::before {
+  content: 'Q';
+  flex: none;
+  width: 2.2rem;
+  height: 2.2rem;
+  display: grid;
+  place-items: center;
+  border-radius: var(--ti-rb, 4px);
+  background: var(--o-r-colors-accent, #17549e);
+  color: var(--o-r-colors-accent_text, #fff);
+  font-size: 1.2rem;
+  margin-top: 0.1em;
+}
+
+/* 開閉の手がかり。閉じているときは下向き、開くと上向き */
+.-w-faq-q::after {
+  content: '';
+  flex: none;
+  margin-inline-start: auto;
+  margin-top: 0.45em;
+  width: 0.9rem;
+  height: 0.9rem;
+  border-right: 2px solid var(--o-r-colors-accent, #17549e);
+  border-bottom: 2px solid var(--o-r-colors-accent, #17549e);
+  rotate: 45deg;
+  transition: rotate 0.2s ease;
+}
+
+.-w-faq-item[open] .-w-faq-q::after { rotate: -135deg; }
+
+.-w-faq-item[open] .-w-faq-q { padding-bottom: 0.8rem; }
+
+.-w-faq-q:hover { background: var(--accent-soft, rgba(23, 84, 158, 0.07)); }
+
+.-w-faq-q:focus-visible {
+  outline: 2px solid var(--o-r-colors-accent, #17549e);
+  outline-offset: -2px;
+}
+
+.-w-faq-a {
+  margin: 0;
+  padding: 0 var(--ti-spc, 20px) var(--ti-spc, 20px) calc(var(--ti-spc, 20px) + 2.9rem);
+  font-size: 1.4rem;
+  line-height: 1.75;
+  color: var(--text-secondary, #45607b);
+}
+
+.-w-faq-a strong { color: var(--c-error, #c0271d); }
+
+.-w-lead-hint {
+  display: inline-block;
+  font-size: 1.3rem;
+  color: var(--text-secondary, #45607b);
+}
+
+/* -------------------------------------------------------------
+   11. 実装ロードマップ（提案書p13 図8 準拠）
+------------------------------------------------------------- */
+/* SPでも縦積みにせず横スクロールさせる（工程の連続性を保つため） */
+.-w-rm-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 0.4rem;
+  scroll-snap-type: x proximity;
+}
+
+.-w-roadmap {
+  display: grid;
+  grid-template-columns: repeat(5, 22rem);
+  width: max-content;          /* 固定幅トラックがはみ出すため、箱側も内容幅にそろえる */
+  gap: 4px;
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.-w-rm {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 1rem;
+  scroll-snap-align: start;
+}
+
+/* シェブロン。左に切り欠き・右に矢尻を持たせて工程の流れを示す */
+.-w-rm-head {
+  margin: 0;
+  padding: 1.4rem 2.6rem 1.4rem 2.8rem;
+  background: var(--o-r-colors-accent, #17549e);
+  color: var(--o-r-colors-accent_text, #fff);
+  text-align: center;
+  clip-path: polygon(0 0, calc(100% - 1.4rem) 0, 100% 50%, calc(100% - 1.4rem) 100%, 0 100%, 1.4rem 50%);
+}
+
+.-w-rm:first-child .-w-rm-head {
+  padding-left: 1.8rem;
+  clip-path: polygon(0 0, calc(100% - 1.4rem) 0, 100% 50%, calc(100% - 1.4rem) 100%, 0 100%);
+}
+
+.-w-rm-no {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: var(--ti-fwbo, 700);
+  letter-spacing: 0.08em;
+  opacity: 0.85;
+}
+
+.-w-rm-ttl {
+  display: block;
+  font-size: 1.7rem;
+  font-weight: var(--ti-fwbo, 700);
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.-w-rm-desc {
+  margin: 0;
+  padding: 1.4rem;
+  background: var(--o-r-colors-base, #fff);
+  border: var(--ti-bw, 1px) solid var(--border-light, #e2e9f0);
+  border-radius: var(--ti-rc, 8px);
+  font-size: 1.3rem;
+  line-height: 1.65;
+  word-break: auto-phrase;
+  color: var(--text-secondary, #45607b);
+}
+
+.-w-rm-desc strong { color: var(--o-r-colors-base_text, #1f2d3d); white-space: nowrap; }
+
+/* 図の締め（属人的なセンスではなく厳密な工程） */
+.-w-rm-concl {
+  margin: 2rem auto 0;
+  max-width: 56rem;
+  padding: 1.6rem 2rem;
+  border: var(--ti-bw, 1px) solid var(--accent-line, rgba(23, 84, 158, 0.28));
+  border-radius: var(--ti-rc, 8px);
+  background: var(--accent-soft, rgba(23, 84, 158, 0.07));
+  text-align: center;
+  font-size: 1.5rem;
+  line-height: 1.7;
+  word-break: auto-phrase;
+  color: var(--o-r-colors-base_text, #1f2d3d);
+}
+
+.-w-rm-concl strong { color: var(--o-r-colors-accent, #17549e); }
+
+/* 御社の関与。依頼事項を並べず、1つに絞る */
+.-w-rm-you {
+  display: flex;
+  gap: 0.7rem;
+  align-items: flex-start;
+  justify-content: center;
+  margin: 1.6rem 0 0;
+  font-size: 1.6rem;
+  line-height: 1.6;
+  word-break: auto-phrase;
+  color: var(--o-r-colors-base_text, #1f2d3d);
+}
+
+.-w-rm-you .-w-icon {
+  margin-top: 0.25em;
+  flex: none;
+  color: var(--c-success, #15803d);
+  font-size: 1.8rem;
+}
+
+.-w-rm-you strong { color: var(--o-r-colors-accent, #17549e); }
+
+/* -------------------------------------------------------------
+   12. オファー（S7・⑨アンカリング / ②希少性 / ④無料効果）
+------------------------------------------------------------- */
+.-w-offer {
+  padding: var(--ti-spc, 20px);
+  background: var(--o-r-colors-base, #fff);
+  border: 2px solid var(--o-r-colors-accent, #17549e);
+  border-radius: var(--ti-rc, 8px);
+  text-align: center;
+}
+
+.-w-offer .-w-regular {
+  font-size: 1.4rem;
+  color: var(--text-secondary, #45607b);
+}
+
+.-w-offer .-w-regular s { text-decoration-color: var(--c-error, #c0271d); }
+
+.-w-offer .-w-price {
+  display: block;
+  margin: 0.6rem 0 0.2rem;
+  font-size: 3.4rem;
+  font-weight: var(--ti-fwbo, 700);
+  line-height: 1.15;
+  color: var(--o-r-colors-accent, #17549e);
+}
+
+.-w-offer .-w-price .-w-tax {
+  font-size: 1.5rem;
+  color: var(--o-r-colors-base_text, #1f2d3d);
+}
+
+.-w-offer .-w-period {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.5rem 1.2rem;
+  border-radius: var(--ti-rb, 4px);
+  background: var(--o-r-colors-button, #0b3d91);
+  color: var(--o-r-colors-button_text, #fff);
+  font-size: 1.3rem;
+  font-weight: var(--ti-fwbo, 700);
+}
+
+.-w-free-step {
+  margin-top: 1.6rem;
+  padding: 1.2rem;
+  border-radius: var(--ti-rb, 4px);
+  background: var(--c-success-bg, rgba(21, 128, 61, 0.08));
+  border: var(--ti-bw, 1px) solid rgba(21, 128, 61, 0.35);
+  text-align: left;
+  font-size: 1.35rem;
+}
+
+.-w-free-step .-w-ttl {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: var(--ti-fwbo, 700);
+  color: var(--c-success, #15803d);
+  margin-bottom: 0.4rem;
+}
+
+/* 実費換算との対比（取消線つきの価格対比＝二重価格表示は使わない） */
+.-w-offer .-w-compare {
+  display: inline-block;
+  margin-top: 0.3rem;
+  font-size: 2rem;
+  color: var(--o-r-colors-base_text, #1f2d3d);
+}
+
+.-w-offer .-w-compare-note {
+  display: inline-block;
+  margin-top: 0.2rem;
+  font-size: 1.2rem;
+  color: var(--text-secondary, #45607b);
+}
+
+.-w-offer .-w-arrow {
+  margin: 0.8rem 0 0.4rem;
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--border-mid, #c3cedb);
+}
+
+/* 打消し表示は本文と同等の視認性が必要（景表法） */
+.-w-note-legal {
+  margin-top: 1.6rem;
+  padding: 1.2rem 1.4rem;
+  border: var(--ti-bw, 1px) solid var(--border-mid, #c3cedb);
+  border-radius: var(--ti-rb, 4px);
+  background: var(--o-r-colors-base, #fff);
+  font-size: 1.5rem;
+  line-height: 1.7;
+  color: var(--o-r-colors-base_text, #1f2d3d);
+}
+
+/* 設計者（E-E-A-T：誰が作業するのかを見せる） */
+.-w-author {
+  display: flex;
+  gap: 1.4rem;
+  align-items: flex-start;
+  margin-bottom: 2.4rem;
+  padding: var(--ti-spc, 20px);
+  border: var(--ti-bw, 1px) solid var(--border-light, #e2e9f0);
+  border-radius: var(--ti-rc, 8px);
+  background: var(--o-r-colors-assort, #edf2f7);
+}
+
+.-w-author-photo {
+  flex: none;
+  width: 8.8rem;
+  height: 8.8rem;
+  border-radius: var(--ti-rb, 4px);
+  object-fit: cover;
+  border: var(--ti-bw, 1px) solid var(--border-mid, #c3cedb);
+}
+
+.-w-author-label {
+  margin: 0 0 0.3rem;
+  font-size: 1.2rem;
+  font-weight: var(--ti-fwbo, 700);
+  letter-spacing: 0.04em;
+  color: var(--o-r-colors-accent, #17549e);
+}
+
+.-w-author-name {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: var(--ti-fwbo, 700);
+  line-height: 1.3;
+}
+
+.-w-author-role {
+  margin: 0.2rem 0 0.8rem;
+  font-size: 1.3rem;
+  color: var(--text-secondary, #45607b);
+}
+
+.-w-author-facts {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.3rem;
+  font-size: 1.35rem;
+  line-height: 1.6;
+  color: var(--o-r-colors-base_text, #1f2d3d);
+}
+
+.-w-author-facts strong { color: var(--o-r-colors-accent, #17549e); }
+
+/* LINE返信導線（入力前に聞きたい層の受け皿） */
+.-w-line-back {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  margin-top: 1.6rem;
+  padding: 1.2rem;
+  border-radius: var(--ti-rb, 4px);
+  background: var(--o-r-colors-assort, #edf2f7);
+  font-size: 1.35rem;
+  line-height: 1.65;
+  color: var(--o-r-colors-base_text, #1f2d3d);
+}
+
+.-w-line-back .-w-icon {
+  margin-top: 0.3em;
+  color: var(--o-r-colors-accent, #17549e);
+}
+
+/* 三点セット要約 */
+.-w-summary {
+  padding-left: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.7rem;
+  margin-bottom: 1.8rem;
+  font-size: 1.45rem;
+}
+
+.-w-summary li { display: flex; gap: 0.6rem; align-items: flex-start; }
+.-w-summary .-w-icon {
+  margin-top: 0.3em;
+  color: var(--o-r-colors-accent, #17549e);
+}
+
+/* -------------------------------------------------------------
+   13. フォーム（教科書4-4 最後の関門）
+------------------------------------------------------------- */
+.-w-form-wrap {
+  padding: var(--ti-spc, 20px);
+  background: var(--o-r-colors-base, #fff);
+  border: var(--ti-bw, 1px) solid var(--border-mid, #c3cedb);
+  border-radius: var(--ti-rc, 8px);
+}
+
+.-w-form-wrap h2 {
+  font-size: 1.9rem;
+  margin-bottom: 0.4rem;
+}
+
+.-w-form-lead {
+  font-size: 1.3rem;
+  color: var(--text-secondary, #45607b);
+  margin-bottom: 2rem;
+}
+
+.-w-field { margin-bottom: 1.8rem; }
+
+.-w-label {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
+  font-size: 1.4rem;
+  font-weight: var(--ti-fwbo, 700);
+}
+
+.-w-req, .-w-opt {
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--ti-rb, 4px);
+  font-size: 1.1rem;
+  font-weight: var(--ti-fwbo, 700);
+}
+
+.-w-req { background: var(--c-error-bg, rgba(192, 39, 29, 0.08)); color: var(--c-error, #c0271d); }
+.-w-opt { background: var(--o-r-colors-assort, #edf2f7); color: var(--text-secondary, #45607b); }
+
+.-w-input, .-w-textarea {
+  width: 100%;
+  padding: 1.2rem;
+  font-family: inherit;
+  font-size: 1.6rem;          /* iOS のズーム防止（16px以上） */
+  line-height: 1.5;
+  color: var(--o-r-colors-base_text, #1f2d3d);
+  background: var(--o-r-colors-base, #fff);
+  border: var(--ti-bw, 1px) solid var(--border-mid, #c3cedb);
+  border-radius: var(--ti-rin, 4px);
+}
+
+.-w-textarea { min-height: 9rem; resize: vertical; }
+
+.-w-input:focus, .-w-textarea:focus {
+  border-color: var(--o-r-colors-accent, #17549e);
+  outline: 2px solid var(--accent-line, rgba(23, 84, 158, 0.28));
+  outline-offset: 0;
+}
+
+.-w-input[aria-invalid="true"], .-w-textarea[aria-invalid="true"] {
+  border-color: var(--c-error, #c0271d);
+  background: var(--c-error-bg, rgba(192, 39, 29, 0.08));
+}
+
+/* エラーはその場で表示（教科書4-4） */
+.-w-err {
+  display: none;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+  font-size: 1.25rem;
+  font-weight: var(--ti-fwbo, 700);
+  color: var(--c-error, #c0271d);
+}
+
+.-w-err.-w-on { display: flex; }
+
+/* 支払い方法（2択・デフォルト未選択） */
+.-w-pay-list { display: grid; gap: var(--ti-gap, 12px); }
+
+.-w-pay {
+  position: relative;
+  display: block;
+  padding: 1.4rem;
+  border: 2px solid var(--border-mid, #c3cedb);
+  border-radius: var(--ti-rc, 8px);
+  background: var(--o-r-colors-base, #fff);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.-w-pay:hover { border-color: var(--o-r-colors-accent, #17549e); }
+
+.-w-pay input[type="radio"] {
+  position: absolute;
+  inset-block-start: 1.5rem;
+  inset-inline-start: 1.4rem;
+  width: 2rem;
+  height: 2rem;
+  margin: 0;
+  accent-color: var(--o-r-colors-accent, #17549e);
+}
+
+/* ラジオと同じ行から本文を始めるため、インラインspanをブロック化する */
+.-w-pay-inner { display: block; padding-left: 3rem; }
+
+.-w-pay-ttl {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-size: 1.5rem;
+  font-weight: var(--ti-fwbo, 700);
+  margin-bottom: 0.5rem;
+}
+
+.-w-pay-amount { color: var(--o-r-colors-accent, #17549e); }
+
+.-w-pay-desc {
+  font-size: 1.3rem;
+  line-height: 1.65;
+  color: var(--text-secondary, #45607b);
+}
+
+.-w-pay-desc dl { margin: 0.6rem 0 0; display: grid; grid-template-columns: auto 1fr; gap: 0.3rem 1rem; }
+.-w-pay-desc dt { font-weight: var(--ti-fwbo, 700); white-space: nowrap; }
+.-w-pay-desc dd { margin: 0; }
+
+.-w-pay-caution {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: var(--ti-rb, 4px);
+  background: var(--c-warning-bg, rgba(180, 83, 9, 0.09));
+  color: var(--c-warning, #b45309);
+  font-size: 1.2rem;
+  font-weight: var(--ti-fwbo, 700);
+  line-height: 1.55;
+}
+
+.-w-pay input[type="radio"]:checked ~ .-w-pay-inner .-w-pay-ttl { color: var(--o-r-colors-accent, #17549e); }
+.-w-pay:has(input[type="radio"]:checked) {
+  border-color: var(--o-r-colors-accent, #17549e);
+  background: var(--accent-soft, rgba(23, 84, 158, 0.07));
+}
+.-w-pay:focus-within { outline: 3px solid var(--o-r-colors-accent, #17549e); outline-offset: 2px; }
+
+/* 申込後の流れ */
+.-w-flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.8rem;
+  margin-top: 1.8rem;
+  padding-top: 1.6rem;
+  border-top: var(--ti-bw, 1px) solid var(--border-light, #e2e9f0);
+  padding-left: 0;
+  list-style: none;
+  font-size: 1.25rem;
+  color: var(--text-secondary, #45607b);
+}
+
+.-w-flow li { display: flex; align-items: center; gap: 0.5rem; }
+.-w-flow li:not(:last-child)::after {
+  content: '';
+  width: 1.4rem;
+  height: 1px;
+  background: var(--border-mid, #c3cedb);
+}
+
+/* 送信完了 */
+.-w-done {
+  padding: var(--ti-spc, 20px);
+  border: 2px solid var(--c-success, #15803d);
+  border-radius: var(--ti-rc, 8px);
+  background: var(--c-success-bg, rgba(21, 128, 61, 0.08));
+}
+
+.-w-done h2 { font-size: 1.9rem; color: var(--c-success, #15803d); margin-bottom: 1rem; }
+.-w-done[hidden] { display: none; }
+
+/* 方法B補足（ターシャリ＝テキストのみ。ボタンにしない＝選択の麻痺回避） */
+.-w-tertiary {
+  margin-top: 1.6rem;
+  padding: 1.2rem;
+  border-radius: var(--ti-rb, 4px);
+  background: var(--o-r-colors-assort, #edf2f7);
+  font-size: 1.3rem;
+  line-height: 1.7;
+  color: var(--text-secondary, #45607b);
+}
+
+/* -------------------------------------------------------------
+   14. 追従CTA（モバイル）
+------------------------------------------------------------- */
+.-w-sticky {
+  position: fixed;
+  inset-block-end: 0;
+  inset-inline: 0;
+  z-index: 55;
+  padding: 0.9rem 1.2rem calc(0.9rem + env(safe-area-inset-bottom, 0px));
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(6px);
+  border-top: var(--ti-bw, 1px) solid var(--border-mid, #c3cedb);
+  transform: translateY(110%);
+  transition: transform 0.24s ease;
+}
+
+.-w-sticky.-w-on { transform: translateY(0); }
+
+.-w-sticky .-w-cta { min-height: 5.6rem; gap: 0.1rem; }
+.-w-sticky .-w-cta .-w-cta-main { font-size: 1.7rem; }
+.-w-sticky .-w-cta span.-w-cta-benefit { font-size: 1.15rem; }
+
+/* -------------------------------------------------------------
+   15. フッター
+------------------------------------------------------------- */
+.-w-foot {
+  padding-block: var(--ti-sp, 40px) calc(var(--ti-sp, 40px) + 7rem);
+  background: var(--o-r-colors-base_text, #1f2d3d);
+  color: var(--text-on-dark, #dbe6f2);
+  font-size: 1.25rem;
+}
+
+.-w-foot a {
+  color: var(--text-on-dark, #dbe6f2);
+  display: inline-block;
+  padding-block: 1.2rem;    /* タップ領域を44px以上にする */
+}
+.-w-foot .-w-corp { font-weight: var(--ti-fwbo, 700); font-size: 1.4rem; margin-bottom: 0.6rem; }
+
+/* -------------------------------------------------------------
+   16. スクロール表示アニメーション
+------------------------------------------------------------- */
+.-w-reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+.-w-reveal.-w-in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .-w-reveal { opacity: 1; transform: none; }
+}
+
+/* -------------------------------------------------------------
+   17. ブレイクポイント（タブレット 768px〜）
+------------------------------------------------------------- */
+@media (min-width: 768px) {
+  :root { --ti-sp: 64px; --ti-spc: 28px; --h-bar: 4.8rem; }
+
+  .-w-container { padding-inline: 3.2rem; }
+  .-w-sp-only { display: none; }
+  .-w-pc-only { display: inline; }
+
+  .-w-deadline-bar { font-size: 1.4rem; gap: 1.6rem; }
+
+  .-w-fv { padding-block: 4.4rem var(--ti-sp, 64px); }
+  .-w-fv h1 { font-size: 3.4rem; }
+  .-w-fv-sub { font-size: 1.6rem; }
+  .-w-fv-brand { font-size: 1.4rem; }
+  .-w-fv-def { font-size: 1.35rem; }
+
+  /* 信頼バー：PCは3列・区切りは縦罫に切り替える */
+  .-w-trust { grid-template-columns: repeat(3, 1fr); }
+  .-w-trust li { justify-content: center; padding: 1.6rem; }
+  .-w-trust li + li { border-top: 0; border-left: var(--ti-bw, 1px) solid var(--border-light, #e2e9f0); }
+
+  .-w-sec-head h2 { font-size: 2.8rem; }
+  .-w-sec-head .-w-lead { font-size: 1.6rem; }
+
+  .-w-cta { min-height: 7rem; }
+  .-w-cta .-w-cta-main { font-size: 2.2rem; }
+  .-w-cta span.-w-cta-benefit { font-size: 1.3rem; }
+  .-w-cta-block { max-width: 56rem; margin-inline: auto; }
+
+  .-w-table { font-size: 1.45rem; min-width: 0; }
+  .-w-scroll-hint { display: none; }
+
+  .-w-cards { grid-template-columns: repeat(2, 1fr); }
+  .-w-cases { grid-template-columns: repeat(3, 1fr); }
+
+  .-w-rm-scroll { overflow-x: visible; }
+  .-w-roadmap { grid-template-columns: repeat(5, 1fr); width: auto; }
+  .-w-rm-hint { display: none; }
+
+  .-w-fig { padding: 3.2rem; }
+  .-w-fig-body { grid-template-columns: 1fr auto 1fr; }
+  .-w-fig-col { padding: 2rem; }
+  .-w-fig-arrow { flex-direction: column; }
+  .-w-fig-arrow .-w-icon { rotate: none; font-size: 2.6rem; }
+  .-w-fig-concl { text-align: center; border-left: 0; border-top: 3px solid var(--o-r-colors-accent, #17549e); }
+
+  .-w-author-photo { width: 11rem; height: 11rem; }
+
+  .-w-equation { grid-template-columns: 1fr auto 1fr auto 1fr; align-items: center; }
+
+  .-w-offer { padding: 4rem; }
+  .-w-offer .-w-price { font-size: 4.8rem; }
+
+  .-w-form-wrap { padding: 4rem; }
+  .-w-pay-list { grid-template-columns: repeat(2, 1fr); }
+
+  .-w-sticky { padding: 1.2rem 2rem; }
+  .-w-sticky .-w-cta { max-width: 48rem; margin-inline: auto; }
+}
+
+/* デスクトップ 1024px〜 */
+@media (min-width: 1024px) {
+  /* 見出しは2行（アクセス〜／それなのに〜）で収める。
+     左カラム幅 ≒ 61.6rem に対し 18文字 × 3.2rem ＝ 57.6rem で折り返さない */
+  .-w-fv h1 { font-size: 3.2rem; }
+
+  /* 1024px以上：左にコピー＋CTA、右に価格カードの2カラム。
+     SPでは「価格カード → CTA」の順（DOM順）を保ち、PCだけ配置を組み替える */
+  .-w-fv-grid {
+    grid-template-columns: minmax(0, 1fr) 36rem;
+    grid-template-areas:
+      "brand price"
+      "head  price"
+      "sub   price"
+      "def   price"
+      "cta   price";
+    column-gap: 4rem;
+    align-items: start;
+  }
+  .-w-fv-brand  { grid-area: brand; }
+  .-w-fv h1     { grid-area: head; }
+  .-w-fv-sub    { grid-area: sub; }
+  .-w-fv-def    { grid-area: def; }
+  .-w-pricecard { grid-area: price; align-self: start; margin-bottom: 0; padding: 2.4rem 2.2rem; }
+  .-w-cta-hero  { grid-area: cta; margin: 1.2rem 0 0; max-width: 48rem; }
+
+  .-w-pc-price { font-size: 5.8rem; }
+  .-w-cards.-w-cards-4 { grid-template-columns: repeat(4, 1fr); }
+  /* 追従CTAはPCでは不要（FV・中盤・最終の3点で足りる） */
+  .-w-sticky { display: none; }
+  .-w-foot { padding-block-end: var(--ti-sp, 64px); }
+}
+
+/* -------------------------------------------------------------
+   18. 印刷（商談時にPDF化して渡すケース）
+------------------------------------------------------------- */
+@media print {
+  .-w-deadline-bar, .-w-sticky, .-w-video-wrap { display: none !important; }
+  body { padding-top: 0; }
+  .-w-reveal { opacity: 1; transform: none; }
+  .-w-table-scroll { overflow: visible; }
+  .-w-table { min-width: 0; font-size: 10pt; }
+}
+
+</style>
+<script>
+/* =============================================================
+   CTA全面刷新 クロージングLP スクリプト
+
+   原稿SSOT : docs/cta-lp-copy.md（コピーを変えるときは必ず原稿を先に直す）
+   守備範囲 : S6 比較検討 → S7 決定
+
+   担当する機能
+     1. セグメント出し分け（?s=lec|scsc|cue）… tosen/js/tosen-cta.js の ?from= 方式を踏襲
+     2. 申込期限のカウントダウン（②希少性。在庫・枠数の演出は行わない）
+     3. 追従CTA（モバイル）
+     4. スクロール表示アニメーション
+     5. 申込フォーム（その場エラー表示・支払い方法2択）
+     6. 4段階効果測定（接触 → 品質 → 中間 → 事業）
+
+   ※動画は常時展開のため開閉制御は持たない
+============================================================= */
+(function () {
+  'use strict';
+
+  /* -----------------------------------------------------------
+     定数
+  ----------------------------------------------------------- */
+
+  /* 申込期間（提案書p16）。日付を変えるときは docs/cta-lp-copy.md も直すこと */
+  var CAMPAIGN_START = '2026-08-24';
+  var CAMPAIGN_END = '2026-09-07';
+
+  /* ▼ 本番差し替え：フォーム送信先。
+     null の間は送信せず完了画面のみ表示する（実装確認用） */
+  var FORM_ENDPOINT = null;
+
+  /* セグメント別の第一声（原稿 §1 と一字一句そろえること）
+     見出し＝痛み（自分ごと化）、サブ＝損失 → ベネフィット → オファー の順。
+     事実提示（約175箇所）だけで終わらせない。人は得より損に2倍反応する。 */
+  /* SP は文節ごとに改行する（-w-br-sp は768px以上で display:none）。
+     日本語は語中で折り返すと読みにくく、見出しの強度が落ちる */
+  /* SPは3行（アクセス／デザイン／それなのに〜）、PCは2行。HTML側の初期値と完全に一致させる */
+  var PAIN = 'アクセスはある。<br class="-w-br-sp">デザインも悪くない。<br>' +
+             'それなのに、<span class="-w-hl">問い合わせが来ない</span>。';
+  var LOSS = '<br>閲覧者は迷って、そのまま帰っています。<br>';
+  /* オファー行は全セグメント共通。正規料金265,000円は価格カードが担うため重複させない */
+  var OFFER = '9月7日まで、35ページ分すべてを<strong>39,750円（税別）</strong>で書き換えます。';
+
+  var SEGMENTS = {
+    lec: {
+      /* 受講者のみ、痛みより⑥一貫性（あのとき納得した自分との整合）を優先する */
+      head: '先日の第9回でお話しした<br class="-w-br-sp">「死んだCTA」。<br>御社サイトの、<span class="-w-hl">約175箇所</span>の話です。',
+      sub: 'あの90分でご覧いただいた型を、御社のサイトへ丸ごと実装します。<br>閲覧者を迷わせない文言へ、35ページ分すべてを。<br>' + OFFER,
+      pay: 'scsc'       // ※受講2名がSCSC顧客かCUE顧客かは要確認（原稿 §8）
+    },
+    scsc: {
+      head: PAIN,
+      sub: '原因は、御社サイトの<strong>約175箇所のボタン</strong>が「詳しく見る」のままだからです。' + LOSS + OFFER,
+      pay: 'scsc'
+    },
+    cue: {
+      head: PAIN,
+      sub: '原因は、御社サイトの<strong>約175箇所のボタン</strong>が「詳しく見る」のままだからです。' + LOSS + OFFER,
+      pay: 'cue'
+    },
+    'default': {
+      head: PAIN,
+      sub: '原因は、サイトの<strong>約175箇所のボタン</strong>が「詳しく見る」のままだからです。' + LOSS + OFFER,
+      pay: 'scsc'
+    }
+  };
+
+  /* 支払い方法2択（原稿 §3 B10）。デフォルト選択は置かない */
+  var PAY_SETS = {
+    scsc: [
+      {
+        value: 'lump',
+        title: '① 一括でお支払い',
+        amount: '39,750円（税別）',
+        rows: [
+          ['初期費用', '39,750円（税別）'],
+          ['月額の変化', 'なし'],
+          ['向いている方', '今回だけ依頼したい']
+        ],
+        caution: 'お手続き期限：9月7日(月)まで'
+      },
+      {
+        value: 'planup',
+        title: '② プランアップでお支払い',
+        amount: '初期費用 0円',
+        rows: [
+          ['初期費用', '0円'],
+          ['月額の変化', '+30,000円（SCSC6.2へ）'],
+          ['追加される役務', '毎月のHP解析詳細レポート／3ヶ月毎の改善支援／3ヶ月毎のプチリニューアル'],
+          ['向いている方', '継続的に改善していきたい']
+        ],
+        caution: 'プラン変更は毎月25日締め。8月25日(火)までのお申込みで9月1日から、以降は10月1日からの適用となります。'
+      }
+    ],
+    cue: [
+      {
+        value: 'card',
+        title: '① クレジットカード',
+        amount: '39,750円（税別）',
+        rows: [
+          ['金額', '39,750円（税別）'],
+          ['お手続き', 'お申込み後、担当よりお支払い用URLをご案内します']
+        ],
+        caution: ''
+      },
+      {
+        value: 'bank',
+        title: '② 銀行振込',
+        amount: '39,750円（税別）',
+        rows: [
+          ['金額', '39,750円（税別）'],
+          ['お手続き', 'お申込み後、担当より請求書を発行します']
+        ],
+        caution: '請求書発行事務手数料 500円（税別）と振込手数料がご負担となります。'
+      }
+    ]
+  };
+
+  /* -----------------------------------------------------------
+     ユーティリティ
+  ----------------------------------------------------------- */
+  function $(id) { return document.getElementById(id); }
+  function $$(sel) { return Array.prototype.slice.call(document.querySelectorAll(sel)); }
+
+  /* GA4イベント（タグ未設置の環境では何もしない） */
+  function track(name, params) {
+    if (typeof window.gtag === 'function') window.gtag('event', name, params || {});
+  }
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  /* 日付文字列（YYYY-MM-DD）をローカル0時のDateにする */
+  function toDate(s) {
+    var p = s.split('-');
+    return new Date(+p[0], +p[1] - 1, +p[2]);
+  }
+
+  var state = {
+    seg: 'default',
+    formStarted: false,
+    depthSent: {}
+  };
+
+  /* -----------------------------------------------------------
+     1. セグメント出し分け（?s=lec|scsc|cue）
+        第一声・動画の初期状態・支払い方法の3点のみを差し替える。
+        本文（S6→S7）は全セグメント共通。
+  ----------------------------------------------------------- */
+  function initSegment() {
+    var params = new URLSearchParams(location.search);
+    var s = (params.get('s') || '').toLowerCase();
+    state.seg = SEGMENTS[s] ? s : 'default';
+
+    var conf = SEGMENTS[state.seg];
+    var head = $('fv-head');
+    var sub = $('fv-sub');
+    if (head) head.innerHTML = conf.head;
+    if (sub) sub.innerHTML = conf.sub;
+
+    /* 支払い方法（?pay= で上書き可。受講者がCUE顧客だった場合の逃げ道） */
+    var payKey = (params.get('pay') || '').toLowerCase();
+    if (!PAY_SETS[payKey]) payKey = conf.pay;
+    renderPayOptions(payKey);
+
+    /* 方法Bの補足はSCSC顧客にのみ表示 */
+    var tn = $('tertiary-note');
+    if (tn && payKey === 'scsc') tn.hidden = false;
+
+    document.documentElement.setAttribute('data-seg', state.seg);
+
+    /* 【第1段階：接触】 */
+    track('lp_view', { lp_segment: state.seg, lp_pay_set: payKey });
+  }
+
+  /* -----------------------------------------------------------
+     2. 支払い方法2択の描画（デフォルト未選択）
+  ----------------------------------------------------------- */
+  function renderPayOptions(key) {
+    var list = $('pay-list');
+    if (!list) return;
+    var set = PAY_SETS[key] || PAY_SETS.scsc;
+
+    list.innerHTML = set.map(function (o) {
+      var rows = o.rows.map(function (r) {
+        return '<dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd>';
+      }).join('');
+      var caution = o.caution
+        ? '<span class="-w-pay-caution">' +
+          '<svg class="-w-icon" aria-hidden="true"><use href="#i-alert"></use></svg>' +
+          esc(o.caution) + '</span>'
+        : '';
+      return '' +
+        '<label class="-w-pay">' +
+          '<input type="radio" name="pay" value="' + esc(o.value) + '" required>' +
+          '<span class="-w-pay-inner">' +
+            '<span class="-w-pay-ttl">' + esc(o.title) +
+              '<span class="-w-pay-amount">' + esc(o.amount) + '</span>' +
+            '</span>' +
+            '<span class="-w-pay-desc"><dl>' + rows + '</dl>' + caution + '</span>' +
+          '</span>' +
+        '</label>';
+    }).join('');
+  }
+
+  /* -----------------------------------------------------------
+     3. 申込期限のカウントダウン（②希少性）
+  ----------------------------------------------------------- */
+  function initCountdown() {
+    var el = $('lp-countdown');
+    if (!el) return;
+
+    var today = new Date();
+    today = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    var start = toDate(CAMPAIGN_START);
+    var end = toDate(CAMPAIGN_END);
+    var day = 86400000;
+
+    if (today < start) {
+      el.textContent = Math.round((start - today) / day) + '日後に受付開始';
+    } else if (today > end) {
+      el.textContent = '受付終了';
+    } else {
+      /* 当日を含めた残り日数 */
+      el.textContent = '残り' + (Math.round((end - today) / day) + 1) + '日';
+    }
+    el.hidden = false;
+  }
+
+  /* -----------------------------------------------------------
+     5. 追従CTA（スクロール25%以降）
+  ----------------------------------------------------------- */
+  function initSticky() {
+    var el = $('sticky-cta');
+    if (!el) return;
+
+    /* 追従CTAの出し入れは「画面にCTAが1つも無い状態を作らない」ための制御。
+         - FVのCTAが画面外に出たら出す
+         - 申込セクションが見えている間は隠す
+           （押しても同じ場所へ飛ぶ空振りを防ぎ、フォームの視界も塞がない） */
+    var fvOut = false;
+    var applyVisible = false;
+
+    function sync() {
+      el.classList.toggle('-w-on', fvOut && !applyVisible);
+    }
+
+    if ('IntersectionObserver' in window) {
+      var fvCta = document.querySelector('[data-cta="fv"]');
+      if (fvCta) {
+        new IntersectionObserver(function (entries) {
+          fvOut = !entries[0].isIntersecting;
+          sync();
+        }, { threshold: 0 }).observe(fvCta);
+      }
+      var apply = $('apply');
+      if (apply) {
+        new IntersectionObserver(function (entries) {
+          applyVisible = entries[0].isIntersecting;
+          sync();
+        }, { threshold: 0 }).observe(apply);
+      }
+    }
+
+    function onScroll() {
+      var h = document.documentElement.scrollHeight - window.innerHeight;
+      var ratio = h > 0 ? window.pageYOffset / h : 0;
+
+      /* 【第2段階：品質】スクロール到達率 */
+      [25, 50, 75, 100].forEach(function (p) {
+        if (ratio * 100 >= p && !state.depthSent[p]) {
+          state.depthSent[p] = true;
+          track('lp_scroll_depth', { lp_segment: state.seg, lp_depth: p });
+        }
+      });
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+
+  /* -----------------------------------------------------------
+     6. スクロール表示アニメーション
+  ----------------------------------------------------------- */
+  function initReveal() {
+    var targets = $$('.-w-reveal');
+    if (!targets.length) return;
+
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || !('IntersectionObserver' in window)) {
+      targets.forEach(function (t) { t.classList.add('-w-in'); });
+      return;
+    }
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('-w-in');
+        io.unobserve(e.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+
+    targets.forEach(function (t) { io.observe(t); });
+  }
+
+  /* -----------------------------------------------------------
+     7. CTAクリックの計測（4箇所すべて同一文言・同一遷移先）
+  ----------------------------------------------------------- */
+  function initCtaTracking() {
+    $$('[data-cta]').forEach(function (el) {
+      if (el.tagName === 'BUTTON') return;   // フォーム送信ボタンは submit 側で計測
+      el.addEventListener('click', function () {
+        track('lp_cta_click', { lp_segment: state.seg, lp_placement: el.getAttribute('data-cta') });
+      });
+    });
+  }
+
+  /* -----------------------------------------------------------
+     8. 申込フォーム
+        教科書4-4：入力は必要最小限／必須・任意を明示／
+        エラーはその場で表示／ボタン直下にマイクロコピー
+  ----------------------------------------------------------- */
+  function initForm() {
+    var form = $('apply-form');
+    var done = $('apply-done');
+    if (!form) return;
+
+    var fields = [
+      { input: 'f-company', err: 'e-company', test: function (v) { return v.trim().length > 0; } },
+      { input: 'f-name', err: 'e-name', test: function (v) { return v.trim().length > 0; } },
+      { input: 'f-email', err: 'e-email', test: function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); } }
+    ];
+
+    /* 【第3段階：中間】最初の入力でフォーム開始を計測 */
+    form.addEventListener('focusin', function () {
+      if (state.formStarted) return;
+      state.formStarted = true;
+      track('lp_form_start', { lp_segment: state.seg });
+    });
+
+    function showErr(f, on) {
+      var input = $(f.input);
+      var err = $(f.err);
+      if (!input || !err) return;
+      err.classList.toggle('-w-on', on);
+      input.setAttribute('aria-invalid', on ? 'true' : 'false');
+      if (on) input.setAttribute('aria-describedby', f.err);
+      else input.removeAttribute('aria-describedby');
+    }
+
+    /* 入力を離れた時点でその場検証（教科書4-4） */
+    fields.forEach(function (f) {
+      var input = $(f.input);
+      if (!input) return;
+      input.addEventListener('blur', function () {
+        if (input.value === '') return;      // 未入力のまま離れただけでは責めない
+        showErr(f, !f.test(input.value));
+      });
+      input.addEventListener('input', function () {
+        if (input.getAttribute('aria-invalid') === 'true' && f.test(input.value)) showErr(f, false);
+      });
+    });
+
+    form.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+
+      var firstBad = null;
+      fields.forEach(function (f) {
+        var input = $(f.input);
+        if (!input) return;
+        var ok = f.test(input.value);
+        showErr(f, !ok);
+        if (!ok && !firstBad) firstBad = input;
+      });
+
+      var pay = form.querySelector('input[name="pay"]:checked');
+      var payErr = $('e-pay');
+      if (payErr) payErr.classList.toggle('-w-on', !pay);
+      if (!pay && !firstBad) firstBad = form.querySelector('input[name="pay"]');
+
+      if (firstBad) {
+        firstBad.focus();
+        firstBad.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        track('lp_form_error', { lp_segment: state.seg });
+        return;
+      }
+
+      var payload = {
+        company: $('f-company').value.trim(),
+        name: $('f-name').value.trim(),
+        email: $('f-email').value.trim(),
+        pay: pay.value,
+        note: $('f-note') ? $('f-note').value.trim() : '',
+        segment: state.seg,
+        page: location.href
+      };
+
+      /* 【第4段階：事業】 */
+      track('lp_apply', { lp_segment: state.seg, lp_pay: payload.pay });
+
+      if (FORM_ENDPOINT) {
+        var btn = form.querySelector('button[type="submit"]');
+        if (btn) btn.disabled = true;
+        fetch(FORM_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        }).then(function (r) {
+          if (!r.ok) throw new Error('bad response');
+          complete();
+        }).catch(function () {
+          if (btn) btn.disabled = false;
+          window.alert('送信に失敗しました。お手数ですが、時間をおいて再度お試しください。');
+          track('lp_apply_failed', { lp_segment: state.seg });
+        });
+      } else {
+        /* 送信先未設定：画面遷移の確認用に完了画面のみ表示 */
+        complete();
+      }
+
+      function complete() {
+        form.hidden = true;
+        if (done) {
+          done.hidden = false;
+          done.focus();
+          done.scrollIntoView({ block: 'start', behavior: 'smooth' });
+        }
+      }
+    });
+  }
+
+  /* -----------------------------------------------------------
+     起動
+  ----------------------------------------------------------- */
+  function init() {
+    initSegment();
+    initCountdown();
+    initSticky();
+    initReveal();
+    initCtaTracking();
+    initForm();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+
+</script>
+</head>
+<body id="top">
+
+<!-- =========================================================
+     SVGアイコンスプライト（Material Outlined 互換のストローク型）
+     リポジトリ規約に従いインライン埋め込み。LINE内ブラウザでの
+     CDNフォント読み込み失敗によるリガチャ文字化を防ぐため。絵文字は不使用。
+========================================================== -->
+<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"
+     style="position:absolute;width:0;height:0;overflow:hidden">
+  <defs>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.8 4.8L19 7.5"/></symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="m8.3 12.3 2.5 2.5 5-5.2"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M10.2 8.8v6.4l5.2-3.2z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6.5 9.5 5.5 5.5 5.5-5.5"/></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M4.5 12h14m0 0-5-5m5 5-5 5"/></symbol>
+    <symbol id="i-swipe" viewBox="0 0 24 24"><path d="M3.5 12h5m-5 0 3-3m-3 3 3 3M20.5 12h-5m5 0-3-3m3 3-3 3"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 4 2.8 20h18.4z"/><path d="M12 10v4.5"/><circle cx="12" cy="17.2" r="1.1" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3.2 4.8 6v6.1c0 4.4 3 7.5 7.2 8.7 4.2-1.2 7.2-4.3 7.2-8.7V6z"/><path d="m9 12.2 2.2 2.2 4-4.3"/></symbol>
+    <symbol id="i-timer" viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="7"/><path d="M12 13.5V9.8M9.5 3h5M12 3v3.5"/></symbol>
+    <symbol id="i-gift" viewBox="0 0 24 24"><rect x="3.5" y="9" width="17" height="11.5" rx="1.5"/><path d="M3.5 13.5h17M12 9v11.5"/><path d="M12 9S9.6 3.5 7.3 4.6C5.4 5.5 6.6 9 12 9zm0 0s2.4-5.5 4.7-4.4C18.6 5.5 17.4 9 12 9z"/></symbol>
+    <symbol id="i-lock-open" viewBox="0 0 24 24"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7.8a4 4 0 0 1 7.8-1.3"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M13.5 3.5H7A1.5 1.5 0 0 0 5.5 5v14A1.5 1.5 0 0 0 7 20.5h10a1.5 1.5 0 0 0 1.5-1.5V8.5z"/><path d="M13.5 3.5V8.5h5"/></symbol>
+    <symbol id="i-person-check" viewBox="0 0 24 24"><circle cx="10" cy="7.5" r="3.5"/><path d="M3.5 20.5c0-3.6 2.9-6.2 6.5-6.2 1 0 2 .2 2.8.6"/><path d="m15 17.8 2 2 4-4.2"/></symbol>
+    <symbol id="i-cube" viewBox="0 0 24 24"><path d="M12 3.2 4 7.4v9.2l8 4.2 8-4.2V7.4z"/><path d="m4 7.4 8 4.2 8-4.2M12 11.6v9.2"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 11.2v5"/><circle cx="12" cy="8" r="1" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M5 20.5V13M12 20.5V4.5M19 20.5v-5.5"/></symbol>
+    <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9.8 6.2 5.8 5.8-5.8 5.8"/></symbol>
+  </defs>
+</svg>
+
+<!-- =========================================================
+     【B0】期限バー ─ ②希少性（在庫・枠数の演出は使わない）
+========================================================== -->
+<div class="-w-deadline-bar" role="status">
+  <span class="-w-sp-only">8/24(月)〜<strong>9/7(月)</strong>の申込限定</span>
+  <span class="-w-pc-only">申込期間：2026年8月24日(月)〜<strong>9月7日(月)</strong></span>
+  <span class="-w-count" id="lp-countdown" hidden></span>
+</div>
+
+<main>
+
+  <!-- =======================================================
+       【B1】ファーストビュー（S6入口／感情：緊張）
+       第一声は ?s= で差し替え。JS未実行時は汎用コピーが残る
+  ======================================================== -->
+  <header class="-w-fv">
+    <div class="-w-container">
+      <div class="-w-fv-grid">
+
+        <p class="-w-fv-brand">
+          <svg class="-w-icon" aria-hidden="true"><use href="#i-cube"></use></svg>
+          <span>3D-CMF理論に基づく<br class="-w-br-sp"> CTA全面刷新</span>
+        </p>
+
+        <!-- 見出しで痛み（自分ごと化）、サブで 損失 → ベネフィット → オファー の順に置く。
+             事実提示（約175箇所）だけで終わらせない -->
+        <h1 id="fv-head">
+          アクセスはある。<br class="-w-br-sp">デザインも悪くない。<br>それなのに、<span class="-w-hl">問い合わせが来ない</span>。
+        </h1>
+
+        <p class="-w-fv-sub" id="fv-sub">
+          原因は、サイトの<strong>約175箇所のボタン</strong>が「詳しく見る」のままだからです。<br>閲覧者は迷って、そのまま帰っています。<br>9月7日まで、35ページ分すべてを<strong>39,750円（税別）</strong>で書き換えます。
+        </p>
+
+        <!-- 専門用語は滑り台の段差になる（教科書1-4）。FVで必ず定義する -->
+        <p class="-w-fv-def">
+          <svg class="-w-icon" aria-hidden="true"><use href="#i-info"></use></svg>
+          <span>※CTAとは、サイト上の「詳しく見る」「お問い合わせはこちら」などの<strong>ボタン・リンク</strong>のことです。</span>
+        </p>
+
+        <!-- 価格カード ─ ⑨アンカリング／②希少性／④無料効果
+             正規料金は取消線を使わず、積算根拠のある金額として提示する（景表法・二重価格表示） -->
+        <aside class="-w-pricecard" aria-label="料金とお申込み期間">
+          <p class="-w-pc-label">正規料金</p>
+          <p class="-w-pc-regular">265,000<span>円（税別）</span></p>
+
+          <p class="-w-pc-arrow" aria-hidden="true">↓</p>
+
+          <p class="-w-pc-campaign">期間限定キャンペーン価格（85%OFF）</p>
+          <p class="-w-pc-price">39,750<span class="-w-pc-yen">円</span><span class="-w-pc-tax">（税別）</span></p>
+
+          <p class="-w-pc-period">
+            <svg class="-w-icon" aria-hidden="true"><use href="#i-timer"></use></svg>
+            <span>2026年8月24日(月)〜9月7日(月)のお申込み限定</span>
+          </p>
+
+          <div class="-w-pc-free">
+            <p class="-w-pc-free-ttl">
+              <svg class="-w-icon" aria-hidden="true"><use href="#i-gift"></use></svg>
+              最初のステップは無料です
+            </p>
+            <ul>
+              <li>対象35ページの選定</li>
+              <li>現状の棚卸し診断</li>
+            </ul>
+          </div>
+        </aside>
+
+        <!-- CTA① ─ 幹・便益・マイクロの三点セットは全4箇所で共通 -->
+        <div class="-w-cta-block -w-cta-hero">
+          <p class="-w-cta-benefit">約175箇所を迷わせない文言へ</p>
+          <a class="-w-cta" href="#apply" data-cta="fv">
+            <span class="-w-cta-main">CTA刷新を申し込む</span>
+            <svg class="-w-icon -w-cta-arw" aria-hidden="true"><use href="#i-chevron-right"></use></svg>
+          </a>
+          <p class="-w-cta-micro">このページでお支払いは発生しません</p>
+        </div>
+
+      </div>
+
+      <ul class="-w-trust">
+        <li><svg class="-w-icon" aria-hidden="true"><use href="#i-cube"></use></svg>3D-CMF理論（2011年考案）</li>
+        <li><svg class="-w-icon" aria-hidden="true"><use href="#i-chart"></use></svg>74,000超のサイト運用で検証</li>
+        <li><svg class="-w-icon" aria-hidden="true"><use href="#i-shield"></use></svg>株式会社ガーディアン</li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- =======================================================
+       【B2】90秒動画 ─ 常時展開（折りたたまない）
+       セグメントによる開閉の出し分けは廃止。
+       架電のみで説明を受けたCUE顧客にとっては唯一の説明者であり、
+       受講者・MTG後の顧客にとっても要点の再確認として機能するため、
+       全セグメントで最初から見える状態に置く。
+  ======================================================== -->
+  <section class="-w-section" aria-labelledby="video-h">
+    <div class="-w-container">
+      <div class="-w-video-wrap -w-reveal">
+        <p class="-w-video-head">
+          <svg class="-w-icon" aria-hidden="true"><use href="#i-play"></use></svg>
+          <span id="video-h">なぜ「詳しく見る」では押されないのか（90秒）</span>
+        </p>
+        <div class="-w-video-body">
+          <div class="-w-video-frame">
+            <!-- ▼ 本番差し替え：WEB学校 第9回 のハイライト90秒
+                 （字幕焼き込み・ミュート自動再生・16:9・poster必須）
+                 <video src="assets/cta-90s.mp4" poster="assets/cta-90s.jpg"
+                        muted autoplay playsinline loop controls
+                        preload="metadata"></video> -->
+            <svg class="-w-icon -w-ph-icon" aria-hidden="true"><use href="#i-play"></use></svg>
+            <span class="-w-ph-text">
+              動画プレースホルダー<br>
+              WEB学校 第9回「問い合わせが増える導線とCTAの黄金比」より抜粋
+            </span>
+          </div>
+          <p class="-w-video-cap">
+            構成：約175箇所の提示 → 死んだCTAと情報の香り（第1章） → Before/After（第3章） → 費用比較
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =======================================================
+       【B3】CTAの構造比較 ─ 図解が主役。本文は図が語れないことだけ書く
+  ======================================================== -->
+  <section class="-w-section -w-tinted" aria-labelledby="scope-h">
+    <div class="-w-container">
+      <div class="-w-sec-head -w-reveal">
+        <span class="-w-eyebrow">構造の比較</span>
+        <h2 id="scope-h">「詳しく見る」は、何も伝えていない</h2>
+      </div>
+
+      <!-- 図1：従来CTAと3D-CMF準拠CTAの構造比較
+           ボタンは実物大のモックとして描き、文章ではなく形で違いを見せる -->
+      <figure class="-w-fig -w-reveal">
+        <div class="-w-fig-body">
+
+          <div class="-w-fig-col -w-fig-ng">
+            <p class="-w-fig-label">いまの状態</p>
+            <p class="-w-mock -w-mock-ng">詳しく見る ▶</p>
+            <ul class="-w-fig-list">
+              <li>クリック先が予測できない</li>
+              <li>誰の疑問にも答えていない</li>
+              <li>押す理由（価値）が不明</li>
+              <li>どのページも同じ文言</li>
+            </ul>
+            <p class="-w-fig-verdict">情報の香り＝<strong>ゼロ</strong></p>
+          </div>
+
+          <p class="-w-fig-arrow" aria-hidden="true">
+            <span>全面刷新</span>
+            <svg class="-w-icon" ><use href="#i-arrow-right"></use></svg>
+          </p>
+
+          <div class="-w-fig-col -w-fig-ok">
+            <p class="-w-fig-label">刷新後</p>
+            <p class="-w-mock-q">Q. 相談だけでもいいの？</p>
+            <p class="-w-mock -w-mock-ok">無理な営業なし・専門家が無料で現状診断 ▶</p>
+            <ul class="-w-fig-list">
+              <li>閲覧者の頭の中の声を代弁する</li>
+              <li>自社の強みを根拠として提示する</li>
+              <li>クリック後に得られる情報を予告する</li>
+            </ul>
+            <p class="-w-fig-verdict">情報の香り＝<strong>濃い</strong></p>
+          </div>
+
+        </div>
+        <p class="-w-fig-concl">
+          「どこへ移動させるか」の設計から、<strong>「何を理解させ、どの心理段階へ進めるか」の設計へ</strong>
+        </p>
+        <figcaption>図1：従来CTAと3D-CMF準拠CTAの構造比較</figcaption>
+      </figure>
+
+      <p class="-w-note">
+        対象は基本かつ重要な35ページ。1ページあたり5つ・<strong>合計で約175箇所</strong>のCTAが、この左側の状態のまま置かれています。
+        対象35ページの選定と現状の棚卸しは、お申込み後に<strong>無償で</strong>実施します。
+      </p>
+    </div>
+  </section>
+
+  <!-- =======================================================
+       【B4】4つの選択肢 ─ S6の核心・感情ピーク
+       ⑧おとり効果／⑩フレーミング
+  ======================================================== -->
+  <section class="-w-section" aria-labelledby="compare-h">
+    <div class="-w-container">
+      <div class="-w-sec-head -w-reveal">
+        <span class="-w-eyebrow">比較</span>
+        <h2 id="compare-h">都度お願いするのと、何が違うの？</h2>
+      </div>
+
+      <p class="-w-scroll-hint">
+        <svg class="-w-icon" aria-hidden="true"><use href="#i-swipe"></use></svg>
+        横にスクロールできます
+      </p>
+
+      <div class="-w-table-scroll -w-reveal">
+        <table class="-w-table">
+          <caption class="-w-sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">4つの選択肢の比較</caption>
+          <thead>
+            <tr>
+              <th scope="col">&nbsp;</th>
+              <th scope="col">① 正規料金で依頼</th>
+              <th scope="col" class="-w-col-win">② 本パッケージ</th>
+              <th scope="col">③ 自社で直す</th>
+              <th scope="col">④ 直さない</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">費用</th>
+              <td>265,000円</td>
+              <td class="-w-col-win"><strong>39,750円</strong></td>
+              <td>0円（自社工数）</td>
+              <td>0円</td>
+            </tr>
+            <tr>
+              <th scope="row">御社の作業</th>
+              <td>公開後の確認のみ</td>
+              <td class="-w-col-win"><strong>公開後の確認のみ</strong></td>
+              <td>約52時間相当</td>
+              <td>なし</td>
+            </tr>
+            <tr>
+              <th scope="row">文言の基準</th>
+              <td>約175箇所すべて同一の型</td>
+              <td class="-w-col-win"><strong>約175箇所すべて同一の型</strong></td>
+              <td>担当者の力量に依存</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <th scope="row">遷移先との整合</th>
+              <td>全件チェック</td>
+              <td class="-w-col-win"><strong>全件チェック</strong></td>
+              <td>自己チェック</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <th scope="row">結末</th>
+              <td>期間外は正規料金</td>
+              <td class="-w-col-win"><span class="-w-good">期間内の申込で85%OFF</span></td>
+              <td>途中で止まりやすい</td>
+              <td><span class="-w-bad">約175箇所が死んだまま</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="-w-note">
+        ※正規料金265,000円は、1ページあたり5つ・合計175箇所のCTAを対象とした標準パッケージの工程別積算（<strong>総工数 約52時間＝約6.5人日 × 時間単価5,000円</strong>）に基づく金額です。1CTAあたり約1,500円・1ページあたり約7,600円に相当します。③はその作業量を御社で対応された場合の目安です。<br>
+        ※お申込み期間は2026年8月24日〜9月7日ですが、<strong>着手・納品は期間後でも本価格が適用されます</strong>。
+      </p>
+
+      <!-- CTA② ─ 感情ピーク直後（教科書3-2） -->
+      <div class="-w-cta-block">
+        <p class="-w-cta-benefit">約175箇所を迷わせない文言へ</p>
+        <a class="-w-cta" href="#apply" data-cta="mid">
+          <span class="-w-cta-main">CTA刷新を申し込む</span>
+          <svg class="-w-icon -w-cta-arw" aria-hidden="true"><use href="#i-chevron-right"></use></svg>
+        </a>
+        <p class="-w-cta-micro">このページでお支払いは発生しません</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =======================================================
+       【B5】どう変わるか（Before / After）＋方程式
+  ======================================================== -->
+  <section class="-w-section -w-tinted" aria-labelledby="ba-h">
+    <div class="-w-container">
+      <div class="-w-sec-head -w-reveal">
+        <span class="-w-eyebrow">Before / After</span>
+        <h2 id="ba-h">具体的に、文言はどう変わるの？</h2>
+      </div>
+
+      <p class="-w-scroll-hint">
+        <svg class="-w-icon" aria-hidden="true"><use href="#i-swipe"></use></svg>
+        横にスクロールできます
+      </p>
+
+      <div class="-w-table-scroll -w-reveal">
+        <table class="-w-table">
+          <thead>
+            <tr>
+              <th scope="col">カテゴリ</th>
+              <th scope="col">Before</th>
+              <th scope="col" class="-w-col-win">After</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">サービス紹介</th>
+              <td class="-w-ba-before">詳しく見る</td>
+              <td class="-w-ba-after"><strong>「自社にはどのプランが合う？」</strong><br>→ 10プランの違いと変更条件を見る</td>
+            </tr>
+            <tr>
+              <th scope="row">実績紹介</th>
+              <td class="-w-ba-before">事例ページへ</td>
+              <td class="-w-ba-after"><strong>「同業他社は何を変えて成果を上げた？」</strong><br>→ Before→Afterの事例を見る</td>
+            </tr>
+            <tr>
+              <th scope="row">料金</th>
+              <td class="-w-ba-before">料金はこちら</td>
+              <td class="-w-ba-after"><strong>「結局いくらかかるの？」</strong><br>→ プラン別の費用と対応範囲を30秒で確認</td>
+            </tr>
+            <tr>
+              <th scope="row">資料請求</th>
+              <td class="-w-ba-before">資料ダウンロード</td>
+              <td class="-w-ba-after"><strong>「何がわかる資料なの？」</strong><br>→ 競合との違いが1枚でわかる比較シートを入手</td>
+            </tr>
+            <tr>
+              <th scope="row">問い合わせ</th>
+              <td class="-w-ba-before">お問い合わせはこちら</td>
+              <td class="-w-ba-after"><strong>「相談だけでもいいの？」</strong><br>→ 無理な営業なし・専門家が無料で現状診断</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="-w-note">
+        ※After欄の数値・条件は、<strong>御社の実際の運用条件と厳密に一致</strong>させます。事実と異なる数字は信頼を毀損し、逆効果になるためです。
+      </p>
+
+      <div class="-w-equation -w-reveal" style="margin-top:2.4rem">
+        <p class="-w-eq-item">顧客の頭の中の声を代弁する<br>「FAQ調の問い」</p>
+        <p class="-w-eq-op" aria-hidden="true">×</p>
+        <p class="-w-eq-item">納得を促す<br>「検証可能な自社の強み」</p>
+        <p class="-w-eq-op" aria-hidden="true">＝</p>
+        <p class="-w-eq-item -w-eq-result">次の心理段階へ進める<br>「接客コンテンツ」</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =======================================================
+       【B6】ケーススタディ（仮定）
+       実在事例ではなくモデルケースとして掲載する。
+       これにより③社会的証明としては機能しなくなるため、
+       実績の重みは④権威性（B7の誠実FAQ・設計者ブロック）が担う。
+       カードは打ち手を主役にし、数値は「想定される変化」として従属させる
+       （数値を大きく置くと、仮定の断りがあっても実績に見えるため）。
+  ======================================================== -->
+  <section class="-w-section" aria-labelledby="case-h">
+    <div class="-w-container">
+      <div class="-w-sec-head -w-reveal">
+        <span class="-w-eyebrow">ケーススタディ（仮定）</span>
+        <h2 id="case-h">数字は、どういう構造で動くのか</h2>
+      </div>
+
+      <!-- 仮定である旨は見出し直下・本文サイズで置く（小さくしない） -->
+      <p class="-w-assume -w-reveal">
+        <svg class="-w-icon" aria-hidden="true"><use href="#i-alert"></use></svg>
+        <span>
+          以下は<strong>実在の顧客事例ではありません。</strong>施策がどの経路で数字を動かすのかを説明するための、<strong>仮定のモデルケース</strong>です。
+        </span>
+      </p>
+
+      <ul class="-w-cases -w-reveal">
+        <li class="-w-case">
+          <p class="-w-case-no">仮定ケース1 ── CTA文言だけを変えた場合</p>
+          <h3>製造業（部品加工）</h3>
+          <dl class="-w-case-dl">
+            <dt>前提</dt>
+            <dd>アクセスは月2,000。CTAは全ページ「お問い合わせはこちら」のみ。問い合わせは月2件</dd>
+            <dt>打ち手</dt>
+            <dd>技術解説の直後に「<strong>この精度、うちの部品でも出せる？</strong>」→ 加工事例と公差実績を見る を設置。料金ページに「<strong>ロット1個でも頼める？</strong>」→ 最小ロットと単価表を確認 を設置</dd>
+            <dt>想定される変化</dt>
+            <dd class="-w-case-change">問い合わせ 月2件 → <strong>月9件</strong>（アクセス数は変えずに）</dd>
+          </dl>
+        </li>
+
+        <li class="-w-case">
+          <p class="-w-case-no">仮定ケース2 ── 踏み板CTAを新設した場合</p>
+          <h3>士業（税理士事務所）</h3>
+          <dl class="-w-case-dl">
+            <dt>前提</dt>
+            <dd>訪問者の大半がまだ問題を自覚していない層。本命CTAは「無料相談」のみ。CVRは0.4%</dd>
+            <dt>打ち手</dt>
+            <dd>本命CTAの手前に「<strong>節税の見落とし、うちにもある？</strong>」→ 10分でわかるチェックリストを入手 を新設</dd>
+            <dt>想定される変化</dt>
+            <dd class="-w-case-change">中間CVが生まれ、CVR 0.4% → <strong>1.3%</strong></dd>
+          </dl>
+        </li>
+
+        <li class="-w-case">
+          <p class="-w-case-no">仮定ケース3 ── 不安解消の一文を添えた場合</p>
+          <h3>店舗サービス業</h3>
+          <dl class="-w-case-dl">
+            <dt>前提</dt>
+            <dd>CTAが「今すぐ予約する」の一択。初回利用への心理ハードルが高い</dd>
+            <dt>打ち手</dt>
+            <dd>ボタン直下に「<strong>無理な勧誘・押し売りは一切ありません</strong>」を追加。「<strong>私でも大丈夫？</strong>」→ 気軽に聞いてみる を併設</dd>
+            <dt>想定される変化</dt>
+            <dd class="-w-case-change">小さなYESが積まれ、新規予約 <strong>1.8倍</strong></dd>
+          </dl>
+        </li>
+      </ul>
+
+      <p class="-w-note-legal">
+        ※上記3件はいずれも<strong>仮定のモデルケース</strong>であり、<strong>実在の顧客事例ではありません。</strong><br>
+        ※数値は施策の効き方を説明するための想定値であり、御社での成果を示すものでも保証するものでもありません。<br>
+        ※いずれのケースも、CTA文言の変更単独ではなく、踏み板CTAの新設・マイクロコピーの追加などを組み合わせた前提のモデルです。
+      </p>
+    </div>
+  </section>
+
+  <!-- =======================================================
+       【B7】先に正直にお伝えします ─ ④権威性・⑥一貫性
+       誠実な期待値設定で S6 の緊張を解く
+  ======================================================== -->
+  <section class="-w-section -w-tinted" aria-labelledby="faq-h">
+    <div class="-w-container">
+      <div class="-w-sec-head -w-reveal">
+        <span class="-w-eyebrow">誠実な前提</span>
+        <h2 id="faq-h">本当に効果があるの？</h2>
+        <p class="-w-lead">先に、都合の悪いことからお伝えします。<span class="-w-lead-hint">（各項目を押すと回答が開きます）</span></p>
+      </div>
+
+      <div class="-w-faq -w-reveal">
+        <details class="-w-faq-item">
+          <summary class="-w-faq-q"><span>なぜ「詳しく見る」ではいけないのですか？</span></summary>
+          <p class="-w-faq-a">
+            親切の問題ではなく、<strong>原則の問題</strong>だからです。W3CのWCAGはリンクの目的が文言から判断できることを求め、Googleは公式に「説明的・簡潔・関連性のある」アンカーテキストを推奨しています。UX・アクセシビリティ・検索エンジン理解の、いずれの基本原則にも反しているのが「詳しく見る」です。
+          </p>
+        </details>
+        <details class="-w-faq-item">
+          <summary class="-w-faq-q"><span>検索順位は上がりますか？</span></summary>
+          <p class="-w-faq-a">
+            <strong>直接は上がりません。</strong>CTA文言の変更だけで検索順位が上がるという期待値設定は誤りです。効果は、回遊性とエンゲージメント指標の改善、およびFAQ構造によるAI検索（AI Overviews／LLM）での引用機会の拡大を通じた「間接的な流入拡大」にあります。
+          </p>
+        </details>
+        <details class="-w-faq-item">
+          <summary class="-w-faq-q"><span>クリック率は上がりますか？</span></summary>
+          <p class="-w-faq-a">
+<strong>改善が見込まれます。</strong>クリック判断に必要な手がかりが揃うためで、これは根拠の強い部分です。ただし、曖昧な文言が集めていた興味本位の誤クリックが排除されるため、<strong>横ばい〜微減となる場合もあります。</strong>いずれにせよ見るべきはその先の「遷移先到達率」「精読率」「フォーム開始率」で、成功指標は押された回数ではなく、押した後に期待された行動が完了した割合へ転換します。
+          </p>
+        </details>
+        <details class="-w-faq-item">
+          <summary class="-w-faq-q"><span>逆効果になりませんか？</span></summary>
+          <p class="-w-faq-a">
+            5つの失敗条件を工程で回避します。① 質問だけで終わる ② 自社都合の質問 ③ 疑問形の多用 ④ クリックベイト化 ⑤ 遷移先との不一致。<strong>特に⑤は致命傷</strong>のため、CTA文言とリンク先冒頭コンテンツの一致を全件確認してから公開します。
+          </p>
+        </details>
+        <details class="-w-faq-item">
+          <summary class="-w-faq-q"><span>うちの数字を勝手に書かれませんか？</span></summary>
+          <p class="-w-faq-a">
+            書きません。Step1で御社の強みを<strong>ファクトチェック</strong>し、<strong>検証可能な事実のみ</strong>を使用します。事実と異なる数字は信頼を毀損して逆効果になるため、弊社の工程として排除します。作成した文言案はすべて事前にお送りします。
+          </p>
+        </details>
+        <details class="-w-faq-item">
+          <summary class="-w-faq-q"><span>正直、高くないですか？</span></summary>
+          <p class="-w-faq-a">
+            本サービスの正規料金は265,000円（税別）です。これは<strong>総工数 約52時間（約6.5人日）</strong>の工程別積算に基づく金額で、1CTAあたり約1,500円に相当します。今回は期間限定で39,750円。ご自身で対応される場合も同等の作業量がかかりますので、金額そのものより<strong>その工数を何に使うか</strong>でご判断ください。
+          </p>
+        </details>
+        <details class="-w-faq-item">
+          <summary class="-w-faq-q"><span>今すぐでなくてもいいのでは？</span></summary>
+          <p class="-w-faq-a">
+            9月7日でこのご案内は終了します。ただ、急がせたいわけではありません。<strong>最初の棚卸し診断は無償</strong>です。まず「御社の何箇所が『詳しく見る』のままか」という数字だけ受け取って、それから判断してください。
+          </p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- =======================================================
+       【B8】進め方 ─ 提案書p15「工程別積算」準拠の実装・検証ロードマップ
+       図はご支給の「確実な成果へ導く実装・検証ロードマップ」に差し替え。
+       御社の関与は「公開後のご確認」のみに絞る（複数の依頼事項を並べない）。
+       SPは横スクロール（縦積みにしない）。
+  ======================================================== -->
+  <section class="-w-section" aria-labelledby="step-h">
+    <div class="-w-container">
+      <div class="-w-sec-head -w-reveal">
+        <span class="-w-eyebrow">進め方</span>
+        <h2 id="step-h">うちは何をすればいいの？</h2>
+        <p class="-w-lead">
+          <strong>ほとんど、何もしていただく必要がありません。</strong>設計から変更・公開・計測の設計まで、5つの工程はすべて弊社が代行します。
+        </p>
+      </div>
+
+      <p class="-w-scroll-hint -w-rm-hint">
+        <svg class="-w-icon" aria-hidden="true"><use href="#i-swipe"></use></svg>
+        横にスクロールできます
+      </p>
+
+      <div class="-w-rm-scroll -w-reveal">
+        <ol class="-w-roadmap">
+          <li class="-w-rm">
+            <p class="-w-rm-head"><span class="-w-rm-no">Step 1</span><span class="-w-rm-ttl">設計準備</span></p>
+            <p class="-w-rm-desc">ページ棚卸し・<strong>3D-CMFマッピング</strong>・強みのファクトチェック</p>
+          </li>
+          <li class="-w-rm">
+            <p class="-w-rm-head"><span class="-w-rm-no">Step 2</span><span class="-w-rm-ttl">文言設計</span></p>
+            <p class="-w-rm-desc">「FAQ調 × 強み」方程式に基づく175箇所の文言作成</p>
+          </li>
+          <li class="-w-rm">
+            <p class="-w-rm-head"><span class="-w-rm-no">Step 3</span><span class="-w-rm-ttl">整合確認</span></p>
+            <p class="-w-rm-desc">遷移先冒頭コンテンツとの完全一致チェック</p>
+          </li>
+          <li class="-w-rm">
+            <p class="-w-rm-head"><span class="-w-rm-no">Step 4</span><span class="-w-rm-ttl">実装・公開</span></p>
+            <p class="-w-rm-desc">CMSへの確実な置換・表示確認作業</p>
+          </li>
+          <li class="-w-rm">
+            <p class="-w-rm-head"><span class="-w-rm-no">Step 5</span><span class="-w-rm-ttl">計測設計</span></p>
+            <p class="-w-rm-desc">GA4/GTMタグ設計による効果検証基盤の構築</p>
+          </li>
+        </ol>
+      </div>
+
+      <!-- 図の締め（ご支給図の下段吹き出し）。④権威性 -->
+      <p class="-w-rm-concl -w-reveal">
+        属人的なセンスではなく、この厳密な工程を経ることで<br class="-w-br-sp"><strong>「再現性のある成果」</strong>を生み出します。
+      </p>
+
+      <!-- 御社の関与。複数の依頼事項を並べず、1つに絞る -->
+      <p class="-w-rm-you -w-reveal">
+        <svg class="-w-icon" aria-hidden="true"><use href="#i-check-circle"></use></svg>
+        <span>御社にお願いする作業は、<strong>公開後のご確認だけ</strong>です。</span>
+      </p>
+
+      <p class="-w-note">
+        ※Step5の計測設計には、ABテストの設計と初期分析（5ページ分）を含みます。<br>
+        ※上記は制作工程における作業です。お申込み時に、対象35ページの選定案のご承認をお願いしております。<br>
+        ※制作の目安期間は1名で1.5〜2週間です。ABテストの検証待ち期間（2〜4週間）は御社サイトの訪問者数に依存するため、期間短縮の対象外となります。
+      </p>
+    </div>
+  </section>
+
+  <!-- =======================================================
+       【B9】オファー ─ S7・⑨アンカリング／②希少性／④無料効果
+  ======================================================== -->
+  <section class="-w-section -w-tinted" aria-labelledby="offer-h">
+    <div class="-w-container">
+      <div class="-w-sec-head -w-reveal">
+        <span class="-w-eyebrow">料金</span>
+        <h2 id="offer-h">いくらで、いつまで？</h2>
+      </div>
+
+      <div class="-w-offer -w-reveal">
+        <!-- 取消線つきの価格対比（265,000円→39,750円）は使わない。
+             比較対照価格の表示には相当期間の販売実績が必要（景表法・二重価格表示）。
+             代わりに「同等作業を弊社へ都度依頼した場合の実費換算」を対比させる -->
+        <p class="-w-regular">
+          正規料金<br>
+          <strong class="-w-compare">265,000円（税別）</strong><br>
+          <span class="-w-compare-note">総工数 約52時間（約6.5人日）× 時間単価5,000円 の積算</span>
+        </p>
+        <p class="-w-arrow" aria-hidden="true">↓</p>
+        <p class="-w-regular">期間限定キャンペーン価格（85%OFF）</p>
+        <span class="-w-price">39,750<span class="-w-tax">円（税別）</span></span>
+        <p class="-w-period">
+          <svg class="-w-icon" aria-hidden="true"><use href="#i-timer"></use></svg>
+          2026年8月24日(月) 〜 9月7日(月) のお申込み限定
+        </p>
+
+        <div class="-w-free-step">
+          <p class="-w-ttl">
+            <svg class="-w-icon" aria-hidden="true"><use href="#i-gift"></use></svg>
+            最初のステップは無償です
+          </p>
+          <p style="margin:0">・対象35ページの選定<br>・現状の棚卸し診断</p>
+        </div>
+
+        <p class="-w-note" style="text-align:left">
+          ※正規料金265,000円の内訳：設計準備55,000円／文言設計105,000円／整合確認25,000円／実装・公開45,000円／計測設計35,000円（いずれも税別）。1CTAあたり約1,500円・1ページあたり約7,600円に相当します。<br>
+          ※進行管理費（PM工数）は含みません。遷移先ページの改修等、標準パッケージ範囲外の追加作業が発生する場合は個別お見積りとなり、割引の対象外です。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =======================================================
+       【B10-12】最終CTA三点セット ＋ 申込フォーム
+       教科書3-2「ベネフィット要約＋社会的証明＋CTA」
+  ======================================================== -->
+  <section class="-w-section" id="apply" aria-labelledby="apply-h">
+    <div class="-w-container">
+
+      <ul class="-w-summary -w-reveal">
+        <li><svg class="-w-icon" aria-hidden="true"><use href="#i-check"></use></svg>約175箇所すべてを「FAQ調の問い × 検証可能な強み」へ置換</li>
+        <li><svg class="-w-icon" aria-hidden="true"><use href="#i-check"></use></svg>変更・公開まで代行。御社の作業負担はほとんど発生しません</li>
+        <li><svg class="-w-icon" aria-hidden="true"><use href="#i-check"></use></svg>39,750円（税別）／9月7日(月)まで</li>
+      </ul>
+
+      <!-- BtoBでは「誰が作業するのか」が見えないこと自体が信頼低下要因になる（E-E-A-T） -->
+      <div class="-w-author -w-reveal">
+        <img class="-w-author-photo" src="data:image/jpeg;base64,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" width="256" height="256"
+             loading="lazy" decoding="async"
+             alt="株式会社ガーディアン 代表取締役社長 青山裕一">
+        <div>
+          <p class="-w-author-label">本サービスの設計者</p>
+          <p class="-w-author-name">青山 裕一</p>
+          <p class="-w-author-role">株式会社ガーディアン 代表取締役社長</p>
+          <ul class="-w-author-facts">
+            <li>直接手掛けたサイト <strong>7,000超</strong>／携わったサイト <strong>74,000超</strong></li>
+            <li><strong>3D-CMF理論 考案者</strong>（2011年）</li>
+            <li>WEB学校 第9回「問い合わせが増える導線とCTAの黄金比」講師</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 申込フォーム ─ 教科書4-4「最後の関門を守る」 -->
+      <div class="-w-form-wrap -w-reveal">
+        <!-- 見出しはCTA文言と完全一致（6-1⑤ 遷移先との不一致＝致命傷 の回避） -->
+        <h2 id="apply-h">CTA刷新を申し込む</h2>
+        <p class="-w-form-lead">お申込みフォームです。入力は1分で完了します。このページでお支払いは発生しません。</p>
+
+        <form id="apply-form" novalidate>
+          <div class="-w-field">
+            <label class="-w-label" for="f-company">会社名 <span class="-w-req">必須</span></label>
+            <input class="-w-input" type="text" id="f-company" name="company"
+                   autocomplete="organization" required>
+            <p class="-w-err" id="e-company"><svg class="-w-icon" aria-hidden="true"><use href="#i-alert"></use></svg>会社名をご入力ください</p>
+          </div>
+
+          <div class="-w-field">
+            <label class="-w-label" for="f-name">お名前 <span class="-w-req">必須</span></label>
+            <input class="-w-input" type="text" id="f-name" name="name"
+                   autocomplete="name" required>
+            <p class="-w-err" id="e-name"><svg class="-w-icon" aria-hidden="true"><use href="#i-alert"></use></svg>お名前をご入力ください</p>
+          </div>
+
+          <div class="-w-field">
+            <label class="-w-label" for="f-email">メールアドレス <span class="-w-req">必須</span></label>
+            <input class="-w-input" type="email" id="f-email" name="email"
+                   autocomplete="email" inputmode="email" required>
+            <p class="-w-err" id="e-email"><svg class="-w-icon" aria-hidden="true"><use href="#i-alert"></use></svg>メールアドレスの形式をご確認ください</p>
+          </div>
+
+          <!-- 支払い方法：2択。デフォルト未選択（金額が変わる選択にデフォルトを置かない） -->
+          <fieldset class="-w-field" style="border:0;padding:0;margin-inline:0">
+            <legend class="-w-label" style="padding:0">お支払い方法 <span class="-w-req">必須</span></legend>
+            <div class="-w-pay-list" id="pay-list">
+              <!-- js/lp.js がセグメント（?s=）に応じて描画 -->
+            </div>
+            <p class="-w-err" id="e-pay"><svg class="-w-icon" aria-hidden="true"><use href="#i-alert"></use></svg>お支払い方法をお選びください</p>
+          </fieldset>
+
+          <div class="-w-field">
+            <label class="-w-label" for="f-note">ご質問・ご要望 <span class="-w-opt">任意</span></label>
+            <textarea class="-w-textarea" id="f-note" name="note"></textarea>
+          </div>
+
+          <!-- CTA③ ─ 全4箇所で完全共通 -->
+          <p class="-w-cta-benefit">約175箇所を迷わせない文言へ</p>
+          <button class="-w-cta" type="submit" data-cta="form">
+            <span class="-w-cta-main">CTA刷新を申し込む</span>
+            <svg class="-w-icon -w-cta-arw" aria-hidden="true"><use href="#i-chevron-right"></use></svg>
+          </button>
+
+          <!-- マイクロコピーは不安解消の1本のみ（規格：15〜22字・1行・2行化の禁止）。
+               ボタン周辺に複数行を積むとボタンの発見性を毀損するため、
+               残りの安心材料は申込後フローの下へ「補足」として移した -->
+          <p class="-w-cta-micro">このページでお支払いは発生しません</p>
+
+          <p class="-w-line-back">
+            <svg class="-w-icon" aria-hidden="true"><use href="#i-doc"></use></svg>
+            フォームの前にご質問がある場合は、<strong>お送りしたLINEにそのままご返信ください。</strong>担当が直接お答えします（平日 9:30〜17:00）。
+          </p>
+
+          <ol class="-w-flow">
+            <li>① お申込み</li>
+            <li>② 対象ページの選定案をご連絡</li>
+            <li>③ ご承認</li>
+            <li>④ ご請求（またはプラン変更のお手続き）</li>
+          </ol>
+
+          <p class="-w-form-note">しつこい営業は一切いたしません。</p>
+        </form>
+
+        <!-- 送信完了（S7→S8の橋） -->
+        <div class="-w-done" id="apply-done" hidden role="status" tabindex="-1">
+          <h2>お申込みを受け付けました</h2>
+          <p>ご入力いただいたメールアドレス宛に、担当より<strong>対象35ページの選定案</strong>をお送りします。</p>
+          <ol class="-w-flow" style="border-top:0;padding-top:0;margin-top:0.8rem">
+            <li>② 選定案をご連絡</li>
+            <li>③ ご承認</li>
+            <li>④ ご請求</li>
+          </ol>
+          <p class="-w-note">
+            約175箇所を放置しているサイトが大半です。着手されたこと自体が差になります。
+          </p>
+        </div>
+
+        <!-- 方法B補足：ターシャリ（テキストのみ）。ボタンにしない＝選択の麻痺回避 -->
+        <p class="-w-tertiary" id="tertiary-note" hidden>
+          <strong>SCSC 3.2〜5.2 をご契約中の方へ：</strong>
+          プランアップ（SCSC6.2）でお申込みいただくと初期費用は0円になります。
+          プラン変更は毎月25日締めのため、<strong>8月25日(火)まで</strong>のお申込みで9月1日から、以降は10月1日からの適用です。
+          詳細は月次WEB戦略MTGでご相談ください。
+        </p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="-w-foot">
+  <div class="-w-container">
+    <p class="-w-corp">株式会社ガーディアン</p>
+    <p style="margin:0">
+      〒104-0031 東京都中央区京橋3-9-5 永井ビル8階（受付）、7階、6階、5階<br>
+      <a href="https://guardian.jpn.com/">https://guardian.jpn.com/</a>
+    </p>
+    <p class="-w-note" style="margin-top:1.6rem">
+      本ページは既存のSCSC／SCSC CUE ご契約者様向けのご案内です。
+      記載の改善事例はいずれも他社での事例であり、成果を保証するものではありません。
+      価格はすべて税別表記です。
+    </p>
+  </div>
+</footer>
+
+<!-- 追従CTA④（モバイル・スクロール25%以降） -->
+<div class="-w-sticky" id="sticky-cta">
+  <a class="-w-cta" href="#apply" data-cta="sticky">
+    <span class="-w-cta-benefit">35ページ分をまとめて刷新</span>
+    <span class="-w-cta-main">CTA刷新を申し込む</span>
+  </a>
+</div>
+
+</body>
+</html>

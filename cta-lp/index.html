@@ -43,6 +43,9 @@
     <symbol id="i-doc" viewBox="0 0 24 24"><path d="M13.5 3.5H7A1.5 1.5 0 0 0 5.5 5v14A1.5 1.5 0 0 0 7 20.5h10a1.5 1.5 0 0 0 1.5-1.5V8.5z"/><path d="M13.5 3.5V8.5h5"/></symbol>
     <symbol id="i-person-check" viewBox="0 0 24 24"><circle cx="10" cy="7.5" r="3.5"/><path d="M3.5 20.5c0-3.6 2.9-6.2 6.5-6.2 1 0 2 .2 2.8.6"/><path d="m15 17.8 2 2 4-4.2"/></symbol>
     <symbol id="i-cube" viewBox="0 0 24 24"><path d="M12 3.2 4 7.4v9.2l8 4.2 8-4.2V7.4z"/><path d="m4 7.4 8 4.2 8-4.2M12 11.6v9.2"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 11.2v5"/><circle cx="12" cy="8" r="1" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M5 20.5V13M12 20.5V4.5M19 20.5v-5.5"/></symbol>
+    <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9.8 6.2 5.8 5.8-5.8 5.8"/></symbol>
   </defs>
 </svg>
 
@@ -63,39 +66,73 @@
   ======================================================== -->
   <header class="-w-fv">
     <div class="-w-container">
-      <p class="-w-fv-brand">
-        <svg class="-w-icon" aria-hidden="true"><use href="#i-cube"></use></svg>
-        3D-CMF理論に基づく CTA全面刷新
-      </p>
+      <div class="-w-fv-grid">
 
-      <!-- 見出しで痛み（自分ごと化）、サブで 損失 → ベネフィット → オファー の順に置く。
-           事実提示（約175箇所）だけで終わらせない -->
-      <h1 id="fv-head">
-        アクセスはある。<br class="-w-br-sp">デザインも悪くない。<br>それなのに、<br class="-w-br-sp"><span class="-w-hl">問い合わせが来ない</span>。
-      </h1>
+        <p class="-w-fv-brand">
+          <svg class="-w-icon" aria-hidden="true"><use href="#i-cube"></use></svg>
+          <span>3D-CMF理論に基づく<br class="-w-br-sp"> CTA全面刷新</span>
+        </p>
 
-      <p class="-w-fv-sub" id="fv-sub">
-        原因は、サイトの<strong>約175箇所のボタン</strong>が「詳しく見る」のままだからです。閲覧者は迷って、そのまま帰っています。9月7日まで、35ページ分すべてを<strong>39,750円（税別）</strong>で書き換えます。
-      </p>
+        <!-- 見出しで痛み（自分ごと化）、サブで 損失 → ベネフィット → オファー の順に置く。
+             事実提示（約175箇所）だけで終わらせない -->
+        <h1 id="fv-head">
+          アクセスはある。<br class="-w-br-sp">デザインも悪くない。<br>それなのに、<span class="-w-hl">問い合わせが来ない</span>。
+        </h1>
 
-      <!-- 専門用語は滑り台の段差になる（教科書1-4）。FVで必ず定義する -->
-      <p class="-w-fv-def">
-        ※CTAとは、サイト上の「詳しく見る」「お問い合わせはこちら」などの<strong>ボタン・リンク</strong>のことです。
-      </p>
+        <p class="-w-fv-sub" id="fv-sub">
+          原因は、サイトの<strong>約175箇所のボタン</strong>が「詳しく見る」のままだからです。<br>閲覧者は迷って、そのまま帰っています。<br>9月7日まで、35ページ分すべてを<strong>39,750円（税別）</strong>で書き換えます。
+        </p>
 
-      <!-- CTA① ─ 全4箇所で完全共通 -->
-      <div class="-w-cta-block">
-        <a class="-w-cta" href="#apply" data-cta="fv">
-<span class="-w-cta-benefit">約175箇所を迷わせない文言へ</span>
-          <span class="-w-cta-main">CTA刷新を申し込む</span>
-        </a>
-        <p class="-w-cta-micro">このページでお支払いは発生しません</p>
+        <!-- 専門用語は滑り台の段差になる（教科書1-4）。FVで必ず定義する -->
+        <p class="-w-fv-def">
+          <svg class="-w-icon" aria-hidden="true"><use href="#i-info"></use></svg>
+          <span>※CTAとは、サイト上の「詳しく見る」「お問い合わせはこちら」などの<strong>ボタン・リンク</strong>のことです。</span>
+        </p>
+
+        <!-- 価格カード ─ ⑨アンカリング／②希少性／④無料効果
+             正規料金は取消線を使わず、積算根拠のある金額として提示する（景表法・二重価格表示） -->
+        <aside class="-w-pricecard" aria-label="料金とお申込み期間">
+          <p class="-w-pc-label">正規料金</p>
+          <p class="-w-pc-regular">265,000<span>円（税別）</span></p>
+
+          <p class="-w-pc-arrow" aria-hidden="true">↓</p>
+
+          <p class="-w-pc-campaign">期間限定キャンペーン価格（85%OFF）</p>
+          <p class="-w-pc-price">39,750<span class="-w-pc-yen">円</span><span class="-w-pc-tax">（税別）</span></p>
+
+          <p class="-w-pc-period">
+            <svg class="-w-icon" aria-hidden="true"><use href="#i-timer"></use></svg>
+            <span>2026年8月24日(月)〜9月7日(月)のお申込み限定</span>
+          </p>
+
+          <div class="-w-pc-free">
+            <p class="-w-pc-free-ttl">
+              <svg class="-w-icon" aria-hidden="true"><use href="#i-gift"></use></svg>
+              最初のステップは無料です
+            </p>
+            <ul>
+              <li>対象35ページの選定</li>
+              <li>現状の棚卸し診断</li>
+            </ul>
+          </div>
+        </aside>
+
+        <!-- CTA① ─ 幹・便益・マイクロの三点セットは全4箇所で共通 -->
+        <div class="-w-cta-block -w-cta-hero">
+          <p class="-w-cta-benefit">約175箇所を迷わせない文言へ</p>
+          <a class="-w-cta" href="#apply" data-cta="fv">
+            <span class="-w-cta-main">CTA刷新を申し込む</span>
+            <svg class="-w-icon -w-cta-arw" aria-hidden="true"><use href="#i-chevron-right"></use></svg>
+          </a>
+          <p class="-w-cta-micro">このページでお支払いは発生しません</p>
+        </div>
+
       </div>
 
       <ul class="-w-trust">
-        <li><svg class="-w-icon" aria-hidden="true"><use href="#i-shield"></use></svg>3D-CMF理論（2011年考案）</li>
-        <li><svg class="-w-icon" aria-hidden="true"><use href="#i-check-circle"></use></svg>74,000超のサイト運用で検証</li>
-        <li><svg class="-w-icon" aria-hidden="true"><use href="#i-doc"></use></svg>株式会社ガーディアン</li>
+        <li><svg class="-w-icon" aria-hidden="true"><use href="#i-cube"></use></svg>3D-CMF理論（2011年考案）</li>
+        <li><svg class="-w-icon" aria-hidden="true"><use href="#i-chart"></use></svg>74,000超のサイト運用で検証</li>
+        <li><svg class="-w-icon" aria-hidden="true"><use href="#i-shield"></use></svg>株式会社ガーディアン</li>
       </ul>
     </div>
   </header>
@@ -268,9 +305,10 @@
 
       <!-- CTA② ─ 感情ピーク直後（教科書3-2） -->
       <div class="-w-cta-block">
+        <p class="-w-cta-benefit">約175箇所を迷わせない文言へ</p>
         <a class="-w-cta" href="#apply" data-cta="mid">
-<span class="-w-cta-benefit">約175箇所を迷わせない文言へ</span>
           <span class="-w-cta-main">CTA刷新を申し込む</span>
+          <svg class="-w-icon -w-cta-arw" aria-hidden="true"><use href="#i-chevron-right"></use></svg>
         </a>
         <p class="-w-cta-micro">このページでお支払いは発生しません</p>
       </div>
@@ -657,9 +695,10 @@
           </div>
 
           <!-- CTA③ ─ 全4箇所で完全共通 -->
+          <p class="-w-cta-benefit">約175箇所を迷わせない文言へ</p>
           <button class="-w-cta" type="submit" data-cta="form">
-            <span class="-w-cta-benefit">約175箇所を迷わせない文言へ</span>
             <span class="-w-cta-main">CTA刷新を申し込む</span>
+            <svg class="-w-icon -w-cta-arw" aria-hidden="true"><use href="#i-chevron-right"></use></svg>
           </button>
 
           <!-- マイクロコピーは不安解消の1本のみ（規格：15〜22字・1行・2行化の禁止）。
